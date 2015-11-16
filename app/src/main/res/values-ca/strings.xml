@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="eventos">Events</string>
+    <string name="mis_eventos">Els Meus Events</string>
+    <string name="historico">Històric</string>
+</resources>

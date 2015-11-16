@@ -3,6 +3,7 @@ package com.ssn.eps.ssn.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -34,6 +35,7 @@ import com.ssn.eps.ssn.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.Manifest.permission.MANAGE_DOCUMENTS;
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
@@ -88,12 +90,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                //attemptLogin();
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                startActivity(intent);
             }
         });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    private LoginActivity getContext()
+    {
+        return this;
     }
 
     private void populateAutoComplete() {

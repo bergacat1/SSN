@@ -1,5 +1,6 @@
 package com.ssn.eps.ssn.activities;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -84,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -118,11 +121,11 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "SECTION 1";
+                    return getString(R.string.eventos);
                 case 1:
-                    return "SECTION 2";
+                    return getString(R.string.mis_eventos);
                 case 2:
-                    return "SECTION 3";
+                    return getString(R.string.historico);
             }
             return null;
         }
