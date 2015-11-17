@@ -3,4 +3,15 @@
     <string name="eventos">Events</string>
     <string name="mis_eventos">My Events</string>
     <string name="historico">History</string>
+
+    <!-- New Event Wizard Activity -->
+    <string name="title_activity_new_event_wizard">New Event</string>
+    <string name="features_button">Features</string>
+    <string name="zone_button">Field</string>
+    <string name="comfirmation_button">Summary</string>
+
+    <string name="sport">Sport:</string>
+    <string name="num_players">Num players:</string>
+    <string name="max_price_player">Max price/player:</string>
+    <string name="date_hour">Date &amp; hour:</string>
 </resources>
