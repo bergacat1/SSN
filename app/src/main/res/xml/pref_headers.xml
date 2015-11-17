@@ -10,8 +10,4 @@
         android:title="@string/pref_header_notifications"
         android:icon="@drawable/ic_notifications_black_24dp" />
 
-    <!--<header-->
-        <!--android:fragment="com.ssn.eps.ssn.activities.SettingsActivity$DataSyncPreferenceFragment"-->
-        <!--android:title="@string/pref_header_data_sync" android:icon="@drawable/ic_sync_black_24dp" />-->
-
 </preference-headers>
