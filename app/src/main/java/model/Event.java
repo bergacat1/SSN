@@ -18,15 +18,19 @@ public class Event implements Serializable{
     private int minPlayers;
     private int maxPlayers;
 
+    private Date eventDate;
     private Date creationDate;
     private Date limitDate;
 
     private State state;
+    private int price;
 
-    public Event(Sport sport, int minPlayers, int maxPlayers, Date creationDate, Date limitDate, State state) {
+    public Event(Sport sport, int minPlayers, int maxPlayers, int price, Date eventDate, Date creationDate, Date limitDate, State state) {
         this.sport = sport;
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
+        this.price = price;
+        this.eventDate = eventDate;
         this.creationDate = creationDate;
         this.limitDate = limitDate;
         this.state = state;
@@ -62,6 +66,22 @@ public class Event implements Serializable{
 
     public void setMaxPlayers(int maxPlayers) {
         this.maxPlayers = maxPlayers;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public Date getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(Date eventDate) {
+        this.eventDate = eventDate;
     }
 
     public Date getCreationDate() {
