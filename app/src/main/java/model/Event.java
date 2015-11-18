@@ -2,6 +2,7 @@ package model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by lluis on 1/11/15.
@@ -24,8 +25,11 @@ public class Event implements Serializable{
 
     private State state;
     private int price;
+    private String zone;
 
-    public Event(Sport sport, int minPlayers, int maxPlayers, int price, Date eventDate, Date creationDate, Date limitDate, State state) {
+    private List<User> players_list;
+
+    public Event(Sport sport, int minPlayers, int maxPlayers, int price, Date eventDate, Date creationDate, Date limitDate, State state, String zone) {
         this.sport = sport;
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
@@ -34,6 +38,7 @@ public class Event implements Serializable{
         this.creationDate = creationDate;
         this.limitDate = limitDate;
         this.state = state;
+        this.zone = zone;
     }
 
     public User_ getOwner() {
@@ -106,5 +111,21 @@ public class Event implements Serializable{
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    public void addPlayer(User user){
+        players_list.add(user);
+    }
+
+    public List<User> getPlayers_list(){
+        return players_list;
+    }
+
+    public String getZone() {
+        return zone;
+    }
+
+    public void setZone(String zone) {
+        this.zone = zone;
     }
 }
