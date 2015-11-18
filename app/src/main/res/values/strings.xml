@@ -78,6 +78,16 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+    <string name="join">Unirse</string>
+    <string name="view_details">Ver</string>
+    <string name="filters">Filtros</string>
+    <string name="pref_alias">Alias</string>
+    <string name="pref_new_event">Al crearse nuevo evento</string>
+    <string name="pref_new_event_managed_field" >En pista gestionada</string>
+    <string name="pref_new_event_unmanaged_field" >En pista no gestionada</string>
+    <string name="pref_new_event_member" >Al unirse un miembro a uno de mis eventos</string>
+    <string name="new_event" >Nuevo evento</string>
+    <string name="event_detail" >Ver</string>
 
 
     <!-- New Event Wizard Activity -->

@@ -18,11 +18,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ssn.eps.ssn.R;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+//import lists.EventItemAdapter;
+import model.Event;
+import model.Sport;
+
+public class MainActivity extends AppCompatActivity implements FragmentsCommunicationInterface{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -82,15 +91,29 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        Intent intent = null;
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
+            intent = new Intent(this, SettingsActivity.class);
+        } else if(id == R.id.event_detail) {
+            intent = new Intent(this, SettingsActivity.class);
+        } else if(id == R.id.new_event) {
+            intent = new Intent(this, SettingsActivity.class);
         }
+        startActivity(intent);
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public List<Event> getEvents() {
+        Sport sport = new Sport(0, "Futbol");
+        List<Event> events = new ArrayList<>();
+        events.add(new Event(sport, 12, 22, 10, new Date(), new Date(), new Date(), Event.State.FILLING, "Lleida"));
+        events.add(new Event(sport, 12, 22, 10, new Date(), new Date(), new Date(), Event.State.FILLING, "Lleida"));
+        events.add(new Event(sport, 12, 22, 10, new Date(), new Date(), new Date(), Event.State.FILLING, "Lleida"));
+        events.add(new Event(sport, 12, 22, 10, new Date(), new Date(), new Date(), Event.State.FILLING, "Lleida"));
+        return events;
     }
 
 
@@ -99,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
+        private int activePage = -1;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -108,7 +132,11 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            switch (position){
+                case 0:
+                    return EventsFragment.getNewInstance();
+            }
+            return new Fragment();
         }
 
         @Override
@@ -119,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
+            this.activePage = position;
             switch (position) {
                 case 0:
                     return getString(R.string.eventos);
@@ -129,40 +158,9 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
-    }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
+        public int getActivePage(){
+            return this.activePage;
         }
     }
 }
