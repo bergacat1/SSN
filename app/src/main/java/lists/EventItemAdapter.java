@@ -79,7 +79,7 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
 
         // Set data into the view.
         TextView tvCompressed = (TextView) rowView.findViewById(R.id.event_compressed_description);
-        tvCompressed.setText(e.getSport().getDescription() + " ");
+        tvCompressed.setText(e.getSport().getDescription() + " " + e.getEventDate().toString() + " " + e.getZone());
 
         Event item = this.events.get(groupPosition);
 

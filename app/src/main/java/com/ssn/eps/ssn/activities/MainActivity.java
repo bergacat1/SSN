@@ -109,10 +109,10 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
     public List<Event> getEvents() {
         Sport sport = new Sport(0, "Futbol");
         List<Event> events = new ArrayList<>();
-        events.add(new Event(sport, 12, 22, new Date(), new Date(), Event.State.FILLING));
-        events.add(new Event(sport, 12, 22, new Date(), new Date(), Event.State.FILLING));
-        events.add(new Event(sport, 12, 22, new Date(), new Date(), Event.State.FILLING));
-        events.add(new Event(sport, 12, 22, new Date(), new Date(), Event.State.FILLING));
+        events.add(new Event(sport, 12, 22, 10, new Date(), new Date(), new Date(), Event.State.FILLING, "Lleida"));
+        events.add(new Event(sport, 12, 22, 10, new Date(), new Date(), new Date(), Event.State.FILLING, "Lleida"));
+        events.add(new Event(sport, 12, 22, 10, new Date(), new Date(), new Date(), Event.State.FILLING, "Lleida"));
+        events.add(new Event(sport, 12, 22, 10, new Date(), new Date(), new Date(), Event.State.FILLING, "Lleida"));
         return events;
     }
 
