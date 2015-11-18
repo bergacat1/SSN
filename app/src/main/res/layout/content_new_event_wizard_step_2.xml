@@ -4,7 +4,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
     android:layout_height="match_parent" android:id="@+id/new_event_wizard_step_2">
 
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/radio_button_zone"
+                android:layout_weight=".30"/>
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight=".70"></Spinner>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/radio_button_field"
+                android:layout_weight=".30"/>
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight=".70"></Spinner>
+        </LinearLayout>
+
+        <RadioButton
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:text="STEEP 2"/>
+        android:layout_height="match_parent"
+        android:text="@string/radio_button_map" />
+
+
+    </LinearLayout>
 </RelativeLayout>

@@ -22,15 +22,18 @@
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" android:layout_weight="1"
-                android:text="@string/features_button" android:id="@+id/features_button"/>
+                android:text="@string/features_button" android:id="@+id/features_button"
+                android:onClick="handleClick"/>
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" android:layout_weight="1"
-                android:text="@string/zone_button" android:id="@+id/zone_button"/>
+                android:text="@string/zone_button" android:id="@+id/zone_button"
+                android:onClick="handleClick"/>
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" android:layout_weight="1"
-                android:text="@string/comfirmation_button" android:id="@+id/summary_button"/>
+                android:text="@string/comfirmation_button" android:id="@+id/summary_button"
+                android:onClick="handleClick"/>
         </LinearLayout>
         <ScrollView
             android:layout_width="match_parent"

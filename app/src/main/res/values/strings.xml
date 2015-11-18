@@ -82,7 +82,7 @@
 
     <!-- New Event Wizard Activity -->
     <string name="title_activity_new_event_wizard">Nuevo Evento</string>
-    <string name="features_button">Características</string>
+    <string name="features_button">Caract.</string>
     <string name="zone_button">Pista</string>
     <string name="comfirmation_button">Resumen</string>
     
@@ -90,4 +90,10 @@
     <string name="num_players">Num jugadores:</string>
     <string name="max_price_player">Max pecio/jugador:</string>
     <string name="date_hour">Fecha &amp; hora:</string>
+
+    <string name="sport_spinner_prompt">Seleccione un deporte</string>
+
+    <string name="radio_button_zone">Zone</string>
+    <string name="radio_button_field">Field</string>
+    <string name="radio_button_map">Map</string>
 </resources>

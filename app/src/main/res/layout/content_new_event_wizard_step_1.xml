@@ -20,14 +20,16 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/num_players_edit_text"/>
+            android:id="@+id/num_players_edit_text"
+            android:inputType="number"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:text="@string/max_price_player"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/max_price_player_edit_text"/>
+            android:id="@+id/max_price_player_edit_text"
+            android:inputType="numberDecimal"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:text="@string/date_hour"/>
