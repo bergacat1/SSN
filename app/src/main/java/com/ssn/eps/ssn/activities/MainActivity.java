@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.ssn.eps.ssn.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -109,10 +110,10 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
     public List<Event> getEvents() {
         Sport sport = new Sport(0, "Futbol");
         List<Event> events = new ArrayList<>();
-        events.add(new Event(sport, 12, 22, 10, new Date(), new Date(), new Date(), Event.State.FILLING, "Lleida"));
-        events.add(new Event(sport, 12, 22, 10, new Date(), new Date(), new Date(), Event.State.FILLING, "Lleida"));
-        events.add(new Event(sport, 12, 22, 10, new Date(), new Date(), new Date(), Event.State.FILLING, "Lleida"));
-        events.add(new Event(sport, 12, 22, 10, new Date(), new Date(), new Date(), Event.State.FILLING, "Lleida"));
+        events.add(new Event(sport, 12, 22, 10, Calendar.getInstance(), Calendar.getInstance(), Calendar.getInstance(), Event.State.FILLING, "Lleida"));
+        events.add(new Event(sport, 12, 22, 10, Calendar.getInstance(), Calendar.getInstance(), Calendar.getInstance(), Event.State.FILLING, "Lleida"));
+        events.add(new Event(sport, 12, 22, 10, Calendar.getInstance(), Calendar.getInstance(), Calendar.getInstance(), Event.State.FILLING, "Lleida"));
+        events.add(new Event(sport, 12, 22, 10, Calendar.getInstance(), Calendar.getInstance(), Calendar.getInstance(), Event.State.FILLING, "Lleida"));
         return events;
     }
 
@@ -130,13 +131,7 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            switch (position){
-                case 0:
-                    return EventsFragment.getNewInstance();
-            }
-            return new Fragment();
+            return EventsFragment.getNewInstance(position);
         }
 
         @Override

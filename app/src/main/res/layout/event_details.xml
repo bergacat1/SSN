@@ -23,10 +23,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/event_expanded_maxprice"/>
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right">
+        android:layout_gravity="end"
+        android:orientation="horizontal">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,8 +37,13 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/leave"
+            android:gravity="center"
+            android:id="@+id/button_leave"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/view_details"
-            android:id="@+id/button_event_details"
-            android:layout_toRightOf="@+id/button_join"/>
-    </RelativeLayout>
+            android:id="@+id/button_event_details"/>
+    </LinearLayout>
 </LinearLayout>

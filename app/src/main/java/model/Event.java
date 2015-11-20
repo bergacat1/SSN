@@ -1,6 +1,8 @@
 package model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -19,9 +21,9 @@ public class Event implements Serializable{
     private int minPlayers;
     private int maxPlayers;
 
-    private Date eventDate;
-    private Date creationDate;
-    private Date limitDate;
+    private Calendar eventDate;
+    private Calendar creationDate;
+    private Calendar limitDate;
 
     private State state;
     private int price;
@@ -29,7 +31,7 @@ public class Event implements Serializable{
 
     private List<User> players_list;
 
-    public Event(Sport sport, int minPlayers, int maxPlayers, int price, Date eventDate, Date creationDate, Date limitDate, State state, String zone) {
+    public Event(Sport sport, int minPlayers, int maxPlayers, int price, Calendar eventDate, Calendar creationDate, Calendar limitDate, State state, String zone) {
         this.sport = sport;
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
@@ -39,6 +41,7 @@ public class Event implements Serializable{
         this.limitDate = limitDate;
         this.state = state;
         this.zone = zone;
+        this.players_list = new ArrayList<>();
     }
 
     public User_ getOwner() {
@@ -81,27 +84,27 @@ public class Event implements Serializable{
         this.price = price;
     }
 
-    public Date getEventDate() {
+    public Calendar getEventDate() {
         return eventDate;
     }
 
-    public void setEventDate(Date eventDate) {
+    public void setEventDate(Calendar eventDate) {
         this.eventDate = eventDate;
     }
 
-    public Date getCreationDate() {
+    public Calendar getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(Calendar creationDate) {
         this.creationDate = creationDate;
     }
 
-    public Date getLimitDate() {
+    public Calendar getLimitDate() {
         return limitDate;
     }
 
-    public void setLimitDate(Date limitDate) {
+    public void setLimitDate(Calendar limitDate) {
         this.limitDate = limitDate;
     }
 

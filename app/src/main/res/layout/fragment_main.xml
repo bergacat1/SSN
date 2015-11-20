@@ -11,12 +11,13 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:text="@string/filters"
-        style="?android:buttonBarButtonStyle"/>
+        android:id="@+id/button_filters"/>
 
     <ExpandableListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/eventsList"
-        android:layout_gravity="center_vertical" />
+        android:layout_gravity="center_vertical"
+        style="@android:style/Widget.DeviceDefault.Light.ExpandableListView"/>
 
 </LinearLayout>
