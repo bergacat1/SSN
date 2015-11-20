@@ -48,6 +48,8 @@
     <string name="comfirmation_button">Resumen</string>
     
     <string name="sport">Deporte:</string>
+    <string name="num_min_players">Min. jugadores:</string>
+    <string name="num_max_players">Max. jugadores:</string>
     <string name="num_players">Jugadores: </string>
     <string name="players"><b>Jugadores:</b> %1$d  Min: %2$d  Max: %3$d</string>
     <string name="max_price_player">Max pecio/jugador:</string>
@@ -57,7 +59,8 @@
 
     <string name="sport_spinner_prompt">Seleccione un deporte</string>
 
-    <string name="radio_button_zone">Zone</string>
-    <string name="radio_button_field">Field</string>
-    <string name="radio_button_map">Map</string>
+    <string name="radio_button_zone">Zona</string>
+    <string name="radio_button_field">Pista</string>
+    <string name="radio_button_map">Mapa</string>
+    <string name="marker_title">Àrea de busqueda</string>
 </resources>

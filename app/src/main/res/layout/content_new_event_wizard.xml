@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -8,41 +8,39 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_new_event_wizard"
-    tools:context="com.ssn.eps.ssn.activities.NewEventWizardActivity">
+    tools:context="com.ssn.eps.ssn.activities.NewEventWizardActivity" android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:weightSum="3" android:orientation="horizontal">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:text="@string/features_button" android:id="@+id/features_button"
+            android:onClick="handleClick"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:text="@string/zone_button" android:id="@+id/zone_button"
+            android:onClick="handleClick"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:text="@string/comfirmation_button" android:id="@+id/summary_button"
+            android:onClick="handleClick"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="3" android:orientation="horizontal">
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content" android:layout_weight="1"
-                android:text="@string/features_button" android:id="@+id/features_button"
-                android:onClick="handleClick"/>
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content" android:layout_weight="1"
-                android:text="@string/zone_button" android:id="@+id/zone_button"
-                android:onClick="handleClick"/>
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content" android:layout_weight="1"
-                android:text="@string/comfirmation_button" android:id="@+id/summary_button"
-                android:onClick="handleClick"/>
+            android:layout_height="match_parent" android:orientation="vertical">
+            <include layout="@layout/content_new_event_wizard_step_1" />
+            <include layout="@layout/content_new_event_wizard_step_3" />
         </LinearLayout>
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <FrameLayout
-                android:id="@+id/flContainer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </ScrollView>
-
-    </LinearLayout>
-</RelativeLayout>
+    </ScrollView>
+    <include layout="@layout/content_new_event_wizard_step_2" />
+</LinearLayout>
