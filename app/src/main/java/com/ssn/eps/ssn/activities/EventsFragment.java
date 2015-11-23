@@ -2,6 +2,7 @@ package com.ssn.eps.ssn.activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -63,9 +64,17 @@ public class EventsFragment extends Fragment{
                 lastExpandedPosition = groupPosition;
             }
         });
-
+        Button filters = (Button)rootView.findViewById(R.id.button_filters);
         if(tab != 0)
-            rootView.findViewById(R.id.button_filters).setVisibility(View.GONE);
+            filters.setVisibility(View.GONE);
+        else
+            filters.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getContext(), FiltersActivity.class);
+                    startActivityForResult(i, 1);
+                }
+            });
 
         return rootView;
     }

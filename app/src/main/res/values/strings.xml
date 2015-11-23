@@ -63,4 +63,7 @@
     <string name="radio_button_field">Pista</string>
     <string name="radio_button_map">Mapa</string>
     <string name="marker_title">Àrea de busqueda</string>
+    <string name="title_activity_filters">FiltersActivity</string>
+    <string name="date_from">Fecha desde: </string>
+    <string name="date_to">Fecha hasta: </string>
 </resources>
