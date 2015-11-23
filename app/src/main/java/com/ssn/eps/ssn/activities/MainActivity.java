@@ -71,8 +71,11 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                  //      .setAction("Action", null).show();
+                Intent intent = new Intent();
+                intent = new Intent(MainActivity.this, NewEventWizardActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -99,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
         } else if(id == R.id.event_detail) {
             intent = new Intent(this, SettingsActivity.class);
         } else if(id == R.id.new_event) {
-            intent = new Intent(this, SettingsActivity.class);
+            intent = new Intent(this, NewEventWizardActivity.class);
         }
         startActivity(intent);
 

@@ -63,6 +63,11 @@
     <string name="radio_button_field">Pista</string>
     <string name="radio_button_map">Mapa</string>
     <string name="marker_title">Àrea de busqueda</string>
+
+    <string name="crear">Crear</string>
+    <string name="ok">Ok</string>
+    <string name="error_validate_event">Error en la creación del evento: Compruebe que los parámetros son correctos</string>
+    <string name="ok_creation_event">El evento se ha creado satisfactoriamente</string>
     <string name="title_activity_filters">FiltersActivity</string>
     <string name="date_from">Fecha desde: </string>
     <string name="date_to">Fecha hasta: </string>

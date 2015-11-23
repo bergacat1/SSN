@@ -1,5 +1,6 @@
 package com.ssn.eps.ssn.activities;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
@@ -31,6 +32,7 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -44,7 +46,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.ssn.eps.ssn.R;
+import com.ssn.eps.ssn.fragments.MessageDialogFragment;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,9 +56,10 @@ import java.util.List;
 
 
 import General.Globals;
+import model.Event;
 
 
-public class NewEventWizardActivity extends AppCompatActivity implements OnMarkerDragListener {
+public class NewEventWizardActivity extends AppCompatActivity implements OnMarkerDragListener{
 
     private RelativeLayout r1;
     private RelativeLayout r2;
@@ -63,6 +68,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
     private Button featuresButton;
     private Button fieldButton;
     private Button summaryButton;
+    private Button createButton;
 
     //private FrameLayout flContainer;
     //private LayoutInflater layoutInflater;
@@ -89,6 +95,16 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
     private MapView mapView;
     private Circle circle;
     private Marker marker;
+
+    private TextView TVSport;
+    private TextView TVMinPlayers;
+    private TextView TVMaxPlayers;
+    private TextView TVMaxPricePlayer;
+    private TextView TVDateHour;
+    private TextView TVField;
+    private TextView TVFieldTitle;
+
+    private Event event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,16 +150,29 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                 r1.setVisibility(View.VISIBLE);
                 r2.setVisibility(View.GONE);
                 r3.setVisibility(View.GONE);
+                createButton.setVisibility(View.GONE);
+                /*featuresButton.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                fieldButton.setBackgroundResource(android.R.drawable.btn_default);
+                summaryButton.setBackgroundResource(android.R.drawable.btn_default_small);*/
                 break;
             case (R.id.zone_button):
                 r1.setVisibility(View.GONE);
                 r2.setVisibility(View.VISIBLE);
                 r3.setVisibility(View.GONE);
+                createButton.setVisibility(View.GONE);
+                /*featuresButton.setBackgroundResource(android.R.drawable.btn_default_small);
+                fieldButton.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                summaryButton.setBackgroundResource(android.R.drawable.btn_default_small);*/
                 break;
             case (R.id.summary_button):
+                buildSummary();
                 r1.setVisibility(View.GONE);
                 r2.setVisibility(View.GONE);
                 r3.setVisibility(View.VISIBLE);
+                createButton.setVisibility(View.VISIBLE);
+                /*featuresButton.setBackgroundResource(android.R.drawable.btn_default_small);
+                fieldButton.setBackgroundResource(android.R.drawable.btn_default_small);
+                summaryButton.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));*/
                 break;
             case (R.id.radio_button_zone):
                 zoneRadioButton.setChecked(true);
@@ -152,6 +181,8 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                 zoneSpinner.setEnabled(true);
                 fieldSpinner.setEnabled(false);
                 seekBar.setEnabled(false);
+                mMap.setMyLocationEnabled(false);
+                mMap.getUiSettings().setAllGesturesEnabled(false);
                 break;
             case (R.id.radio_button_field):
                 zoneRadioButton.setChecked(false);
@@ -160,6 +191,8 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                 zoneSpinner.setEnabled(false);
                 fieldSpinner.setEnabled(true);
                 seekBar.setEnabled(false);
+                mMap.setMyLocationEnabled(false);
+                mMap.getUiSettings().setAllGesturesEnabled(false);
                 break;
             case (R.id.radio_button_map):
                 zoneRadioButton.setChecked(false);
@@ -168,6 +201,8 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                 zoneSpinner.setEnabled(false);
                 fieldSpinner.setEnabled(false);
                 seekBar.setEnabled(true);
+                mMap.setMyLocationEnabled(true);
+                mMap.getUiSettings().setAllGesturesEnabled(true);
                 break;
             default:
                 break;
@@ -179,6 +214,8 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         featuresButton = (Button) findViewById(R.id.features_button);
         fieldButton = (Button) findViewById(R.id.zone_button);
         summaryButton = (Button) findViewById(R.id.summary_button);
+        createButton = (Button) findViewById(R.id.new_event_create_button);
+        createButton.setVisibility(View.GONE);
         r1 = (RelativeLayout) findViewById(R.id.new_event_wizard_step_1);
         r2 = (RelativeLayout) findViewById(R.id.new_event_wizard_step_2);
         r3 = (RelativeLayout) findViewById(R.id.new_event_wizard_step_3);
@@ -215,7 +252,6 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         zoneSpinner.setAdapter(adapter);
 
         fieldSpinner = (Spinner)findViewById(R.id.field_spinner);
-        //http://stackoverflow.com/questions/867518/how-to-make-an-android-spinner-with-initial-text-select-one
         adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, fieldsList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         fieldSpinner.setAdapter(adapter);
@@ -245,7 +281,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         mMap = mapView.getMap();
-        //mMap.getUiSettings().setAllGesturesEnabled(false);
+        mMap.getUiSettings().setAllGesturesEnabled(false);
         MapsInitializer.initialize(this);
         mapView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -255,6 +291,13 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         });
         initializeMap();
 
+        TVSport = (TextView) findViewById(R.id.TV_sport);
+        TVMinPlayers = (TextView) findViewById(R.id.TV_num_min_players);
+        TVMaxPlayers = (TextView) findViewById(R.id.TV_num_max_players);
+        TVMaxPricePlayer = (TextView) findViewById(R.id.TV_max_price_player);
+        TVDateHour = (TextView) findViewById(R.id.TV_date_hour);
+        TVField = (TextView) findViewById(R.id.TV_field);
+        TVFieldTitle = (TextView) findViewById(R.id.TV_field_title);
     }
 
     private void initializeMap() {
@@ -262,7 +305,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         if (mMap != null) {
             mMap.setOnMarkerDragListener(this);
             // Enable MyLocation Layer of Google Map
-            mMap.setMyLocationEnabled(true);
+            //mMap.setMyLocationEnabled(true);
 
             // set map type
             //String myListPreference = myPreference.getString("map_type_list", "1");
@@ -278,26 +321,29 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
                 @Override
                 public void onMapLongClick(LatLng latLng) {
-                    //mMap.clear();
+
+
+                }
+            });
+            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng latLng) {
                     LatLng pos = new LatLng(latLng.latitude, latLng.longitude);
                     if(marker == null){
                         marker = mMap.addMarker(new MarkerOptions()
                                         .position(pos)
                                         .title(getString(R.string.marker_title))
                                         .draggable(true)
-
                         );
                     }else{
                         marker.setPosition(pos);
                     }
-
-
                     // Instantiates a new CircleOptions object and defines the center and radius
                     // Get back the mutable Circle
                     if(circle == null){
                         circle = mMap.addCircle(new CircleOptions()
                                         .center(pos)
-                                        .radius(1000)
+                                        .radius(250)
                                         .strokeWidth(2)
                                         .strokeColor(Color.BLUE)
                                         .fillColor(Color.argb(140,36,4,218))
@@ -305,7 +351,6 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                     }else{
                         circle.setCenter(latLng);
                     }
-
                 }
             });
 
@@ -321,6 +366,68 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             }*/
 
         }
+    }
+
+    private void buildSummary(){
+
+        TVSport.setText(sportsList.get(sportsSpinner.getSelectedItemPosition()));
+        TVMinPlayers.setText(numMinPlayersEditText.getText());
+        TVMaxPlayers.setText(numMaxPlayersEditText.getText());
+        TVMaxPricePlayer.setText(maxPricePlayerEditText.getText());
+        TVDateHour.setText(dateHourEditText.getText());
+
+        if(zoneRadioButton.isChecked()){
+            TVFieldTitle.setText(getString(R.string.radio_button_zone)+":");
+            TVField.setText(zonesList.get(zoneSpinner.getSelectedItemPosition()));
+        }else if(fieldRadioButton.isChecked()){
+            TVFieldTitle.setText(getString(R.string.radio_button_field)+":");
+            TVField.setText(fieldsList.get(fieldSpinner.getSelectedItemPosition()));
+        }else{
+            TVFieldTitle.setText(getString(R.string.radio_button_map)+":");
+            if(marker != null && circle != null)
+                TVField.setText("  lat: " + new DecimalFormat("#0.00").format(marker.getPosition().latitude)
+                    + "º long: " + new DecimalFormat("#0.00").format(marker.getPosition().longitude)
+                    + "º R: " + circle.getRadius()/1000 + "Km");
+        }
+
+    }
+
+    public void createEvent(View v){
+        MessageDialogFragment dialog = new MessageDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("title",getString(R.string.new_event));
+        if(!validate()){
+            bundle.putSerializable("message",getString(R.string.error_validate_event));
+            dialog.setArguments(bundle);
+            dialog.show(getSupportFragmentManager(),"error_message_new_event");
+            return;
+        }
+
+        /*event = new Event(sportsList.get(sportsSpinner.getSelectedItemPosition())
+                , numMinPlayersEditText.getText()
+                , numMaxPlayersEditText.getText()
+                , maxPricePlayerEditText.getText()
+                , );*/
+
+        bundle.putSerializable("message", getString(R.string.ok_creation_event));
+        bundle.putBoolean("finish",true);
+        dialog.setArguments(bundle);
+        dialog.show(getSupportFragmentManager(),"ok_message_new_event");
+    }
+
+    private boolean validate(){
+
+        if(sportsSpinner.getSelectedItemPosition() < 0) return false;
+        if(numMinPlayersEditText.getText() == null || numMinPlayersEditText.getText().toString().isEmpty() || !isNumeric(numMinPlayersEditText.getText().toString())) return false;
+        if(numMaxPlayersEditText.getText() == null || numMaxPlayersEditText.getText().toString().isEmpty() || !isNumeric(numMaxPlayersEditText.getText().toString())) return false;
+        if(Integer.parseInt(numMaxPlayersEditText.getText().toString()) < Integer.parseInt(numMinPlayersEditText.getText().toString())) return false;
+        if(maxPricePlayerEditText.getText() == null || maxPricePlayerEditText.getText().toString().isEmpty() || !isNumeric(maxPricePlayerEditText.getText().toString())) return false;
+        if(dateHourEditText.getText() == null || dateHourEditText.getText().toString().isEmpty()) return false;
+        if(zoneRadioButton.isChecked() && zoneSpinner.getSelectedItemPosition() < 0) return false;
+        if(fieldRadioButton.isChecked() && fieldSpinner.getSelectedItemPosition() < 0) return false;
+        if(mapRadioButton.isChecked() && (marker == null || circle == null)) return false;
+
+        return true;
     }
 
     public void setDateEditText(Calendar calendar){
@@ -350,6 +457,19 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
     public void onMarkerDragEnd(Marker marker) {
         circle.setCenter(marker.getPosition());
         //circle.setVisible(true);
+    }
+
+    public boolean isNumeric(String str)
+    {
+        try
+        {
+            double d = Double.parseDouble(str);
+        }
+        catch(NumberFormatException nfe)
+        {
+            return false;
+        }
+        return true;
     }
 
     private static class TimePickerFragment extends DialogFragment

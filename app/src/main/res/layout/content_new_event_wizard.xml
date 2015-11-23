@@ -43,4 +43,18 @@
         </LinearLayout>
     </ScrollView>
     <include layout="@layout/content_new_event_wizard_step_2" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="right|bottom"
+        android:orientation="vertical">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/crear"
+            android:id="@+id/new_event_create_button"
+            android:layout_gravity="right|center"
+            android:onClick="createEvent"/>
+    </LinearLayout>
 </LinearLayout>
