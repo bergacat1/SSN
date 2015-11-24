@@ -21,6 +21,7 @@
     <string name="pref_header_notifications">Notificacions</string>
 
     <string name="join">Unir-se</string>
+    <string name="join_confirmation">Estàs segur que vols unir-te a l\'event?</string>
     <string name="view_details">Veure</string>
     <string name="filters">Filtres</string>
     <string name="pref_alias">Àlies</string>
@@ -31,6 +32,7 @@
     <string name="new_event" >Nou event</string>
     <string name="event_detail" >Veure</string>
     <string name="leave">Sortir</string>
+    <string name="leave_confirmation">Estàs segur que vols sortir de l\'event?</string>
 
 
     <!-- New Event Wizard Activity -->
@@ -58,7 +60,7 @@
     <string name="crear">Crear</string>
     <string name="ok">Ok</string>
     <string name="error_validate_event">Error en la creació del event: Comprovi que els paràmetres són correctes</string>
-    <string name="ok_creation_event">L'evento s'ha creat satisfactoriament</string>
+    <string name="ok_creation_event">L\'event s\'ha creat satisfactoriament</string>
     <string name="title_activity_filters">FiltersActivity</string>
     <string name="date_from">Data desde: </string>
     <string name="date_to">Data fins: </string>

@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/eventsList"
         android:layout_gravity="center_vertical"
-        style="@android:style/Widget.DeviceDefault.Light.ExpandableListView"/>
+        android:groupIndicator="@null"
+        style="@android:style/Widget.ExpandableListView"/>
 
 </LinearLayout>

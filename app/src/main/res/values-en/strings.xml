@@ -1,8 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Sport Social Network</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Login</string>
+    <string name="action_settings">Settings</string>
+
     <string name="eventos">Events</string>
     <string name="mis_eventos">My Events</string>
     <string name="historico">History</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="join">Join</string>
+    <string name="join_confirmation">You really want to join the event?</string>
+    <string name="view_details">Details</string>
+    <string name="filters">Filters</string>
+    <string name="pref_alias">Alias</string>
+    <string name="pref_new_event">On new event created</string>
+    <string name="pref_new_event_managed_field" >In managed field</string>
+    <string name="pref_new_event_unmanaged_field" >In unmanaged field</string>
+    <string name="pref_new_event_member" >When a player joins one of my events</string>
+    <string name="new_event" >New event</string>
+    <string name="event_detail" >Details</string>
+    <string name="leave">Leave</string>
+    <string name="leave_confirmation">You really want to leave the event?</string>
+
 
     <!-- New Event Wizard Activity -->
     <string name="title_activity_new_event_wizard">New Event</string>
@@ -11,7 +42,27 @@
     <string name="comfirmation_button">Summary</string>
 
     <string name="sport">Sport:</string>
-    <string name="num_players">Num players:</string>
+    <string name="num_min_players">Min. players:</string>
+    <string name="num_max_players">Max. players:</string>
+    <string name="num_players">Players: </string>
+    <string name="players"><b>Players:</b> %1$d  Min: %2$d  Max: %3$d</string>
     <string name="max_price_player">Max price/player:</string>
-    <string name="date_hour">Date &amp; hour:</string>
+    <string name="date_hour">Date &amp; time:</string>
+    <string name="bar">/</string>
+    <string name="place">Place:</string>
+
+    <string name="sport_spinner_prompt">Select a sport</string>
+
+    <string name="radio_button_zone">Zone</string>
+    <string name="radio_button_field">Field</string>
+    <string name="radio_button_map">Map</string>
+    <string name="marker_title">Search area</string>
+
+    <string name="crear">Create</string>
+    <string name="ok">Ok</string>
+    <string name="error_validate_event">Error creating the event: Check the correctness of your parameters</string>
+    <string name="ok_creation_event">Event created successfully</string>
+    <string name="title_activity_filters">Filters</string>
+    <string name="date_from">From date: </string>
+    <string name="date_to">To date: </string>
 </resources>

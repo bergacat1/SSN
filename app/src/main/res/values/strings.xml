@@ -1,25 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Sport Social Network</string>
     
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Contraseña (optional)</string>
+    <string name="prompt_password">Contraseña (opcional)</string>
     <string name="action_sign_in">Entrar</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
-    <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="action_settings">Configuració</string>
 
     <string name="eventos">Eventos</string>
     <string name="mis_eventos">Mis Eventos</string>
-    <string name="historico">Historico</string>
-    <string name="title_activity_settings">Settings</string>
+    <string name="historico">Histórico</string>
+    <string name="title_activity_settings">Configuración</string>
 
     <!-- Strings related to Settings -->
 
@@ -29,6 +21,7 @@
     <string name="pref_header_notifications">Notificacions</string>
 
     <string name="join">Unirse</string>
+    <string name="join_confirmation">Estás seguro que quieres unirte al evento?</string>
     <string name="view_details">Ver</string>
     <string name="filters">Filtros</string>
     <string name="pref_alias">Alias</string>
@@ -39,6 +32,7 @@
     <string name="new_event" >Nuevo evento</string>
     <string name="event_detail" >Ver</string>
     <string name="leave">Salir</string>
+    <string name="leave_confirmation">Estás seguro que quieres salir del evento?</string>
 
 
     <!-- New Event Wizard Activity -->
@@ -52,7 +46,7 @@
     <string name="num_max_players">Max. jugadores:</string>
     <string name="num_players">Jugadores: </string>
     <string name="players"><b>Jugadores:</b> %1$d  Min: %2$d  Max: %3$d</string>
-    <string name="max_price_player">Max pecio/jugador:</string>
+    <string name="max_price_player">Max precio/jugador:</string>
     <string name="date_hour">Fecha &amp; hora:</string>
     <string name="bar">/</string>
     <string name="place">Lugar:</string>
@@ -68,7 +62,7 @@
     <string name="ok">Ok</string>
     <string name="error_validate_event">Error en la creación del evento: Compruebe que los parámetros son correctos</string>
     <string name="ok_creation_event">El evento se ha creado satisfactoriamente</string>
-    <string name="title_activity_filters">FiltersActivity</string>
+    <string name="title_activity_filters">Filtros</string>
     <string name="date_from">Fecha desde: </string>
     <string name="date_to">Fecha hasta: </string>
 </resources>
