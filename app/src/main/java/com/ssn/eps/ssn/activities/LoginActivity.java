@@ -6,16 +6,23 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.ssn.eps.ssn.R;
+
+import General.Globals;
 
 
 /**
@@ -49,6 +56,18 @@ public class LoginActivity extends Activity {
         mLoginFormView = findViewById(R.id.login_form);
     }
 
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        checkPlayServices();
+        /*if(MyDevice.getInstance().isOnline()){
+            startMainActivity();
+            finish();
+        }*/
+    }
+
     private Context getContext(){
         return this;
     }
@@ -62,13 +81,42 @@ public class LoginActivity extends Activity {
         if (mAuthTask != null) {
             return;
         }
+        boolean cancel = false;
 
-        showProgress(true);
-        mAuthTask = new UserLoginTask();
-        mAuthTask.execute((Void) null);
+        // Check if network is active
+        if(!checkNetwork()){
+            //showToast(getString(R.string.activateNetwork));
+            cancel = true;
 
+            startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), 0);
+        }
+
+        if(!cancel){
+            showProgress(true);
+            mAuthTask = new UserLoginTask();
+            mAuthTask.execute((Void) null);
+        }
+    }
+    public boolean checkNetwork(){
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
     }
 
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS){
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)){
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+                        Globals.PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            }else{
+                Log.i("--->", "Dispositivo no soportado.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
 
     /**
      * Shows the progress UI and hides the login form.
