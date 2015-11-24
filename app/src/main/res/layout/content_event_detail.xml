@@ -22,7 +22,7 @@
         android:layout_alignParentStart="true" />
 
     <TextView
-        android:layout_width="90sp"
+        android:layout_width="100dp"
         android:layout_height="40sp"
         android:id="@+id/tvSport_value"
         android:textSize="20dp"
@@ -34,7 +34,7 @@
         android:layout_toEndOf="@+id/tvSport" />
 
     <TextView
-        android:layout_width="150dp"
+        android:layout_width="135dp"
         android:layout_height="40dp"
         android:id="@+id/tvDateTime"
         android:text="@string/date_hour"
@@ -45,10 +45,10 @@
         android:layout_alignParentStart="true" />
 
     <TextView
-        android:layout_width="90dp"
+        android:layout_width="100dp"
         android:layout_height="40sp"
         android:id="@+id/tvDateTime_value"
-        android:textSize="20dp"
+        android:textSize="17dp"
         android:layout_marginLeft="10dp"
         android:layout_below="@+id/tvSport_value"
         android:layout_toRightOf="@+id/tvDateTime"
@@ -104,7 +104,7 @@
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="163dp"
+        android:layout_height="170dp"
         android:id="@+id/list_players"
         android:layout_gravity="bottom"
         android:layout_below="@+id/tvMax_price"

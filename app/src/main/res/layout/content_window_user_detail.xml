@@ -16,7 +16,6 @@
         android:text="@string/userName"
         android:textStyle="bold"
         android:textSize="20dp"
-        android:layout_marginTop="60dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/tv_userCity"
@@ -28,7 +27,6 @@
         android:id="@+id/tv_userName_value"
         android:textSize="20dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="60dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
@@ -83,7 +81,7 @@
         android:layout_alignEnd="@+id/tv_favSportUser_value" />
 
     <TextView
-        android:layout_width="150dp"
+        android:layout_width="170dp"
         android:layout_height="40dp"
         android:id="@+id/tv_favSportUser"
         android:text="@string/favSportUser"
@@ -122,7 +120,7 @@
         android:layout_width="280dp"
         android:layout_height="40dp"
         android:id="@+id/tv_emailUser_value"
-        android:textSize="15sp"
+        android:textSize="18sp"
         android:layout_alignTop="@+id/tv_emailUser"
         android:layout_alignRight="@+id/tv_favSportUser_value"
         android:layout_toEndOf="@+id/tv_emailUser" />

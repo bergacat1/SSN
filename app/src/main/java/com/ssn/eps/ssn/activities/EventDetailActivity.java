@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.usage.UsageEvents;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import com.ssn.eps.ssn.R;
+import com.ssn.eps.ssn.fragments.MessageDialogFragment;
 
 import java.util.Date;
 import java.util.List;
@@ -108,15 +111,27 @@ public class EventDetailActivity extends AppCompatActivity {
                 final Dialog dialog = new Dialog(EventDetailActivity.this);
                 dialog.setTitle(getString(R.string.user_info));
                 dialog.setContentView(R.layout.content_window_user_detail);
+
                 report_button = (Button) dialog.findViewById(R.id.button_report);
-
-                dialog.setCancelable(true);
-
                 report_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
                     public void onClick(View v) {
-                        dialog.dismiss();
+                        new AlertDialog.Builder(v.getContext())
+                                .setTitle(getString(R.string.confirmar_reporte))
+                                .setMessage(getString(R.string.confirmar_reporte_text))
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                })
+                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                })
+                                .show();
                     }
                 });
+
+                dialog.setCancelable(true);
 
                 TextView userName = (TextView) dialog.findViewById(R.id.tv_userName_value);
                 userName.setText(String.valueOf(user.getName()));

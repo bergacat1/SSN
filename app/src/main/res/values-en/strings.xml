@@ -65,5 +65,14 @@
     <string name="title_activity_filters">Filters</string>
     <string name="date_from">From date: </string>
     <string name="date_to">To date: </string>
-    <string name="user_info">Información del usuario</string>
+
+    <!-- Event detail -->
+    <string name="jugadores">Players</string>
+    <string name="userName">Name</string>
+    <string name="userCity">City</string>
+    <string name="userAge">Age</string>
+    <string name="favSportUser">Favorite sport</string>
+    <string name="emailUser">Email</string>
+    <string name="report">User report</string>
+    <string name="user_info">User\'s information</string>
 </resources>
