@@ -124,6 +124,10 @@ public class Event implements Serializable{
         return players_list;
     }
 
+    public User getPlayer(int i){
+        return players_list.get(i);
+    }
+
     public String getZone() {
         return zone;
     }

@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.CharacterPickerDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.ssn.eps.ssn.R;
+import com.ssn.eps.ssn.activities.EventDetailActivity;
 import com.ssn.eps.ssn.fragments.MessageDialogFragment;
 
 import java.text.SimpleDateFormat;
@@ -31,7 +34,7 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<Event> events;
     private int tab;
-    private Button butJoin, butLeave;
+    private Button butJoin, butLeave, butView;
 
     public EventItemAdapter(Context context, List<Event> events, int tab){
         this.context = context;
@@ -123,6 +126,15 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
         tvMaxPrice.setText(rowView.getResources().getText(R.string.max_price_player) + " " + e.getPrice());
         TextView tvZone = (TextView) rowView.findViewById(R.id.event_expanded_zone);
         tvZone.setText(rowView.getResources().getText(R.string.place) + " " + e.getZone());
+
+        butView = (Button) rowView.findViewById(R.id.button_event_details);
+        butView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context,EventDetailActivity.class);
+                context.startActivity(i);
+            }
+        });
 
         butJoin = (Button) rowView.findViewById(R.id.button_join);
         butJoin.setOnClickListener(new View.OnClickListener() {

@@ -7,7 +7,7 @@
     <string name="prompt_password">Contraseña (opcional)</string>
     <string name="action_sign_in">Entrar</string>
     <string name="action_settings">Configuració</string>
-
+    <string name="event">Evento</string>
     <string name="eventos">Eventos</string>
     <string name="mis_eventos">Mis Eventos</string>
     <string name="historico">Histórico</string>
@@ -65,4 +65,14 @@
     <string name="title_activity_filters">Filtros</string>
     <string name="date_from">Fecha desde: </string>
     <string name="date_to">Fecha hasta: </string>
+
+    <!-- Event detail -->
+    <string name="jugadores">Jugadores</string>
+    <string name="userName">Nombre</string>
+    <string name="userCity">Ciudad</string>
+    <string name="userAge">Edad</string>
+    <string name="favSportUser">Deporte favorito</string>
+    <string name="emailUser">Email</string>
+    <string name="report">Reportar usuario</string>
+    <string name="user_info">Información del usuario</string>
 </resources>

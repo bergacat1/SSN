@@ -69,6 +69,11 @@
             android:label="@string/filters"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+        <activity
+            android:name=".activities.EventDetailActivity"
+            android:label="@string/event"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
     </application>
     <uses-feature
         android:glEsVersion="0x00020000"
