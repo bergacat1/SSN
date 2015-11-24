@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.ssn.eps.ssn.activities.MainActivity">
     <item android:id="@+id/new_event" android:title="@string/new_event"
-        android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/event_detail" android:title="@string/event_detail"
-        android:orderInCategory="100" app:showAsAction="never" />
+        android:orderInCategory="100" app:showAsAction="never" android:icon="@drawable/ic_action_new"/>
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
+        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/logout" android:title="@string/leave"
         android:orderInCategory="100" app:showAsAction="never" />
 </menu>

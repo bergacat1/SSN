@@ -1,6 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Sport Social Network</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Contrasenya (opcional)</string>
+    <string name="action_sign_in">Entrar</string>
+    <string name="action_settings">Configuració</string>
+
     <string name="eventos">Events</string>
-    <string name="mis_eventos">Els Meus Events</string>
+    <string name="mis_eventos">Els meus events</string>
     <string name="historico">Històric</string>
+    <string name="title_activity_settings">Configuració</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notificacions</string>
+
+    <string name="join">Unir-se</string>
+    <string name="view_details">Veure</string>
+    <string name="filters">Filtres</string>
+    <string name="pref_alias">Àlies</string>
+    <string name="pref_new_event">Al crear-se nou event</string>
+    <string name="pref_new_event_managed_field" >En pista gestionada</string>
+    <string name="pref_new_event_unmanaged_field" >En pista no gestionada</string>
+    <string name="pref_new_event_member" >Al unir-se un membre a un dels meus events</string>
+    <string name="new_event" >Nou event</string>
+    <string name="event_detail" >Veure</string>
+    <string name="leave">Sortir</string>
+
+
+    <!-- New Event Wizard Activity -->
+    <string name="title_activity_new_event_wizard">Nou Event</string>
+    <string name="features_button">Caract.</string>
+    <string name="zone_button">Pista</string>
+    <string name="comfirmation_button">Resum</string>
+
+    <string name="sport">Esport:</string>
+    <string name="num_min_players">Min. jugadors:</string>
+    <string name="num_max_players">Max. jugadors:</string>
+    <string name="num_players">Jugadors: </string>
+    <string name="players"><b>Jugadors:</b> %1$d  Min: %2$d  Max: %3$d</string>
+    <string name="max_price_player">Max preu/jugador:</string>
+    <string name="date_hour">Data &amp; hora:</string>
+    <string name="place">Lloc:</string>
+
+    <string name="sport_spinner_prompt">Seleccioni un esport</string>
+
+    <string name="radio_button_zone">Zona</string>
+    <string name="radio_button_field">Pista</string>
+    <string name="radio_button_map">Mapa</string>
+    <string name="marker_title">Àrea de busqueda</string>
+
+    <string name="crear">Crear</string>
+    <string name="ok">Ok</string>
+    <string name="error_validate_event">Error en la creació del event: Comprovi que els paràmetres són correctes</string>
+    <string name="ok_creation_event">L'evento s'ha creat satisfactoriament</string>
+    <string name="title_activity_filters">FiltersActivity</string>
+    <string name="date_from">Data desde: </string>
+    <string name="date_to">Data fins: </string>
 </resources>

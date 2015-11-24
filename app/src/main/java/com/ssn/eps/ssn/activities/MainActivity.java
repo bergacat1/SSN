@@ -94,18 +94,20 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
         Intent intent = null;
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            intent = new Intent(this, SettingsActivity.class);
-        } else if(id == R.id.event_detail) {
-            intent = new Intent(this, SettingsActivity.class);
-        } else if(id == R.id.new_event) {
-            intent = new Intent(this, NewEventWizardActivity.class);
-        }
-        startActivity(intent);
+        switch (item.getItemId()){
+            case R.id.action_settings:
+                intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.logout:
 
+                break;
+            case R.id.new_event:
+                intent = new Intent(this, NewEventWizardActivity.class);
+                startActivity(intent);
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
