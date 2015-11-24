@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -85,7 +86,7 @@ public class LoginActivity extends Activity {
 
         // Check if network is active
         if(!checkNetwork()){
-            //showToast(getString(R.string.activateNetwork));
+            showToast(getString(R.string.activateNetwork));
             cancel = true;
 
             startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), 0);
@@ -199,6 +200,10 @@ public class LoginActivity extends Activity {
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    private void showToast(CharSequence text){
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
     }
 }
 

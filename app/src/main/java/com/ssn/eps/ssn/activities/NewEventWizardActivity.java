@@ -328,6 +328,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(LatLng latLng) {
+                    if(!mapRadioButton.isChecked())return;
                     LatLng pos = new LatLng(latLng.latitude, latLng.longitude);
                     if(marker == null){
                         marker = mMap.addMarker(new MarkerOptions()
