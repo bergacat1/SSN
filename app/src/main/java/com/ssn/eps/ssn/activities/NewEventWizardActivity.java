@@ -131,6 +131,8 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
 
         initializeViews(savedInstanceState);
 
+        showInitialMessage();
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
@@ -429,6 +431,15 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         if(mapRadioButton.isChecked() && (marker == null || circle == null)) return false;
 
         return true;
+    }
+
+    private void showInitialMessage(){
+        MessageDialogFragment dialog = new MessageDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("title",getString(R.string.new_event));
+        bundle.putSerializable("message",getString(R.string.new_event));
+        dialog.setArguments(bundle);
+        dialog.show(getSupportFragmentManager(), "initial_message_new_event");
     }
 
     public void setDateEditText(Calendar calendar){
