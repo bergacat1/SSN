@@ -81,4 +81,5 @@
 
     <string name="confirmar_reporte">Reportar Usuario</string>
     <string name="confirmar_reporte_text">Está seguro que quiere reportar el usuario?</string>
+    <string name="close">Cerrar</string>
 </resources>

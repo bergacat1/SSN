@@ -9,138 +9,121 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.ssn.eps.ssn.activities.EventDetailActivity">
 
-    <TextView
-        android:layout_width="50dp"
-        android:layout_height="40dp"
-        android:id="@+id/tv_userName"
-        android:text="@string/userName"
-        android:textStyle="bold"
-        android:textSize="20dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/tv_userCity"
-        android:layout_alignEnd="@+id/tv_userCity" />
-
-    <TextView
-        android:layout_width="90sp"
-        android:layout_height="40sp"
-        android:id="@+id/tv_userName_value"
-        android:textSize="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@+id/tv_userName"
-        android:layout_toEndOf="@+id/tv_userName" />
-
-    <TextView
-        android:layout_width="110dp"
-        android:layout_height="40dp"
-        android:id="@+id/tv_userCity"
-        android:text="@string/userCity"
-        android:textStyle="bold"
-        android:textSize="20dp"
-        android:layout_marginTop="12dp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tv_userName"
-        android:layout_alignParentLeft="true" />
-
-    <TextView
-        android:layout_width="90dp"
-        android:layout_height="40dp"
-        android:id="@+id/tv_userCity_value"
-        android:textSize="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_above="@+id/tv_userAge"
-        android:layout_alignRight="@+id/tv_userAge_value"
-        android:layout_alignEnd="@+id/tv_userAge_value"
-        android:layout_toRightOf="@+id/tv_userCity"
-        android:layout_toEndOf="@+id/tv_userCity" />
-
-    <TextView
-        android:layout_width="110dp"
-        android:layout_height="40dp"
-        android:id="@+id/tv_userAge"
-        android:text="@string/userAge"
-        android:textStyle="bold"
-        android:textSize="20dp"
-        android:layout_marginTop="12dp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tv_userCity"
-        android:layout_alignParentLeft="true" />
-
-    <TextView
-        android:layout_width="90dp"
-        android:layout_height="40dp"
-        android:id="@+id/tv_userAge_value"
-        android:textSize="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_below="@+id/tv_userCity"
-        android:layout_toRightOf="@+id/tv_userAge"
-        android:layout_alignRight="@+id/tv_favSportUser_value"
-        android:layout_alignEnd="@+id/tv_favSportUser_value" />
-
-    <TextView
-        android:layout_width="170dp"
-        android:layout_height="40dp"
-        android:id="@+id/tv_favSportUser"
-        android:text="@string/favSportUser"
-        android:textStyle="bold"
-        android:textSize="20dp"
-        android:layout_marginTop="12dp"
-        android:layout_below="@+id/tv_userAge"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="80sp"
-        android:layout_height="40sp"
-        android:id="@+id/tv_favSportUser_value"
-        android:textSize="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_alignTop="@+id/tv_favSportUser"
-        android:layout_alignRight="@+id/tv_userName_value"
-        android:layout_alignEnd="@+id/tv_userName_value"
-        android:layout_toRightOf="@+id/tv_favSportUser"
-        android:layout_toEndOf="@+id/tv_favSportUser" />
-
-    <TextView
-        android:layout_width="90dp"
-        android:layout_height="40dp"
-        android:id="@+id/tv_emailUser"
-        android:text="@string/emailUser"
-        android:textStyle="bold"
-        android:textSize="20dp"
-        android:layout_marginTop="12dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tv_favSportUser" />
-
-    <TextView
-        android:layout_width="280dp"
-        android:layout_height="40dp"
-        android:id="@+id/tv_emailUser_value"
-        android:textSize="18sp"
-        android:layout_alignTop="@+id/tv_emailUser"
-        android:layout_alignRight="@+id/tv_favSportUser_value"
-        android:layout_toEndOf="@+id/tv_emailUser" />
-
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/report"
-        android:id="@+id/button_report"
-        android:layout_below="@+id/tv_emailUser"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_userName"
+            android:text="@string/userName"
+            android:textStyle="bold"
+            android:layout_weight=".4"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_userName_value"
+            android:layout_weight=".6"/>
+    </LinearLayout>
 
-    <!--<ImageView
-        android:layout_width="25dp"
-        android:layout_height="30dp"
-        android:id="@+id/imageView"
-        android:src="@drawable/redcross_icon"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/tv_userName_value"
-        android:layout_alignEnd="@+id/tv_userName_value" />-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_userCity"
+            android:text="@string/userCity"
+            android:textStyle="bold"
+            android:layout_weight=".4"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_userCity_value"
+            android:layout_weight=".6"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_userAge"
+            android:text="@string/userAge"
+            android:textStyle="bold"
+            android:layout_weight=".4"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_userAge_value"
+            android:layout_weight=".6"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_favSportUser"
+            android:text="@string/favSportUser"
+            android:textStyle="bold"
+            android:layout_weight=".4"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_favSportUser_value"
+            android:layout_weight=".6"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_emailUser"
+            android:text="@string/emailUser"
+            android:textStyle="bold"
+            android:layout_weight=".4"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_emailUser_value"
+            android:layout_weight=".6"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report"
+            android:id="@+id/button_report"
+            android:layout_marginTop="20dp"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/close"
+            android:id="@+id/button_close"
+            android:layout_marginTop="20dp"
+            android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+
+</LinearLayout>
 
 </RelativeLayout>

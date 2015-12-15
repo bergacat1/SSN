@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.usage.UsageEvents;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,21 +14,36 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.ssn.eps.ssn.R;
 import com.ssn.eps.ssn.fragments.MessageDialogFragment;
 
@@ -53,6 +69,13 @@ public class EventDetailActivity extends AppCompatActivity {
     TextView tv_maxprice;
     ListView listView_players;
     Button report_button;
+    Button close_button;
+
+    private SeekBar seekBar;
+    private GoogleMap mMap;
+    private MapView mapView;
+    private Circle circle;
+    private Marker marker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +84,8 @@ public class EventDetailActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
+
+        initializeViews(savedInstanceState);
 
         Calendar c = Calendar.getInstance();
 
@@ -77,10 +102,10 @@ public class EventDetailActivity extends AppCompatActivity {
         tv_maxprice = (TextView) findViewById(R.id.tvMaxprice_value);
         //listView_players = (ListView) findViewById(R.id.listPlayers);
 
-        event.addPlayer(new User("Guillem","Lleida",22,"Futbol","guillembarbosa@gmail.com"));
-        event.addPlayer(new User("Lluís","Benavent",28,"Petanca","lluis.eche@gmail.com"));
-        event.addPlayer(new User("Albert","Torrefarrera",22,"Padel","abergacat@gmail.com"));
-        event.addPlayer(new User("Eduardo", "Lleida", 32, "Baloncesto", "eduardooo@gmail.com"));
+        event.addPlayer(new User("Guillem","Barbosa","Lleida",22,"Futbol","guillembarbosa@gmail.com"));
+        event.addPlayer(new User("Lluís","Echeverria","Benavent",28,"Petanca","lluis.eche@gmail.com"));
+        event.addPlayer(new User("Albert","Berga","Torrefarrera",22,"Padel","abergacat@gmail.com"));
+        event.addPlayer(new User("Eduardo","Gutierrez","Lleida", 32, "Baloncesto", "eduardooo@gmail.com"));
 
         listPlayers = event.getPlayers_list();
 
@@ -100,7 +125,7 @@ public class EventDetailActivity extends AppCompatActivity {
         }
 
         ArrayAdapter <String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, values);
+                R.layout.event_list_item, R.id.event_compressed_description, values);
 
         listView.setAdapter(adapter);
 
@@ -111,6 +136,14 @@ public class EventDetailActivity extends AppCompatActivity {
                 final Dialog dialog = new Dialog(EventDetailActivity.this);
                 dialog.setTitle(getString(R.string.user_info));
                 dialog.setContentView(R.layout.content_window_user_detail);
+
+                close_button =  (Button) dialog.findViewById(R.id.button_close);
+                close_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
 
                 report_button = (Button) dialog.findViewById(R.id.button_report);
                 report_button.setOnClickListener(new View.OnClickListener() {
@@ -134,7 +167,7 @@ public class EventDetailActivity extends AppCompatActivity {
                 dialog.setCancelable(true);
 
                 TextView userName = (TextView) dialog.findViewById(R.id.tv_userName_value);
-                userName.setText(String.valueOf(user.getName()));
+                userName.setText(String.valueOf(user.getName())+" "+String.valueOf(user.getSurname()));
 
                 TextView userCity = (TextView) dialog.findViewById(R.id.tv_userCity_value);
                 userCity.setText(String.valueOf(user.getCity()));
@@ -152,6 +185,128 @@ public class EventDetailActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void initializeViews(Bundle savedInstanceState){
+
+        seekBar = (SeekBar) findViewById(R.id.seek_bar);
+        seekBar.setEnabled(false);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (progress == 0) progress = 1;
+                if (circle != null) circle.setRadius(progress * 1000 / 4);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        mapView = (MapView) findViewById(R.id.mapview);
+        mapView.onCreate(savedInstanceState);
+        mapView.onResume();
+        mMap = mapView.getMap();
+        mMap.getUiSettings().setAllGesturesEnabled(false);
+        MapsInitializer.initialize(this);
+        mapView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;//return mapRadioButton.isChecked();
+            }
+        });
+        initializeMap();
+
+    }
+
+    private void initializeMap() {
+        // Check if we were successful in obtaining the map.
+        if (mMap != null) {
+            mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                @Override
+                public void onMarkerDragStart(Marker marker) {
+
+                }
+
+                @Override
+                public void onMarkerDrag(Marker marker) {
+
+                }
+
+                @Override
+                public void onMarkerDragEnd(Marker marker) {
+
+                }
+            });
+            // Enable MyLocation Layer of Google Map
+            //mMap.setMyLocationEnabled(true);
+
+            // set map type
+            //String myListPreference = myPreference.getString("map_type_list", "1");
+            //mMap.setMapType(Integer.parseInt(myListPreference));
+
+            // Set 3D buildings
+            //boolean buildings = myPreference.getBoolean("buildings_map_checkbox",true);
+            //mMap.setBuildingsEnabled(buildings);
+
+            //Nos registramos para recibir actualizaciones de la posición
+            //locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locListener);
+
+            mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+                @Override
+                public void onMapLongClick(LatLng latLng) {
+
+
+                }
+            });
+            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng latLng) {
+                    if(false/*!mapRadioButton.isChecked()*/)return;
+                    LatLng pos = new LatLng(latLng.latitude, latLng.longitude);
+                    if(marker == null){
+                        marker = mMap.addMarker(new MarkerOptions()
+                                        .position(pos)
+                                        .title(getString(R.string.marker_title))
+                                        .draggable(true)
+                        );
+                    }else{
+                        marker.setPosition(pos);
+                    }
+                    // Instantiates a new CircleOptions object and defines the center and radius
+                    // Get back the mutable Circle
+                    if(circle == null){
+                        circle = mMap.addCircle(new CircleOptions()
+                                        .center(pos)
+                                        .radius(250)
+                                        .strokeWidth(2)
+                                        .strokeColor(Color.BLUE)
+                                        .fillColor(Color.argb(140,36,4,218))
+                        );
+                    }else{
+                        circle.setCenter(latLng);
+                    }
+                }
+            });
+
+            // Try center map on my device
+            /*Location myLoc = mMap.getMyLocation();
+            if(myLoc != null){
+                centerMapOnPosition(new LatLng(myLoc.getLatitude(),myLoc.getLongitude()));
+            }else{
+                LatLng myLatlon = getDeviceLocation();
+                if(myLatlon != null){
+                    centerMapOnPosition(myLatlon);
+                }
+            }*/
+
+        }
     }
 
 }

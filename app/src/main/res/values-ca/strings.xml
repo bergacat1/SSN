@@ -76,4 +76,7 @@
     <string name="emailUser">Correu</string>
     <string name="report">Reportar usuari</string>
     <string name="user_info">Informació de l\'usuari</string>
+
+    <string name="confirmar_reporte_text">Està segur que vol reportar l\'usuari?</string>
+    <string name="close">Tancar</string>
 </resources>

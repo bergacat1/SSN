@@ -56,4 +56,19 @@ public class Sport {
     public void setMaxPlayers(int maxPlayers) {
         this.maxPlayers = maxPlayers;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Sport sport = (Sport) o;
+
+        return id == sport.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
 }

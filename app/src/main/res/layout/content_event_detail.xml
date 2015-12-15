@@ -10,118 +10,134 @@
     tools:showIn="@layout/activity_event_detail"
     tools:context="com.ssn.eps.ssn.activities.EventDetailActivity">
 
-    <TextView
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:id="@+id/tvSport"
-        android:text="@string/sport"
-        android:textStyle="bold"
-        android:textSize="20dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/linearLayout2">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvSport"
+            android:text="@string/sport"
+            android:textStyle="bold"
+            android:layout_weight=".5"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvSport_value"
+            android:layout_weight=".5"/>
+    </LinearLayout>
 
-    <TextView
-        android:layout_width="100dp"
-        android:layout_height="40sp"
-        android:id="@+id/tvSport_value"
-        android:textSize="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@+id/tvSport"
-        android:layout_toEndOf="@+id/tvSport" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvDateTime"
+            android:text="@string/date_hour"
+            android:textStyle="bold"
+            android:layout_weight=".5"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvDateTime_value"
+            android:layout_weight=".5"/>
+    </LinearLayout>
 
-    <TextView
-        android:layout_width="135dp"
-        android:layout_height="40dp"
-        android:id="@+id/tvDateTime"
-        android:text="@string/date_hour"
-        android:textStyle="bold"
-        android:textSize="20dp"
-        android:layout_below="@+id/tvSport"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvNumPlayers"
+            android:text="@string/num_players"
+            android:textStyle="bold"
+            android:layout_weight=".5"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvNumPlayers_value"
+            android:layout_weight=".5"/>
+    </LinearLayout>
 
-    <TextView
-        android:layout_width="100dp"
-        android:layout_height="40sp"
-        android:id="@+id/tvDateTime_value"
-        android:textSize="17dp"
-        android:layout_marginLeft="10dp"
-        android:layout_below="@+id/tvSport_value"
-        android:layout_toRightOf="@+id/tvDateTime"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvMax_price"
+            android:text="@string/max_price_player"
+            android:textStyle="bold"
+            android:layout_weight=".5"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvMaxprice_value"
+            android:layout_weight=".5"/>
+    </LinearLayout>
 
-    <TextView
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:id="@+id/tvNumPlayers"
-        android:text="@string/num_players"
-        android:textStyle="bold"
-        android:textSize="20dp"
-        android:layout_marginTop="15dp"
-        android:layout_below="@+id/tvDateTime"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="90dp"
-        android:layout_height="40dp"
-        android:id="@+id/tvNumPlayers_value"
-        android:textSize="20dp"
-        android:layout_alignTop="@+id/tvNumPlayers"
-        android:layout_alignLeft="@+id/tvDateTime_value"
-        android:layout_alignStart="@+id/tvDateTime_value"
-        android:layout_alignRight="@+id/tvSport_value"
-        android:layout_alignEnd="@+id/tvSport_value" />
-
-    <TextView
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:id="@+id/tvMax_price"
-        android:text="@string/max_price_player"
-        android:textStyle="bold"
-        android:textSize="20dp"
-        android:layout_marginTop="15dp"
-        android:layout_below="@+id/tvNumPlayers"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="80sp"
-        android:layout_height="40sp"
-        android:id="@+id/tvMaxprice_value"
-        android:textSize="20dp"
-        android:layout_alignTop="@+id/tvMax_price"
-        android:layout_alignRight="@+id/tvSport_value"
-        android:layout_alignEnd="@+id/tvSport_value"
-        android:layout_alignLeft="@+id/tvNumPlayers_value"
-        android:layout_alignStart="@+id/tvNumPlayers_value" />
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_titleList"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:text="@string/jugadores"
+            android:layout_weight=".5"
+            android:textSize="15dp" />
+    </LinearLayout>
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="170dp"
-        android:id="@+id/list_players"
-        android:layout_gravity="bottom"
-        android:layout_below="@+id/tvMax_price"
-        android:layout_alignRight="@+id/tvMaxprice_value"
-        android:layout_alignEnd="@+id/tvMaxprice_value"
-        android:layout_marginTop="41dp" />
+        android:layout_height="150dp"
+        android:id="@+id/list_players" />
+    </LinearLayout>
 
-    <TextView
-        android:layout_width="240sp"
-        android:layout_height="40sp"
-        android:id="@+id/tv_titleList"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:text="@string/jugadores"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/tvMax_price"
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </LinearLayout>
+
+    <com.google.android.gms.maps.MapView  xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/mapview"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/linearLayout2"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/seek_bar">
+    </com.google.android.gms.maps.MapView>
+
+    <SeekBar
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight=".7"
+    android:id="@+id/seek_bar"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="51dp"
+        android:layout_alignRight="@+id/mapview"
+        android:layout_alignEnd="@+id/mapview" />
+
 
 </RelativeLayout>
