@@ -81,4 +81,17 @@
 
     <string name="confirmar_reporte">Reportar Usuario</string>
     <string name="confirmar_reporte_text">Está seguro que quiere reportar el usuario?</string>
+
+    <string name="mapType">Tipo de mapa</string>
+    <string name="chooseMapType">Seleccione un tipo de mapa</string>
+    <string-array name="mapTypes">
+        <item>De carreteras</item>
+        <item>Satelite</item>
+        <item>Hibrido</item>
+    </string-array>
+    <string-array name="mapTypes_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 </resources>

@@ -101,7 +101,11 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
                 startActivity(intent);
                 break;
             case R.id.logout:
-
+                finish();
+                intent = new Intent(Intent.ACTION_MAIN);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intent);
                 break;
             case R.id.new_event:
                 intent = new Intent(this, NewEventWizardActivity.class);
