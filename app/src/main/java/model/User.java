@@ -6,13 +6,15 @@ package model;
 public class User extends User_ {
 
     private String name;
+    private String surname;
     private String city;
     private int age;
     private String fav_sport;
     private String email;
 
-    public User(String name, String city, int age, String fav_sport, String email){
+    public User(String name, String surname, String city, int age, String fav_sport, String email){
         this.name = name;
+        this.surname = surname;
         this.city = city;
         this.age = age;
         this.fav_sport = fav_sport;
@@ -25,6 +27,14 @@ public class User extends User_ {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public String getCity() {

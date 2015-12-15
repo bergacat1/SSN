@@ -75,4 +75,7 @@
     <string name="emailUser">Email</string>
     <string name="report">User report</string>
     <string name="user_info">User\'s information</string>
+
+    <string name="confirmar_reporte_text">Are you sure to report user?</string>
+    <string name="close">Close</string>
 </resources>
