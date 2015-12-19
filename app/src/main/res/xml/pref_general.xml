@@ -16,5 +16,9 @@
         android:dialogTitle="@string/chooseMapType"
         android:entries="@array/mapTypes"
         android:entryValues="@array/mapTypes_values"
-        android:defaultValue="0" />
+        android:defaultValue="1" />
+    <SwitchPreference
+        android:key="buildings_map_checkbox"
+        android:title="@string/buildings_map_checkbox"
+        android:defaultValue="false" />
 </PreferenceScreen>

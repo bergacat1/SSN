@@ -85,14 +85,15 @@
 
     <string name="mapType">Tipo de mapa</string>
     <string name="chooseMapType">Seleccione un tipo de mapa</string>
+    <string name="buildings_map_checkbox">Edificios 3D</string>
     <string-array name="mapTypes">
         <item>De carreteras</item>
-        <item>Satelite</item>
+        <item>Satélite</item>
         <item>Hibrido</item>
     </string-array>
     <string-array name="mapTypes_values">
-        <item>0</item>
         <item>1</item>
         <item>2</item>
+        <item>4</item>
     </string-array>
 </resources>
