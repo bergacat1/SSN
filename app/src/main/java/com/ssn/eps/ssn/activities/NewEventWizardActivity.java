@@ -386,7 +386,10 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
 
     private void showFieldsMap(boolean mode){
         if (mMap != null) {
-            if(marker != null)marker.setVisible(!mode);
+            if(marker != null){
+                marker.setVisible(!mode);
+                circle.setVisible(!mode);
+            }
             for(Marker m : managerEntityMarkers.keySet()){
                 m.setVisible(mode);
             }
@@ -410,7 +413,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         }
 
         ManagerEntity m1 = new ManagerEntityManaged();
-        m1.setLatitude(41.61792);
+        m1.setLatitude(41.62792);
         m1.setLongitude(0.629101);
         m1.setName("GYM TONY");
 
@@ -435,7 +438,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                 .visible(false)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_no_managed_no_selected)));
 
-        managerEntityMarkers.put(mm2,new Pair<Boolean, Boolean>(true,false));
+        managerEntityMarkers.put(mm2,new Pair<Boolean, Boolean>(false,false));
     }
 
     private void buildSummary(){
