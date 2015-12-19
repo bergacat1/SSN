@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.ssn.eps.ssn.R;
 import com.ssn.eps.ssn.activities.MainActivity;
 
 /**
@@ -34,23 +35,24 @@ public class GCMIntentService extends IntentService
         {
             if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType))
             {
-                mostrarNotification(extras.getString("msg"));
+                mostrarNotification(extras);
             }
         }
 
         GCMBroadcastReceiver.completeWakefulIntent(intent);
     }
 
-    private void mostrarNotification(String msg)
+    private void mostrarNotification(Bundle extras)
     {
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(android.R.drawable.stat_sys_warning)
-                        .setContentTitle("Notificación GCM")
-                        .setContentText(msg);
+                        .setSmallIcon(R.drawable.logo1)
+                        .setContentTitle(getString(R.string.app_name))
+                        .setContentText(extras.getString("msg"))
+                        .setAutoCancel(true);
 
         Intent notIntent =  new Intent(this, MainActivity.class);
         PendingIntent contIntent = PendingIntent.getActivity(
