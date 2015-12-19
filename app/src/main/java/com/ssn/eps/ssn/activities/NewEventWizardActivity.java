@@ -62,6 +62,7 @@ import model.Event;
 import model.Field;
 import model.ManagerEntity;
 import model.ManagerEntityManaged;
+import model.ManagerEntityNoManaged;
 
 
 public class NewEventWizardActivity extends AppCompatActivity implements OnMarkerDragListener{
@@ -100,7 +101,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
     private Circle circle;
     private Marker marker;
 
-    private HashMap<Marker,Boolean> managerEntityMarkers;
+    private HashMap<Marker,Pair<Boolean,Boolean>> managerEntityMarkers;
 
     private TextView TVSport;
     private TextView TVMinPlayers;
@@ -275,12 +276,23 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             public boolean onMarkerClick(Marker marker) {
                 if(mapRadioButton.isChecked()) return false;
 
-                if(managerEntityMarkers.get(marker)){ //SELECCIONAT
-                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                    managerEntityMarkers.put(marker,false);
-                }else{
-                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-                    managerEntityMarkers.put(marker,true);
+                if(managerEntityMarkers.get(marker).first){ //MANAGED ENTITY
+                    if(managerEntityMarkers.get(marker).second){ //SELECTED
+                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_managed_no_selected));
+                        managerEntityMarkers.put(marker,new Pair<Boolean, Boolean>(true,false));
+                    }else{
+                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_managed_selected));
+                        managerEntityMarkers.put(marker,new Pair<Boolean, Boolean>(true,true));
+                    }
+
+                }else{// NO MANAGED ENTITY
+                    if(managerEntityMarkers.get(marker).second){
+                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_no_managed_no_selected));
+                        managerEntityMarkers.put(marker,new Pair<Boolean, Boolean>(false,false));
+                    }else{
+                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_no_managed_selected));
+                        managerEntityMarkers.put(marker,new Pair<Boolean, Boolean>(false,true));
+                    }
                 }
 
                 return false;
@@ -406,11 +418,12 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                         .position(new LatLng(m1.getLatitude(),m1.getLongitude()))
                         .title(m1.getName())
                         .draggable(true)
-                        .visible(false));
+                        .visible(false)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_managed_no_selected)));
 
-        managerEntityMarkers.put(mm1,false);
+        managerEntityMarkers.put(mm1,new Pair<Boolean, Boolean>(true,false));
 
-        ManagerEntity m2 = new ManagerEntityManaged();
+        ManagerEntity m2 = new ManagerEntityNoManaged();
         m2.setLatitude(41.61780);
         m2.setLongitude(0.629121);
         m2.setName("Royal Machine");
@@ -419,9 +432,10 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                 .position(new LatLng(m2.getLatitude(),m2.getLongitude()))
                 .title(m2.getName())
                 .draggable(true)
-                .visible(false));
+                .visible(false)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_no_managed_no_selected)));
 
-        managerEntityMarkers.put(mm2,false);
+        managerEntityMarkers.put(mm2,new Pair<Boolean, Boolean>(true,false));
     }
 
     private void buildSummary(){
@@ -598,6 +612,60 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                 DialogFragment newFragment = new TimePickerFragment(c);
                 newFragment.show(getActivity().getSupportFragmentManager(), "timePicker");
             }
+        }
+    }
+
+    private class Pair<A, B> {
+        private A first;
+        private B second;
+
+        public Pair(A first, B second) {
+            super();
+            this.first = first;
+            this.second = second;
+        }
+
+        public int hashCode() {
+            int hashFirst = first != null ? first.hashCode() : 0;
+            int hashSecond = second != null ? second.hashCode() : 0;
+
+            return (hashFirst + hashSecond) * hashSecond + hashFirst;
+        }
+
+        public boolean equals(Object other) {
+            if (other instanceof Pair) {
+                Pair otherPair = (Pair) other;
+                return
+                        ((  this.first == otherPair.first ||
+                                ( this.first != null && otherPair.first != null &&
+                                        this.first.equals(otherPair.first))) &&
+                                (	this.second == otherPair.second ||
+                                        ( this.second != null && otherPair.second != null &&
+                                                this.second.equals(otherPair.second))) );
+            }
+
+            return false;
+        }
+
+        public String toString()
+        {
+            return "(" + first + ", " + second + ")";
+        }
+
+        public A getFirst() {
+            return first;
+        }
+
+        public void setFirst(A first) {
+            this.first = first;
+        }
+
+        public B getSecond() {
+            return second;
+        }
+
+        public void setSecond(B second) {
+            this.second = second;
         }
     }
 }
