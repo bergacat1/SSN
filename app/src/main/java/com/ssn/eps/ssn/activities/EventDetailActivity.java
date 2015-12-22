@@ -79,8 +79,7 @@ public class EventDetailActivity extends AppCompatActivity {
     private MapView mapView;
     private Circle circle;
     private Marker marker;
-    private LinearLayout pistaLayout;
-    private TextView zona_map_title;
+    private LinearLayout zona_layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,8 +197,7 @@ public class EventDetailActivity extends AppCompatActivity {
     private void initializeViews(Bundle savedInstanceState){
 
         mapView = (MapView) findViewById(R.id.mapview);
-        pistaLayout = (LinearLayout) findViewById(R.id.pistaLayout);
-        zona_map_title = (TextView) findViewById(R.id.tv_zona_map);
+        zona_layout = (LinearLayout) findViewById(R.id.pistaLayout);
 
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
@@ -220,8 +218,6 @@ public class EventDetailActivity extends AppCompatActivity {
 
         if(num == 1) {
             mapView.setVisibility(View.VISIBLE);
-            zona_map_title.setVisibility(View.VISIBLE);
-            zona_map_title.setText("Mapa");
 
             marker = mMap.addMarker(new MarkerOptions()
                     .position(pos)
@@ -231,8 +227,6 @@ public class EventDetailActivity extends AppCompatActivity {
 
         else if (num == 2){
             mapView.setVisibility(View.VISIBLE);
-            zona_map_title.setVisibility(View.VISIBLE);
-            zona_map_title.setText("Zona");
 
             marker = mMap.addMarker(new MarkerOptions()
                     .position(pos)
@@ -250,7 +244,7 @@ public class EventDetailActivity extends AppCompatActivity {
         }
 
         else{
-            pistaLayout.setVisibility(View.VISIBLE);
+            zona_layout.setVisibility(View.VISIBLE);
         }
 
     }

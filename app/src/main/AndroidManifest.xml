@@ -63,7 +63,8 @@
         <activity
             android:name=".activities.NewEventWizardActivity"
             android:label="@string/title_activity_new_event_wizard"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".activities.FiltersActivity"
@@ -73,7 +74,8 @@
         <activity
             android:name=".activities.EventDetailActivity"
             android:label="@string/event"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" >
         </activity>
         <receiver android:name=".gcmservices.GCMBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
