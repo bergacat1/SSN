@@ -62,20 +62,19 @@ public class EventDetailActivity extends AppCompatActivity {
 
     private List<User> listPlayers = new ArrayList<>();
 
-    ListView listView;
+    private ListView listView;
 
-    Event event;
-    ManagerEntity manager_entity;
+    private Event event;
+    private ManagerEntity manager_entity;
 
-    TextView tv_sport;
-    TextView tv_datetime;
-    TextView tv_numplayers;
-    TextView tv_maxprice;
-    ListView listView_players;
-    Button report_button;
-    Button close_button;
+    private TextView tv_sport;
+    private TextView tv_datetime;
+    private TextView tv_numplayers;
+    private TextView tv_maxprice;
+    private ListView listView_players;
+    private Button report_button;
+    private Button close_button;
 
-    private SeekBar seekBar;
     private GoogleMap mMap;
     private MapView mapView;
     private Circle circle;
@@ -90,7 +89,7 @@ public class EventDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_detail);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
 
         initializeViews(savedInstanceState);
 
