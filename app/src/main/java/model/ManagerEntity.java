@@ -8,6 +8,7 @@ import java.util.List;
  */
 public abstract class ManagerEntity implements Serializable{
 
+    private int id;
     private String name;
 
     private String address;
@@ -15,6 +16,14 @@ public abstract class ManagerEntity implements Serializable{
     private double longitude;
 
     private List<Field> fields;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

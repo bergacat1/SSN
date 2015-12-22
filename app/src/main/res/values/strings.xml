@@ -82,4 +82,18 @@
     <string name="confirmar_reporte">Reportar Usuario</string>
     <string name="confirmar_reporte_text">Está seguro que quiere reportar el usuario?</string>
     <string name="close">Cerrar</string>
+
+    <string name="mapType">Tipo de mapa</string>
+    <string name="chooseMapType">Seleccione un tipo de mapa</string>
+    <string name="buildings_map_checkbox">Edificios 3D</string>
+    <string-array name="mapTypes">
+        <item>De carreteras</item>
+        <item>Satélite</item>
+        <item>Hibrido</item>
+    </string-array>
+    <string-array name="mapTypes_values">
+        <item>1</item>
+        <item>2</item>
+        <item>4</item>
+    </string-array>
 </resources>
