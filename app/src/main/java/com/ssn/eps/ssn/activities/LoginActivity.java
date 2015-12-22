@@ -214,6 +214,8 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
                 if(regid.equals("")){
                     TareaRegistroGCM tarea = new TareaRegistroGCM();
                     tarea.execute(gsa.getEmail());
+                }else{
+                    Log.d(Globals.TAG, "YA Registrado en GCM: registration_id=" + regid);
                 }
 
                 Intent intent = new Intent(getContext(), MainActivity.class);
