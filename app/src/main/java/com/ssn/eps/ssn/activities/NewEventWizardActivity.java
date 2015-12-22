@@ -37,11 +37,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -180,7 +182,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                 mapRadioButton.setChecked(false);
                 zoneSpinner.setEnabled(true);
                 seekBar.setEnabled(false);
-                mMap.setMyLocationEnabled(false);
+                mMap.getUiSettings().setMyLocationButtonEnabled(false);
                 mMap.getUiSettings().setAllGesturesEnabled(false);
                 break;
             case (R.id.radio_button_field):
@@ -189,8 +191,11 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                 mapRadioButton.setChecked(false);
                 zoneSpinner.setEnabled(false);
                 seekBar.setEnabled(false);
-                mMap.setMyLocationEnabled(true);
+
+                mMap.getUiSettings().setMyLocationButtonEnabled(true);
                 mMap.getUiSettings().setAllGesturesEnabled(true);
+                if(mMap.getMyLocation() != null) mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                        new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude()), 15),2000,null);
                 showFieldsMap(true);
                 break;
             case (R.id.radio_button_map):
@@ -199,8 +204,10 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                 mapRadioButton.setChecked(true);
                 zoneSpinner.setEnabled(false);
                 seekBar.setEnabled(true);
-                mMap.setMyLocationEnabled(true);
+                mMap.getUiSettings().setMyLocationButtonEnabled(true);
                 mMap.getUiSettings().setAllGesturesEnabled(true);
+                if(mMap.getMyLocation() != null) mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                        new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude()), 15),2000,null);
                 showFieldsMap(false);
                 break;
             default:
@@ -323,6 +330,8 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
     private void initializeMap() {
         // Check if we were successful in obtaining the map.
         if (mMap != null) {
+            mMap.setMyLocationEnabled(true);
+
             mMap.setOnMarkerDragListener(this);
             // Enable MyLocation Layer of Google Map
             //mMap.setMyLocationEnabled(true);
@@ -445,7 +454,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                 .visible(false)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_no_managed_no_selected)));
 
-        managerEntityMarkers.put(mm2, new Three<ManagerEntity, Boolean, Boolean>(m1, false, false));
+        managerEntityMarkers.put(mm2, new Three<ManagerEntity, Boolean, Boolean>(m2, false, false));
     }
 
     private void buildSummary(){
@@ -463,7 +472,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             TVFieldTitle.setText(getString(R.string.radio_button_field)+":");
             String text = "";
             for(Three t : managerEntityMarkers.values()){
-                text += ", " + ((ManagerEntity)t.first).getName();
+                text +=  ((ManagerEntity)t.first).getName() + " ";
             }
             TVField.setText(text);
         }else{
