@@ -120,24 +120,46 @@
         android:id="@+id/mapview"
         android:layout_width="match_parent"
         android:layout_height="130dp"
-        android:layout_marginTop="15dp"
-        android:layout_below="@+id/linearLayout2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignBottom="@+id/seek_bar">
-    </com.google.android.gms.maps.MapView>
-
-    <SeekBar
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_weight=".7"
-    android:id="@+id/seek_bar"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="51dp"
-        android:layout_alignRight="@+id/mapview"
-        android:layout_alignEnd="@+id/mapview" />
+        android:layout_marginBottom="41dp"
+        android:visibility="invisible">
+    </com.google.android.gms.maps.MapView>
 
+    <LinearLayout
+        android:id="@+id/pistaLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/linearLayout2"
+        android:layout_above="@+id/mapview"
+        android:visibility="invisible">
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_pistatitle"
+            android:textStyle="bold"
+            android:text="@string/zone_button"
+            android:layout_weight=".5"
+            android:textSize="15dp"/>
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_pistavalue"
+            android:text="GYM TONIC"
+            android:layout_weight=".5"
+            android:textSize="15dp" />
+    </LinearLayout>
+    <TextView
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_zona_map"
+        android:textStyle="bold"
+        android:text="Zona"
+        android:layout_weight=".5"
+        android:textSize="15dp"
+        android:layout_below="@+id/linearLayout2"
+        android:layout_marginTop="40dp"
+        android:visibility="invisible"/>
 
 </RelativeLayout>

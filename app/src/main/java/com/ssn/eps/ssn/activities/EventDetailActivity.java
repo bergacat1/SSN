@@ -22,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -49,9 +50,11 @@ import com.ssn.eps.ssn.fragments.MessageDialogFragment;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import General.Globals;
 import model.Event;
+import model.ManagerEntity;
 import model.Sport;
 import model.User;
 
@@ -62,6 +65,7 @@ public class EventDetailActivity extends AppCompatActivity {
     ListView listView;
 
     Event event;
+    ManagerEntity manager_entity;
 
     TextView tv_sport;
     TextView tv_datetime;
@@ -76,10 +80,13 @@ public class EventDetailActivity extends AppCompatActivity {
     private MapView mapView;
     private Circle circle;
     private Marker marker;
+    private LinearLayout pistaLayout;
+    private TextView zona_map_title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_event_detail);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -96,6 +103,7 @@ public class EventDetailActivity extends AppCompatActivity {
         c.set(Calendar.MINUTE, 30);
 
         event = new Event(new Sport(1, "Futbol Sala"), 8, 12, 5, c, c, c, Event.State.NEW, "Lleida");
+
         tv_sport = (TextView) findViewById(R.id.tvSport_value);
         tv_datetime = (TextView) findViewById(R.id.tvDateTime_value);
         tv_numplayers = (TextView) findViewById(R.id.tvNumPlayers_value);
@@ -187,33 +195,18 @@ public class EventDetailActivity extends AppCompatActivity {
 
     }
 
+
     private void initializeViews(Bundle savedInstanceState){
 
-        seekBar = (SeekBar) findViewById(R.id.seek_bar);
-        seekBar.setEnabled(false);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (progress == 0) progress = 1;
-                if (circle != null) circle.setRadius(progress * 1000 / 4);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
         mapView = (MapView) findViewById(R.id.mapview);
+        pistaLayout = (LinearLayout) findViewById(R.id.pistaLayout);
+        zona_map_title = (TextView) findViewById(R.id.tv_zona_map);
+
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         mMap = mapView.getMap();
-        mMap.getUiSettings().setAllGesturesEnabled(false);
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setAllGesturesEnabled(true);
         MapsInitializer.initialize(this);
         mapView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -221,92 +214,46 @@ public class EventDetailActivity extends AppCompatActivity {
                 return true;//return mapRadioButton.isChecked();
             }
         });
-        initializeMap();
 
-    }
+        LatLng pos = new LatLng(41.6, 0.77);
+        Random rnd = new Random();
+        int num = rnd.nextInt(3) + 1;
 
-    private void initializeMap() {
-        // Check if we were successful in obtaining the map.
-        if (mMap != null) {
-            mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-                @Override
-                public void onMarkerDragStart(Marker marker) {
+        if(num == 1) {
+            mapView.setVisibility(View.VISIBLE);
+            zona_map_title.setVisibility(View.VISIBLE);
+            zona_map_title.setText("Mapa");
 
-                }
+            marker = mMap.addMarker(new MarkerOptions()
+                    .position(pos)
+                    .title("GYM TONIC")
+                    .draggable(true));
+        }
 
-                @Override
-                public void onMarkerDrag(Marker marker) {
+        else if (num == 2){
+            mapView.setVisibility(View.VISIBLE);
+            zona_map_title.setVisibility(View.VISIBLE);
+            zona_map_title.setText("Zona");
 
-                }
+            marker = mMap.addMarker(new MarkerOptions()
+                    .position(pos)
+                    .title("GYM TONIC")
+                    .draggable(true));
 
-                @Override
-                public void onMarkerDragEnd(Marker marker) {
-
-                }
-            });
-            // Enable MyLocation Layer of Google Map
-            //mMap.setMyLocationEnabled(true);
-
-            // set map type
-            //String myListPreference = myPreference.getString("map_type_list", "1");
-            //mMap.setMapType(Integer.parseInt(myListPreference));
-
-            // Set 3D buildings
-            //boolean buildings = myPreference.getBoolean("buildings_map_checkbox",true);
-            //mMap.setBuildingsEnabled(buildings);
-
-            //Nos registramos para recibir actualizaciones de la posición
-            //locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locListener);
-
-            mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-                @Override
-                public void onMapLongClick(LatLng latLng) {
-
-
-                }
-            });
-            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                @Override
-                public void onMapClick(LatLng latLng) {
-                    if(false/*!mapRadioButton.isChecked()*/)return;
-                    LatLng pos = new LatLng(latLng.latitude, latLng.longitude);
-                    if(marker == null){
-                        marker = mMap.addMarker(new MarkerOptions()
-                                        .position(pos)
-                                        .title(getString(R.string.marker_title))
-                                        .draggable(true)
-                        );
-                    }else{
-                        marker.setPosition(pos);
-                    }
-                    // Instantiates a new CircleOptions object and defines the center and radius
-                    // Get back the mutable Circle
-                    if(circle == null){
-                        circle = mMap.addCircle(new CircleOptions()
-                                        .center(pos)
-                                        .radius(250)
-                                        .strokeWidth(2)
-                                        .strokeColor(Color.BLUE)
-                                        .fillColor(Color.argb(140,36,4,218))
-                        );
-                    }else{
-                        circle.setCenter(latLng);
-                    }
-                }
-            });
-
-            // Try center map on my device
-            /*Location myLoc = mMap.getMyLocation();
-            if(myLoc != null){
-                centerMapOnPosition(new LatLng(myLoc.getLatitude(),myLoc.getLongitude()));
-            }else{
-                LatLng myLatlon = getDeviceLocation();
-                if(myLatlon != null){
-                    centerMapOnPosition(myLatlon);
-                }
-            }*/
+            circle = mMap.addCircle(new CircleOptions()
+                            .center(pos)
+                            .radius(250)
+                            .strokeWidth(2)
+                            .strokeColor(Color.BLUE)
+                            .fillColor(Color.argb(140, 36, 4, 218))
+            );
 
         }
+
+        else{
+            pistaLayout.setVisibility(View.VISIBLE);
+        }
+
     }
 
 }
