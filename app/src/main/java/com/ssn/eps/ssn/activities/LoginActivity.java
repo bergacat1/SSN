@@ -11,6 +11,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -31,13 +32,22 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.ssn.eps.ssn.R;
+import com.ssn.eps.ssn.wscaller.Mapping;
+import com.ssn.eps.ssn.wscaller.SoapWSCaller;
+import com.ssn.eps.ssn.wscaller.WSCallbackInterface;
+
+import org.ksoap2.serialization.PropertyInfo;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import General.Globals;
+import model.Result;
+import model.User;
 
 
 /**
@@ -58,10 +68,14 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
     private View mProgressView;
     private View mLoginFormView;
 
+    private SharedPreferences myPreference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        myPreference = PreferenceManager.getDefaultSharedPreferences(this);
 
         Button mSignInButton = (Button) findViewById(R.id.sign_in_button);
         mSignInButton.setOnClickListener(new OnClickListener() {
@@ -216,12 +230,12 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
                     tarea.execute(gsa.getEmail());
                 }else{
                     Log.d(Globals.TAG, "YA Registrado en GCM: registration_id=" + regid);
+                    registerUserInServer(gsa.getEmail(), regid, false);
                 }
 
-                Intent intent = new Intent(getContext(), MainActivity.class);
-                startActivity(intent);
+            }else{
+                showToast("Error al registrar con Google +");
             }
-
         }
     }
 
@@ -314,6 +328,45 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
         editor.commit();
     }
 
+    private void registerUserInServer(final String email, final String regid, final boolean comeFromGCMTask){
+
+        String userName = myPreference.getString("userName", email);
+
+        User me = new User(email,userName,regid);
+
+        List<PropertyInfo> piList = new ArrayList<PropertyInfo>();
+        PropertyInfo pi = new PropertyInfo();
+        pi.setName("User");
+        pi.setValue(me);
+        pi.setType(User.class);
+        piList.add(pi);
+
+        List<Mapping> maList = new ArrayList<Mapping>();
+        Mapping ma = new Mapping("User",User.class);
+        maList.add(ma);
+
+        SoapWSCaller caller = new SoapWSCaller("methodName", "soapAction", piList, maList, new WSCallbackInterface() {
+            @Override
+            public void onProcesFinished(Result res) {
+                if(!res.isValid()){
+                    showToast("Error al registrar con el servidor de la app: " + res.getError());
+                    return;
+                }
+                int id = (Integer) res.getData().get(0);
+
+                if(id > 0){
+                    if (comeFromGCMTask) setRegistrationId(getApplicationContext(), email, regid);
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    startActivity(intent);
+                }else{
+                    showToast("Error al registrar con el servidor de la app");
+                }
+            }
+        });
+
+        caller.makeCall();
+    }
+
     private class TareaRegistroGCM extends AsyncTask<String,Integer,String>
     {
         @Override
@@ -335,13 +388,8 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
                 Log.d(Globals.TAG, "Registrado en GCM: registration_id=" + regid);
 
                 //Nos registramos en nuestro servidor
-                //boolean registrado = registroServidor(params[0], regid);
+                registerUserInServer(params[0], regid,true);
 
-                //Guardamos los datos del registro
-                //if(registrado)
-                {
-                    setRegistrationId(getApplicationContext(), params[0], regid);
-                }
             }
             catch (IOException ex)
             {

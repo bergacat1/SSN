@@ -130,14 +130,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
 
         myPreference = PreferenceManager.getDefaultSharedPreferences(this);
 
-        //http://stackoverflow.com/questions/4046644/android-how-to-dynamically-include-a-xml-layout
-        //http://stackoverflow.com/questions/22592192/dynamically-include-another-layout-in-fragment-activity
-        // Retrieve your container
-        //flContainer = (FrameLayout)findViewById(R.id.flContainer);
-        //layoutInflater = (LayoutInflater)
-                //this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        //ViewGroup v = null;
-        //flContainer.addView(layoutInflater.inflate(R.layout.content_new_event_wizard_step_1, v));
+        //https://developers.google.com/places/android-api/autocomplete
 
         getSports();
         getZones();

@@ -108,10 +108,9 @@ public class EventDetailActivity extends AppCompatActivity {
         tv_maxprice = (TextView) findViewById(R.id.tvMaxprice_value);
         //listView_players = (ListView) findViewById(R.id.listPlayers);
 
-        event.addPlayer(new User("Guillem","Barbosa","Lleida",22,"Futbol","guillembarbosa@gmail.com"));
-        event.addPlayer(new User("Lluís","Echeverria","Benavent",28,"Petanca","lluis.eche@gmail.com"));
-        event.addPlayer(new User("Albert","Berga","Torrefarrera",22,"Padel","abergacat@gmail.com"));
-        event.addPlayer(new User("Eduardo","Gutierrez","Lleida", 32, "Baloncesto", "eduardooo@gmail.com"));
+        event.addPlayer(new User("guillembarbosa@gmail.com","Guille",""));
+        event.addPlayer(new User("lluis.eche@gmail.com","Lluís",""));
+        event.addPlayer(new User("abergacat@gmail.com","Albert",""));
 
         listPlayers = event.getPlayers_list();
 
@@ -127,7 +126,7 @@ public class EventDetailActivity extends AppCompatActivity {
         List<String> values = new ArrayList<>();
 
         for(int i=0;i<listPlayers.size();i++){
-            values.add(listPlayers.get(i).getName());
+            values.add(listPlayers.get(i).getUserName());
         }
 
         ArrayAdapter <String> adapter = new ArrayAdapter<String>(this,
@@ -173,16 +172,7 @@ public class EventDetailActivity extends AppCompatActivity {
                 dialog.setCancelable(true);
 
                 TextView userName = (TextView) dialog.findViewById(R.id.tv_userName_value);
-                userName.setText(String.valueOf(user.getName())+" "+String.valueOf(user.getSurname()));
-
-                TextView userCity = (TextView) dialog.findViewById(R.id.tv_userCity_value);
-                userCity.setText(String.valueOf(user.getCity()));
-
-                TextView userAge = (TextView) dialog.findViewById(R.id.tv_userAge_value);
-                userAge.setText(String.valueOf(user.getAge()));
-
-                TextView favSportUser = (TextView) dialog.findViewById(R.id.tv_favSportUser_value);
-                favSportUser.setText(String.valueOf(user.getFav_sport()));
+                userName.setText(String.valueOf(user.getUserName()));
 
                 TextView emailUser = (TextView) dialog.findViewById(R.id.tv_emailUser_value);
                 emailUser.setText(String.valueOf(user.getEmail()));

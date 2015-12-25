@@ -1,64 +1,43 @@
 package model;
 
+import org.ksoap2.serialization.KvmSerializable;
+import org.ksoap2.serialization.PropertyInfo;
+
+import java.util.Hashtable;
+
 /**
  * Created by lluis on 1/11/15.
  */
-public class User extends User_ {
+public class User extends User_ implements KvmSerializable{
 
-    private String name;
-    private String surname;
-    private String city;
-    private int age;
-    private String fav_sport;
+    private int id;
+
     private String email;
+    private String userName;
+    private String GCMId;
 
-    public User(String name, String surname, String city, int age, String fav_sport, String email){
-        this.name = name;
-        this.surname = surname;
-        this.city = city;
-        this.age = age;
-        this.fav_sport = fav_sport;
+    public User(){}
+
+    public User(String email, String userName, String GCMId){
         this.email = email;
+        this.userName = userName;
+        this.GCMId = GCMId;
     }
 
-    public String getName() {
-        return name;
+    public int getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getSurname() {
-        return surname;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getFav_sport() {
-        return fav_sport;
-    }
-
-    public void setFav_sport(String fav_sport) {
-        this.fav_sport = fav_sport;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getEmail() {
@@ -67,5 +46,64 @@ public class User extends User_ {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getGCMId() {
+        return GCMId;
+    }
+
+    public void setGCMId(String GCMId) {
+        this.GCMId = GCMId;
+    }
+
+    @Override
+    public Object getProperty(int i) {
+        switch (i){
+            case 0:
+                return email;
+            case 1:
+                return userName;
+            case 2:
+                return GCMId;
+        }
+        return null;
+    }
+
+    @Override
+    public int getPropertyCount() {
+        return 3;
+    }
+
+    @Override
+    public void setProperty(int i, Object o) {
+        switch (i){
+            case 0:
+                email = o.toString();
+                break;
+            case 1:
+                userName = o.toString();
+                break;
+            case 2:
+                GCMId = o.toString();
+                break;
+        }
+    }
+
+    @Override
+    public void getPropertyInfo(int i, Hashtable hashtable, PropertyInfo propertyInfo) {
+        switch (i){
+            case 0:
+                propertyInfo.type = PropertyInfo.STRING_CLASS;
+                propertyInfo.name = "email";
+                break;
+            case 1:
+                propertyInfo.type = PropertyInfo.STRING_CLASS;
+                propertyInfo.name = "userName";
+                break;
+            case 2:
+                propertyInfo.type = PropertyInfo.STRING_CLASS;
+                propertyInfo.name = "GCMId";
+                break;
+        }
     }
 }
