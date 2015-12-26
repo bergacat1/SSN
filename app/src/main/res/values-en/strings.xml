@@ -35,7 +35,7 @@
     <string name="leave_confirmation">You really want to leave the event?</string>
 
 
-    <!-- New Event Wizard Activity -->
+    <!-- New Event_OLD Wizard Activity -->
     <string name="title_activity_new_event_wizard">New Event</string>
     <string name="features_button">Features</string>
     <string name="zone_button">Field</string>
@@ -66,7 +66,7 @@
     <string name="date_from">From date: </string>
     <string name="date_to">To date: </string>
 
-    <!-- Event detail -->
+    <!-- Event_OLD detail -->
     <string name="jugadores">Players</string>
     <string name="userName">Name</string>
     <string name="userCity">City</string>

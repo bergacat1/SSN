@@ -1,30 +1,23 @@
 package lists;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
-import android.text.method.CharacterPickerDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.ssn.eps.ssn.R;
 import com.ssn.eps.ssn.activities.EventDetailActivity;
-import com.ssn.eps.ssn.fragments.MessageDialogFragment;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 
 import General.Globals;
-import model.Event;
+import model.Event_OLD;
 
 /**
  * Created by alber on 17/11/2015.
@@ -32,11 +25,11 @@ import model.Event;
 public class EventItemAdapter extends BaseExpandableListAdapter {
 
     private Context context;
-    private List<Event> events;
+    private List<Event_OLD> events;
     private int tab;
     private Button butJoin, butLeave, butView;
 
-    public EventItemAdapter(Context context, List<Event> events, int tab){
+    public EventItemAdapter(Context context, List<Event_OLD> events, int tab){
         this.context = context;
         this.events = events;
         this.tab = tab;
@@ -88,14 +81,14 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
             rowView = inflater.inflate(R.layout.event_list_item, parent, false);
         }
 
-        Event e = this.events.get(groupPosition);
+        Event_OLD e = this.events.get(groupPosition);
 
 
         // Set data into the view.
         TextView tvCompressed = (TextView) rowView.findViewById(R.id.event_compressed_description);
         tvCompressed.setText(e.getSport().getName() + " " + Globals.sdf.format(e.getEventDate().getTime()) + " " + e.getZone());
 
-        Event item = this.events.get(groupPosition);
+        Event_OLD item = this.events.get(groupPosition);
 
         return rowView;
     }
@@ -113,7 +106,7 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
         else
             rowView = convertView;
 
-        Event e = this.events.get(groupPosition);
+        Event_OLD e = this.events.get(groupPosition);
 
         // Set data into the view.
         TextView tvSport = (TextView) rowView.findViewById(R.id.event_expanded_sport);

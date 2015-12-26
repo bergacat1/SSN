@@ -3,20 +3,19 @@ package model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by lluis on 1/11/15.
  */
-public class Event implements Serializable{
+public class Event_OLD implements Serializable{
 
     public enum State {
         NEW, FILLING, FULL, RESERVED
     }
 
     private User_ owner;
-    private Sport sport;
+    private Sport_OLD sport;
 
     private int minPlayers;
     private int maxPlayers;
@@ -29,9 +28,9 @@ public class Event implements Serializable{
     private int price;
     private String zone;
 
-    private List<User> players_list;
+    private List<User_OLD> players_list;
 
-    public Event(Sport sport, int minPlayers, int maxPlayers, int price, Calendar eventDate, Calendar creationDate, Calendar limitDate, State state, String zone) {
+    public Event_OLD(Sport_OLD sport, int minPlayers, int maxPlayers, int price, Calendar eventDate, Calendar creationDate, Calendar limitDate, State state, String zone) {
         this.sport = sport;
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
@@ -52,11 +51,11 @@ public class Event implements Serializable{
         this.owner = owner;
     }
 
-    public Sport getSport() {
+    public Sport_OLD getSport() {
         return sport;
     }
 
-    public void setSport(Sport sport) {
+    public void setSport(Sport_OLD sport) {
         this.sport = sport;
     }
 
@@ -116,15 +115,15 @@ public class Event implements Serializable{
         this.state = state;
     }
 
-    public void addPlayer(User user){
+    public void addPlayer(User_OLD user){
         players_list.add(user);
     }
 
-    public List<User> getPlayers_list(){
+    public List<User_OLD> getPlayers_list(){
         return players_list;
     }
 
-    public User getPlayer(int i){
+    public User_OLD getPlayer(int i){
         return players_list.get(i);
     }
 

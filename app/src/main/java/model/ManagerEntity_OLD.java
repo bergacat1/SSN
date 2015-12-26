@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by lluis on 1/11/15.
  */
-public abstract class ManagerEntity implements Serializable{
+public abstract class ManagerEntity_OLD implements Serializable{
 
     private int id;
     private String name;
@@ -15,7 +15,7 @@ public abstract class ManagerEntity implements Serializable{
     private double latitude;
     private double longitude;
 
-    private List<Field> fields;
+    private List<Field_OLD> fields;
 
     public int getId() {
         return id;
@@ -33,11 +33,11 @@ public abstract class ManagerEntity implements Serializable{
         this.name = name;
     }
 
-    public List<Field> getFields() {
+    public List<Field_OLD> getFields() {
         return fields;
     }
 
-    public void setFields(List<Field> fields) {
+    public void setFields(List<Field_OLD> fields) {
         this.fields = fields;
     }
 
@@ -65,7 +65,7 @@ public abstract class ManagerEntity implements Serializable{
         this.latitude = latitude;
     }
 
-    public boolean hasSportField(Sport sport){
+    public boolean hasSportField(Sport_OLD sport){
         return fields.contains(sport);
     }
 }

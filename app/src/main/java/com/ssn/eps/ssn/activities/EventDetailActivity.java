@@ -1,39 +1,22 @@
 package com.ssn.eps.ssn.activities;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.app.usage.UsageEvents;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -46,26 +29,24 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.ssn.eps.ssn.R;
-import com.ssn.eps.ssn.fragments.MessageDialogFragment;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 import General.Globals;
-import model.Event;
-import model.ManagerEntity;
-import model.Sport;
-import model.User;
+import model.Event_OLD;
+import model.ManagerEntity_OLD;
+import model.Sport_OLD;
+import model.User_OLD;
 
 public class EventDetailActivity extends AppCompatActivity {
 
-    private List<User> listPlayers = new ArrayList<>();
+    private List<User_OLD> listPlayers = new ArrayList<>();
 
     private ListView listView;
 
-    private Event event;
-    private ManagerEntity manager_entity;
+    private Event_OLD event;
+    private ManagerEntity_OLD manager_entity;
 
     private TextView tv_sport;
     private TextView tv_datetime;
@@ -100,7 +81,7 @@ public class EventDetailActivity extends AppCompatActivity {
         c.set(Calendar.HOUR, 12);
         c.set(Calendar.MINUTE, 30);
 
-        event = new Event(new Sport(1, "Futbol Sala"), 8, 12, 5, c, c, c, Event.State.NEW, "Lleida");
+        event = new Event_OLD(new Sport_OLD(1, "Futbol Sala"), 8, 12, 5, c, c, c, Event_OLD.State.NEW, "Lleida");
 
         tv_sport = (TextView) findViewById(R.id.tvSport_value);
         tv_datetime = (TextView) findViewById(R.id.tvDateTime_value);
@@ -108,9 +89,9 @@ public class EventDetailActivity extends AppCompatActivity {
         tv_maxprice = (TextView) findViewById(R.id.tvMaxprice_value);
         //listView_players = (ListView) findViewById(R.id.listPlayers);
 
-        event.addPlayer(new User("guillembarbosa@gmail.com","Guille",""));
-        event.addPlayer(new User("lluis.eche@gmail.com","Lluís",""));
-        event.addPlayer(new User("abergacat@gmail.com","Albert",""));
+        event.addPlayer(new User_OLD("guillembarbosa@gmail.com","Guille",""));
+        event.addPlayer(new User_OLD("lluis.eche@gmail.com","Lluís",""));
+        event.addPlayer(new User_OLD("abergacat@gmail.com","Albert",""));
 
         listPlayers = event.getPlayers_list();
 
@@ -137,7 +118,7 @@ public class EventDetailActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                User user = listPlayers.get(position);
+                User_OLD user = listPlayers.get(position);
                 final Dialog dialog = new Dialog(EventDetailActivity.this);
                 dialog.setTitle(getString(R.string.user_info));
                 dialog.setContentView(R.layout.content_window_user_detail);

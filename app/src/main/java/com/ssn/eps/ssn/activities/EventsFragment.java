@@ -1,26 +1,21 @@
 package com.ssn.eps.ssn.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 
 import com.ssn.eps.ssn.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import lists.EventItemAdapter;
-import model.Event;
+import model.Event_OLD;
 
 /**
  * Created by alber on 17/11/2015.
@@ -52,7 +47,7 @@ public class EventsFragment extends Fragment{
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         this.listView = (ExpandableListView) rootView.findViewById(R.id.eventsList);
-        this.listView.setAdapter(new EventItemAdapter(this.getContext(), mCallback != null ? mCallback.getEvents() : new ArrayList<Event>(), tab));
+        this.listView.setAdapter(new EventItemAdapter(this.getContext(), mCallback != null ? mCallback.getEvents() : new ArrayList<Event_OLD>(), tab));
         this.listView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
 
             @Override

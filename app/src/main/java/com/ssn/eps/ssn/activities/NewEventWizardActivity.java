@@ -1,34 +1,24 @@
 package com.ssn.eps.ssn.activities;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.FragmentTransaction;
 import android.app.TimePickerDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -40,10 +30,8 @@ import android.widget.TimePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -62,9 +50,8 @@ import java.util.List;
 
 
 import General.Globals;
-import model.Event;
-import model.Field;
-import model.ManagerEntity;
+import model.Event_OLD;
+import model.ManagerEntity_OLD;
 import model.ManagerEntityManaged;
 import model.ManagerEntityNoManaged;
 
@@ -105,7 +92,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
     private Circle circle;
     private Marker marker;
 
-    private HashMap<Marker,Three<ManagerEntity,Boolean,Boolean>> managerEntityMarkers;
+    private HashMap<Marker,Three<ManagerEntity_OLD,Boolean,Boolean>> managerEntityMarkers;
 
     private TextView TVSport;
     private TextView TVMinPlayers;
@@ -117,7 +104,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
 
     private boolean mapModeField;
 
-    private Event event;
+    private Event_OLD event;
 
     private SharedPreferences myPreference;
 
@@ -284,19 +271,19 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                 if(managerEntityMarkers.get(marker).second){ //MANAGED ENTITY
                     if(managerEntityMarkers.get(marker).third){ //SELECTED
                         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_managed_no_selected));
-                        managerEntityMarkers.put(marker,new Three<ManagerEntity, Boolean, Boolean>(managerEntityMarkers.get(marker).first,true,false));
+                        managerEntityMarkers.put(marker,new Three<ManagerEntity_OLD, Boolean, Boolean>(managerEntityMarkers.get(marker).first,true,false));
                     }else{
                         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_managed_selected));
-                        managerEntityMarkers.put(marker,new Three<ManagerEntity, Boolean, Boolean>(managerEntityMarkers.get(marker).first,true,true));
+                        managerEntityMarkers.put(marker,new Three<ManagerEntity_OLD, Boolean, Boolean>(managerEntityMarkers.get(marker).first,true,true));
                     }
 
                 }else{// NO MANAGED ENTITY
                     if(managerEntityMarkers.get(marker).third){
                         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_no_managed_no_selected));
-                        managerEntityMarkers.put(marker,new Three<ManagerEntity, Boolean, Boolean>(managerEntityMarkers.get(marker).first,false,false));
+                        managerEntityMarkers.put(marker,new Three<ManagerEntity_OLD, Boolean, Boolean>(managerEntityMarkers.get(marker).first,false,false));
                     }else{
                         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_no_managed_selected));
-                        managerEntityMarkers.put(marker,new Three<ManagerEntity, Boolean, Boolean>(managerEntityMarkers.get(marker).first,false,true));
+                        managerEntityMarkers.put(marker,new Three<ManagerEntity_OLD, Boolean, Boolean>(managerEntityMarkers.get(marker).first,false,true));
                     }
                 }
 
@@ -419,7 +406,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             managerEntityMarkers = new HashMap<>();
         }
 
-        ManagerEntity m1 = new ManagerEntityManaged();
+        ManagerEntity_OLD m1 = new ManagerEntityManaged();
         m1.setLatitude(41.62792);
         m1.setLongitude(0.629101);
         m1.setName("GYM TONY");
@@ -432,9 +419,9 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                         .visible(false)
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_managed_no_selected)));
 
-        managerEntityMarkers.put(mm1,new Three<ManagerEntity, Boolean, Boolean>(m1,true,false));
+        managerEntityMarkers.put(mm1,new Three<ManagerEntity_OLD, Boolean, Boolean>(m1,true,false));
 
-        ManagerEntity m2 = new ManagerEntityNoManaged();
+        ManagerEntity_OLD m2 = new ManagerEntityNoManaged();
         m2.setLatitude(41.61780);
         m2.setLongitude(0.629121);
         m2.setName("Royal Machine");
@@ -447,7 +434,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                 .visible(false)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_no_managed_no_selected)));
 
-        managerEntityMarkers.put(mm2, new Three<ManagerEntity, Boolean, Boolean>(m2, false, false));
+        managerEntityMarkers.put(mm2, new Three<ManagerEntity_OLD, Boolean, Boolean>(m2, false, false));
     }
 
     private void buildSummary(){
@@ -465,7 +452,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             TVFieldTitle.setText(getString(R.string.radio_button_field)+":");
             String text = "";
             for(Three t : managerEntityMarkers.values()){
-                text +=  ((ManagerEntity)t.first).getName() + " ";
+                text +=  ((ManagerEntity_OLD)t.first).getName() + " ";
             }
             TVField.setText(text);
         }else{
@@ -489,7 +476,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             return;
         }
 
-        /*event = new Event(sportsList.get(sportsSpinner.getSelectedItemPosition())
+        /*event = new Event_OLD(sportsList.get(sportsSpinner.getSelectedItemPosition())
                 , numMinPlayersEditText.getText()
                 , numMaxPlayersEditText.getText()
                 , maxPricePlayerEditText.getText()

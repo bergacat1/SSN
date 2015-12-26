@@ -1,4 +1,4 @@
-package model;
+package com.ssn.eps.model;
 
 import org.ksoap2.serialization.KvmSerializable;
 import org.ksoap2.serialization.PropertyInfo;
@@ -79,10 +79,13 @@ public class Result<T> implements KvmSerializable{
         switch (i){
             case 0:
                 data = (List<T>) o;
+                break;
             case 1:
                 valid = Boolean.getBoolean(o.toString());
+                break;
             case 2:
                 error = o.toString();
+                break;
         }
     }
 
@@ -92,12 +95,15 @@ public class Result<T> implements KvmSerializable{
             case 0:
                 propertyInfo.type = PropertyInfo.OBJECT_TYPE;
                 propertyInfo.name = "data";
+                break;
             case 1:
                 propertyInfo.type = PropertyInfo.BOOLEAN_CLASS;
                 propertyInfo.name = "valid";
+                break;
             case 2:
                 propertyInfo.type = PropertyInfo.STRING_CLASS;
                 propertyInfo.name = "error";
+                break;
         }
     }
 }

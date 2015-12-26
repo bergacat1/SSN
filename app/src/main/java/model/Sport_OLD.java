@@ -3,7 +3,7 @@ package model;
 /**
  * Created by lluis on 1/11/15.
  */
-public class Sport {
+public class Sport_OLD {
 
     private int id;
     private String name;
@@ -12,7 +12,7 @@ public class Sport {
     private int minPlayers;
     private int maxPlayers;
 
-    public Sport(int id, String name) {
+    public Sport_OLD(int id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -62,7 +62,7 @@ public class Sport {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Sport sport = (Sport) o;
+        Sport_OLD sport = (Sport_OLD) o;
 
         return id == sport.id;
     }

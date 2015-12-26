@@ -5,13 +5,13 @@ import java.util.List;
 /**
  * Created by lluis on 1/11/15.
  */
-public class Field {
+public class Field_OLD {
 
     private String name;
 
     private int id;
 
-    private List<Sport> sports;
+    private List<Sport_OLD> sports;
 
     public String getName() {
         return name;
@@ -21,15 +21,15 @@ public class Field {
         this.name = name;
     }
 
-    public List<Sport> getSports() {
+    public List<Sport_OLD> getSports() {
         return sports;
     }
 
-    public void setSports(List<Sport> sports) {
+    public void setSports(List<Sport_OLD> sports) {
         this.sports = sports;
     }
 
-    public boolean hasSport(Sport sport){
+    public boolean hasSport(Sport_OLD sport){
         return sports.contains(sport);
     }
 
@@ -46,7 +46,7 @@ public class Field {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Field field = (Field) o;
+        Field_OLD field = (Field_OLD) o;
 
         return id == field.id;
 

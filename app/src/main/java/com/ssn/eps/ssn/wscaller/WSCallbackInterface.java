@@ -1,8 +1,6 @@
 package com.ssn.eps.ssn.wscaller;
 
-import java.util.Objects;
-
-import model.Result;
+import com.ssn.eps.model.Result;
 
 /**
  * Created by lluis on 24/12/15.

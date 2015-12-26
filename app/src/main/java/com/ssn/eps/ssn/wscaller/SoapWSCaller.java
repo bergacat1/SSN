@@ -5,23 +5,20 @@ import android.os.AsyncTask;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.List;
 
-import model.Result;
-import model.User;
-import model.User_;
+import com.ssn.eps.model.Result;
 
 /**
  * Created by lluis on 24/12/15.
  */
 public class SoapWSCaller {
 
-    private final String NAMESPACE = "";
-    private final String URL = "";
+    private final String NAMESPACE = "http://192.168.1.105:8080/SSN_WS/";
+    private final String URL = "http://192.168.1.105:8080/SSN_WS/SSNWS";
     private String soapAction = "";
     private String methodName = "";
 
@@ -32,8 +29,8 @@ public class SoapWSCaller {
 
     // Callbacks http://stackoverflow.com/questions/16800711/passing-function-as-a-parameter-in-java
 
-    public SoapWSCaller(String methodName, String soapAction, List<PropertyInfo> piList, List<Mapping> mapList, WSCallbackInterface callback){
-        this.soapAction = soapAction;
+    public SoapWSCaller(String methodName, List<PropertyInfo> piList, List<Mapping> mapList, WSCallbackInterface callback){
+        this.soapAction = this.NAMESPACE + methodName;
         this.methodName = methodName;
         this.piList = piList;
         this.mapList = mapList;

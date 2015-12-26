@@ -3,7 +3,6 @@ package com.ssn.eps.ssn.activities;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -12,25 +11,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.ssn.eps.ssn.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 //import lists.EventItemAdapter;
-import model.Event;
-import model.Sport;
+import model.Event_OLD;
+import model.Sport_OLD;
 
 public class MainActivity extends AppCompatActivity implements FragmentsCommunicationInterface{
 
@@ -116,13 +109,13 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
     }
 
     @Override
-    public List<Event> getEvents() {
-        Sport sport = new Sport(0, "Futbol");
-        List<Event> events = new ArrayList<>();
-        events.add(new Event(sport, 12, 22, 10, Calendar.getInstance(), Calendar.getInstance(), Calendar.getInstance(), Event.State.FILLING, "Lleida"));
-        events.add(new Event(sport, 12, 22, 10, Calendar.getInstance(), Calendar.getInstance(), Calendar.getInstance(), Event.State.FILLING, "Lleida"));
-        events.add(new Event(sport, 12, 22, 10, Calendar.getInstance(), Calendar.getInstance(), Calendar.getInstance(), Event.State.FILLING, "Lleida"));
-        events.add(new Event(sport, 12, 22, 10, Calendar.getInstance(), Calendar.getInstance(), Calendar.getInstance(), Event.State.FILLING, "Lleida"));
+    public List<Event_OLD> getEvents() {
+        Sport_OLD sport = new Sport_OLD(0, "Futbol");
+        List<Event_OLD> events = new ArrayList<>();
+        events.add(new Event_OLD(sport, 12, 22, 10, Calendar.getInstance(), Calendar.getInstance(), Calendar.getInstance(), Event_OLD.State.FILLING, "Lleida"));
+        events.add(new Event_OLD(sport, 12, 22, 10, Calendar.getInstance(), Calendar.getInstance(), Calendar.getInstance(), Event_OLD.State.FILLING, "Lleida"));
+        events.add(new Event_OLD(sport, 12, 22, 10, Calendar.getInstance(), Calendar.getInstance(), Calendar.getInstance(), Event_OLD.State.FILLING, "Lleida"));
+        events.add(new Event_OLD(sport, 12, 22, 10, Calendar.getInstance(), Calendar.getInstance(), Calendar.getInstance(), Event_OLD.State.FILLING, "Lleida"));
         return events;
     }
 

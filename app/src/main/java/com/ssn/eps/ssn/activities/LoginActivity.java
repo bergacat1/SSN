@@ -3,7 +3,6 @@ package com.ssn.eps.ssn.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -31,6 +30,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.ssn.eps.model.User;
 import com.ssn.eps.ssn.R;
 import com.ssn.eps.ssn.wscaller.Mapping;
 import com.ssn.eps.ssn.wscaller.SoapWSCaller;
@@ -46,8 +46,8 @@ import java.util.List;
 import java.util.Locale;
 
 import General.Globals;
-import model.Result;
-import model.User;
+import com.ssn.eps.model.Result;
+import model.User_OLD;
 
 
 /**
@@ -332,20 +332,23 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
 
         String userName = myPreference.getString("userName", email);
 
-        User me = new User(email,userName,regid);
+        User me = new User();
+        me.setEmail(email);
+        me.setUsername(userName);
+        me.setGcmId(regid);
 
         List<PropertyInfo> piList = new ArrayList<PropertyInfo>();
         PropertyInfo pi = new PropertyInfo();
-        pi.setName("User");
+        pi.setName("user");
         pi.setValue(me);
         pi.setType(User.class);
         piList.add(pi);
 
         List<Mapping> maList = new ArrayList<Mapping>();
-        Mapping ma = new Mapping("User",User.class);
+        Mapping ma = new Mapping("User_OLD", User_OLD.class);
         maList.add(ma);
 
-        SoapWSCaller caller = new SoapWSCaller("methodName", "soapAction", piList, maList, new WSCallbackInterface() {
+        SoapWSCaller caller = new SoapWSCaller("registerUser", piList, maList, new WSCallbackInterface() {
             @Override
             public void onProcesFinished(Result res) {
                 if(!res.isValid()){

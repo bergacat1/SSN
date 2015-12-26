@@ -35,7 +35,7 @@
     <string name="leave_confirmation">Estàs segur que vols sortir de l\'event?</string>
 
 
-    <!-- New Event Wizard Activity -->
+    <!-- New Event_OLD Wizard Activity -->
     <string name="title_activity_new_event_wizard">Nou Event</string>
     <string name="features_button">Caract.</string>
     <string name="zone_button">Pista</string>
@@ -67,7 +67,7 @@
 
     <string name="activateNetwork">És necesari activar la xarxa</string>
 
-    <!-- Event detail -->
+    <!-- Event_OLD detail -->
     <string name="jugadores">Jugadors</string>
     <string name="userName">Nom</string>
     <string name="userCity">Ciutat</string>

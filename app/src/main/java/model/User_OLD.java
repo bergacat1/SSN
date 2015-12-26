@@ -8,7 +8,7 @@ import java.util.Hashtable;
 /**
  * Created by lluis on 1/11/15.
  */
-public class User extends User_ implements KvmSerializable{
+public class User_OLD extends User_ implements KvmSerializable{
 
     private int id;
 
@@ -16,9 +16,9 @@ public class User extends User_ implements KvmSerializable{
     private String userName;
     private String GCMId;
 
-    public User(){}
+    public User_OLD(){}
 
-    public User(String email, String userName, String GCMId){
+    public User_OLD(String email, String userName, String GCMId){
         this.email = email;
         this.userName = userName;
         this.GCMId = GCMId;
