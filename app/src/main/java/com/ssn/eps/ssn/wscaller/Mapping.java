@@ -7,6 +7,9 @@ public class Mapping {
     private String name;
     private Class aClass;
 
+    public Mapping() {
+    }
+
     public Mapping(String name, Class aClass) {
         this.name = name;
         this.aClass = aClass;

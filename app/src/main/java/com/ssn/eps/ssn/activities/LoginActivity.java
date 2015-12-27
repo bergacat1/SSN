@@ -30,6 +30,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.ssn.eps.model.Sport;
 import com.ssn.eps.model.User;
 import com.ssn.eps.ssn.R;
 import com.ssn.eps.ssn.wscaller.Mapping;
@@ -341,12 +342,11 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
         PropertyInfo pi = new PropertyInfo();
         pi.setName("user");
         pi.setValue(me);
-        pi.setType(User.class);
         piList.add(pi);
 
         List<Mapping> maList = new ArrayList<Mapping>();
-        Mapping ma = new Mapping("User_OLD", User_OLD.class);
-        maList.add(ma);
+//        Mapping m = new Mapping("sport", new Sport().getClass());
+//        maList.add(m);
 
         SoapWSCaller caller = new SoapWSCaller("registerUser", piList, maList, new WSCallbackInterface() {
             @Override
