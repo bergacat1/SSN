@@ -1,8 +1,14 @@
 package com.ssn.eps.ssn.activities;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -14,18 +20,25 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.ssn.eps.model.Result;
 import com.ssn.eps.ssn.R;
+import com.ssn.eps.ssn.wscaller.SoapWSCaller;
+import com.ssn.eps.ssn.wscaller.WSCallbackInterface;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 //import lists.EventItemAdapter;
+import General.Globals;
 import model.Event_OLD;
 import model.Sport_OLD;
 
 public class MainActivity extends AppCompatActivity implements FragmentsCommunicationInterface{
+
+    private SharedPreferences myPreference;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -46,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        myPreference = PreferenceManager.getDefaultSharedPreferences(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -94,11 +109,20 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
                 startActivity(intent);
                 break;
             case R.id.logout:
-                finish();
-                intent = new Intent(Intent.ACTION_MAIN);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addCategory(Intent.CATEGORY_HOME);
-                startActivity(intent);
+                new AlertDialog.Builder(getContext())
+                        .setTitle(getString(R.string.leave))
+                        .setMessage(getString(R.string.leave_app_text))
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                logout();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .show();
+
                 break;
             case R.id.new_event:
                 intent = new Intent(this, NewEventWizardActivity.class);
@@ -106,6 +130,49 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void logout(){
+
+        String email = myPreference.getString(Globals.PROPERTY_USER,"");
+
+        if(email.equals("")){
+            showToast(getString(R.string.internal_error));
+            return;
+        }
+
+        SoapWSCaller.getInstance().unRegisterUserCall(this, email, new WSCallbackInterface() {
+            @Override
+            public void onProcesFinished(Result res) {
+                if (!res.isValid()) {
+                    showToast(getString(R.string.server_error) + ": " + res.getError());
+                    return;
+                }
+                int id = (Integer) res.getData().get(0);
+
+                if (id > 0) {
+
+                    getActivity().finish();
+
+                    LoginActivity.logged = false;
+
+                    Intent intent = new Intent(Intent.ACTION_MAIN);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addCategory(Intent.CATEGORY_HOME);
+                    startActivity(intent);
+                } else {
+                    showToast(getString(R.string.server_error));
+                }
+            }
+        });
+    }
+
+    private Activity getActivity(){
+        return this;
+    }
+
+    private Context getContext(){
+        return this;
     }
 
     @Override
@@ -159,5 +226,9 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
         public int getActivePage(){
             return this.activePage;
         }
+    }
+
+    private void showToast(CharSequence text){
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
     }
 }

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Sport Social Network</string>
+    <string name="internal_error">Error interno</string>
+    <string name="server_error">Error en el servidor de la app</string>
+
+    <string name="leave_app_text">Está seguro que desea salir de la aplicación? De este modo dejará de recibir notificaciones.</string>
     
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -29,7 +33,7 @@
     <string name="pref_new_event_managed_field" >En pista gestionada</string>
     <string name="pref_new_event_unmanaged_field" >En pista no gestionada</string>
     <string name="pref_new_event_member" >Al unirse un miembro a uno de mis eventos</string>
-    <string name="new_event" >Nuevo evento</string>
+    <string name="new_event">Nuevo evento</string>
     <string name="event_detail" >Ver</string>
     <string name="leave">Salir</string>
     <string name="leave_confirmation">Estás seguro que quieres salir del evento?</string>

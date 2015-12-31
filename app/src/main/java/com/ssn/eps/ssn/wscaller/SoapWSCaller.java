@@ -1,7 +1,13 @@
 package com.ssn.eps.ssn.wscaller;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
@@ -10,41 +16,96 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ssn.eps.model.Result;
+import com.ssn.eps.model.Sport;
+import com.ssn.eps.model.User;
+import com.ssn.eps.ssn.R;
 
 /**
  * Created by lluis on 24/12/15.
  */
 public class SoapWSCaller {
 
+    private static SoapWSCaller instance = new SoapWSCaller();
+
     private final static String NAMESPACE = "http://ws.ssn/";
-    private final String URL = "http://192.168.1.105:8080/SSN_WS/SSNWS";
-    private String soapAction = "";
-    private String methodName = "";
-
-    private List<PropertyInfo> piList;
-    private List<Mapping> mapList;
-
-    private WSCallbackInterface callback;
+    private final String URL = "http://192.168.1.124:8080/SSN_WS/SSNWS";
 
     // Callbacks http://stackoverflow.com/questions/16800711/passing-function-as-a-parameter-in-java
 
-    public SoapWSCaller(String methodName, List<PropertyInfo> piList, List<Mapping> mapList, WSCallbackInterface callback){
-        //this.soapAction = this.NAMESPACE + methodName;
-        this.methodName = methodName;
-        this.piList = piList;
-        this.mapList = mapList;
-        this.callback = callback;
-    }
+    private SoapWSCaller(){}
 
-    public void makeCall(){
-        AsyncCallWS task = new AsyncCallWS();
+    private void makeCall(Activity act, String methodName, List<PropertyInfo> piList, List<Mapping> mapList, WSCallbackInterface callback){
+
+        // Check if network is active
+        if(!checkNetwork(act)){
+            Toast.makeText(act, act.getString(R.string.activateNetwork), Toast.LENGTH_LONG).show();
+            act.startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), 0);
+            return;
+        }
+
+        AsyncCallWS task = new AsyncCallWS(methodName, piList, mapList, callback);
         task.execute();
     }
 
+    public void registerUserCall(Activity act, User user, WSCallbackInterface callback ){
+
+        List<PropertyInfo> piList = new ArrayList<PropertyInfo>();
+        PropertyInfo pi = new PropertyInfo();
+        pi.setName("user");
+        pi.setValue(user);
+        piList.add(pi);
+
+        List<Mapping> maList = new ArrayList<Mapping>();
+        Mapping m = new Mapping("user", new User().getClass());
+        maList.add(m);
+
+        makeCall(act, "registerUser", piList, maList, callback);
+    }
+
+    public void unRegisterUserCall(Activity act, String email, WSCallbackInterface callback){
+        //todo
+    }
+
+    public void getSportsCall(Activity act, WSCallbackInterface callback){
+
+        List<Mapping> maList = new ArrayList<Mapping>();
+        Mapping m = new Mapping("sport", new Sport().getClass());
+        maList.add(m);
+
+        makeCall(act, "getSports", null, maList, callback);
+    }
+
+    private boolean checkNetwork(Activity act){
+        ConnectivityManager connectivityManager = (ConnectivityManager) act.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
+    public static SoapWSCaller getInstance(){
+        return instance;
+    }
+
     private class AsyncCallWS extends AsyncTask <String, Void, Result> {
+
+        private String soapAction = "";
+        private String methodName = "";
+
+        private List<PropertyInfo> piList;
+        private List<Mapping> mapList;
+
+        private WSCallbackInterface callback;
+
+        public AsyncCallWS(String methodName, List<PropertyInfo> piList, List<Mapping> mapList, WSCallbackInterface callback){
+            this.methodName = methodName;
+            this.piList = piList;
+            this.mapList = mapList;
+            this.callback = callback;
+        }
+
 
         @Override
         protected Result doInBackground(String... params) {
@@ -115,6 +176,4 @@ public class SoapWSCaller {
             super.onProgressUpdate(values);
         }
     }
-
-
 }

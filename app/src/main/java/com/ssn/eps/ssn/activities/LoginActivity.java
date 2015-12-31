@@ -56,11 +56,10 @@ import model.User_OLD;
  */
 public class LoginActivity extends AppCompatActivity  implements GoogleApiClient.OnConnectionFailedListener {
 
+    public static boolean logged = false;
 
     private static final int RC_SIGN_IN = 9001;
     private GoogleApiClient mGoogleApiClient;
-    private UserLoginTask mAuthTask = null;
-
     private GoogleCloudMessaging gcm;
 
     private String regid;
@@ -73,7 +72,9 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // todo Powered by Google
         super.onCreate(savedInstanceState);
+        if(logged)finish();
         setContentView(R.layout.activity_login);
 
         myPreference = PreferenceManager.getDefaultSharedPreferences(this);
@@ -83,8 +84,6 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
             @Override
             public void onClick(View view) {
                 attemptLogin();
-                //Intent intent = new Intent(getContext(), MainActivity.class);
-                //startActivity(intent);
             }
         });
 
@@ -125,9 +124,7 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
+
         boolean cancel = false;
 
         // Check if network is active
@@ -140,11 +137,9 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
         if(!cancel){
             //showProgress(true);
             signIn();
-            //mAuthTask = new UserLoginTask();
-            //mAuthTask.execute((Void) null);
         }
     }
-    public boolean checkNetwork(){
+    private boolean checkNetwork(){
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
@@ -200,8 +195,6 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
-
-
 
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -311,7 +304,7 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
         }
     }
 
-    private void setRegistrationId(Context context, String user, String regId)
+    private void setRegistrationId(Context context, String user, String userName, String regId)
     {
         SharedPreferences prefs = getSharedPreferences(
                 MainActivity.class.getSimpleName(),
@@ -321,7 +314,9 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
 
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(Globals.PROPERTY_USER, user);
+        editor.putString(Globals.PROPERTY_USER_NAME, userName);
         editor.putString(Globals.PROPERTY_REG_ID, regId);
+        //editor.putString(Globals.PROPERTY_SERVER_ID, serverId);
         editor.putInt(Globals.PROPERTY_APP_VERSION, appVersion);
         editor.putLong(Globals.PROPERTY_EXPIRATION_TIME,
                 System.currentTimeMillis() + Globals.EXPIRATION_TIME_MS);
@@ -331,43 +326,34 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
 
     private void registerUserInServer(final String email, final String regid, final boolean comeFromGCMTask){
 
-        String userName = myPreference.getString("userName", email);
+        final String userName = myPreference.getString("userName", email);
 
         User me = new User();
         me.setEmail(email);
         me.setUsername(userName);
         me.setGcmId(regid);
 
-        List<PropertyInfo> piList = new ArrayList<PropertyInfo>();
-        PropertyInfo pi = new PropertyInfo();
-        pi.setName("user");
-        pi.setValue(me);
-        piList.add(pi);
-
-        List<Mapping> maList = new ArrayList<Mapping>();
-//        Mapping m = new Mapping("sport", new Sport().getClass());
-//        maList.add(m);
-
-        SoapWSCaller caller = new SoapWSCaller("registerUser", piList, maList, new WSCallbackInterface() {
+        SoapWSCaller.getInstance().registerUserCall(this, me, new WSCallbackInterface() {
             @Override
             public void onProcesFinished(Result res) {
-                if(!res.isValid()){
-                    showToast("Error al registrar con el servidor de la app: " + res.getError());
+                if (!res.isValid()) {
+                    showToast(getString(R.string.server_error) +": " + res.getError());
                     return;
                 }
                 int id = (Integer) res.getData().get(0);
 
-                if(id > 0){
-                    if (comeFromGCMTask) setRegistrationId(getApplicationContext(), email, regid);
+                if (id > 0) {
+                    if (comeFromGCMTask)
+                        setRegistrationId(getApplicationContext(), email, userName, regid);
+                    LoginActivity.logged = true;
                     Intent intent = new Intent(getContext(), MainActivity.class);
                     startActivity(intent);
-                }else{
-                    showToast("Error al registrar con el servidor de la app");
+                } else {
+                    showToast(getString(R.string.server_error));
                 }
             }
         });
 
-        caller.makeCall();
     }
 
     private class TareaRegistroGCM extends AsyncTask<String,Integer,String>
@@ -400,53 +386,6 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
             }
 
             return msg;
-        }
-    }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        UserLoginTask() {
-
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-
-            // TODO: register the new account here.
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                Intent intent = new Intent(getContext(), MainActivity.class);
-                startActivity(intent);
-                //finish();
-            } else {
-
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
         }
     }
 

@@ -18,11 +18,16 @@
                 android:id="@+id/radio_button_zone"
                 android:layout_weight=".30"
                 android:onClick="handleClick"/>
-            <Spinner
+            <AutoCompleteTextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight=".70"
-                android:id="@+id/zone_spinner"></Spinner>
+                android:id="@+id/zone_edit_text"/>
+            <!--<Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight=".70"
+                android:id="@+id/zone_spinner"></Spinner>-->
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
