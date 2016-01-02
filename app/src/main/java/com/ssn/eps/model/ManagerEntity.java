@@ -1,4 +1,4 @@
-package model;
+package com.ssn.eps.model;
 
 public class ManagerEntity {
 	private int idManagerEntity;
@@ -77,5 +77,14 @@ public class ManagerEntity {
 	}
 	public void setIdUser(int idUser) {
 		this.idUser = idUser;
+	}
+
+	public boolean isValidForPrint() {
+
+		if(this.latitude == 0 & this.longitude == 0) return false;
+		if(this.name.equals("")) return false;
+		if(this.type < 1 || this.type > 2) return false;
+
+		return true;
 	}
 }

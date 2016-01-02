@@ -63,5 +63,13 @@
             android:id="@+id/date_hour_edit_text"
             android:onClick="handleClick"
             android:editable="false"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:text="@string/duration"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/duration"
+            android:inputType="number"/>
     </LinearLayout>
 </RelativeLayout>

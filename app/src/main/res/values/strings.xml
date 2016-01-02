@@ -90,6 +90,11 @@
     <string name="mapType">Tipo de mapa</string>
     <string name="chooseMapType">Seleccione un tipo de mapa</string>
     <string name="buildings_map_checkbox">Edificios 3D</string>
+
+    <string name="no_managed_entity_selected">Entidad no gestionada seleccionada</string>
+    <string name="no_managed_entity_selected_text">No es posible asegurar la disponibilidad de la pista, debido a que no existe una entidad registrada que la gestione.</string>
+    <string name="duration">Duración:</string>
+
     <string-array name="mapTypes">
         <item>De carreteras</item>
         <item>Satélite</item>

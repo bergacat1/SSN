@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -12,6 +13,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -38,10 +40,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Result;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.AutocompletePrediction;
@@ -60,7 +60,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.plus.Plus;
 import com.ssn.eps.model.Sport;
 import com.ssn.eps.ssn.R;
 import com.ssn.eps.ssn.fragments.MessageDialogFragment;
@@ -76,13 +75,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-
 import General.Globals;
-import model.Event_OLD;
-import model.ManagerEntity_OLD;
-import model.ManagerEntityManaged;
-import model.ManagerEntityNoManaged;
-
+import com.ssn.eps.model.Event;
+import com.ssn.eps.model.ManagerEntity;
 
 public class NewEventWizardActivity extends AppCompatActivity implements OnMarkerDragListener {
 
@@ -106,6 +101,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
     private EditText numMaxPlayersEditText;
     private EditText maxPricePlayerEditText;
     private EditText dateHourEditText;
+    private EditText durationEditText;
 
     private RadioGroup radioGroup;
     private RadioButton zoneRadioButton;
@@ -119,22 +115,25 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
     private Circle circle;
     private Marker marker;
 
-    private HashMap<Marker,Three<ManagerEntity_OLD,Boolean,Boolean>> managerEntityMarkers;
+    private HashMap<Marker,Three<ManagerEntity,Boolean,Boolean>> managerEntityMarkers;
 
     private TextView TVSport;
     private TextView TVMinPlayers;
     private TextView TVMaxPlayers;
     private TextView TVMaxPricePlayer;
+    private TextView TVDuration;
     private TextView TVDateHour;
     private TextView TVField;
     private TextView TVFieldTitle;
 
     private boolean mapModeField;
 
-    private Event_OLD event;
+    private Event event;
 
     private SharedPreferences myPreference;
     private GoogleApiClient mGoogleApiClient;
+
+    private String fullZoneText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -281,6 +280,8 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             }
         });
 
+        durationEditText = (EditText) findViewById(R.id.duration);
+
         zoneRadioButton = (RadioButton) findViewById(R.id.radio_button_zone);
         fieldRadioButton = (RadioButton) findViewById(R.id.radio_button_field);
         mapRadioButton = (RadioButton) findViewById(R.id.radio_button_map);
@@ -351,6 +352,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         zoneEditText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                fullZoneText = zonesAdapter.getItem(position);
                 zoneEditText.setText(zonesAdapter.getItem(position).split(",")[0]);
             }
         });
@@ -384,28 +386,53 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         MapsInitializer.initialize(this);
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
-            public boolean onMarkerClick(Marker marker) {
-                if(mapRadioButton.isChecked()) return false;
+            public boolean onMarkerClick(final Marker marker) {
+                if (mapRadioButton.isChecked()) return false;
 
-                if(managerEntityMarkers.get(marker).second){ //MANAGED ENTITY
-                    if(managerEntityMarkers.get(marker).third){ //SELECTED
+                if (managerEntityMarkers.get(marker).second) { //MANAGED ENTITY
+                    if (managerEntityMarkers.get(marker).third) { //SELECTED
                         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_managed_no_selected));
-                        managerEntityMarkers.put(marker,new Three<ManagerEntity_OLD, Boolean, Boolean>(managerEntityMarkers.get(marker).first,true,false));
-                    }else{
+                        managerEntityMarkers.put(marker, new Three<ManagerEntity, Boolean, Boolean>(managerEntityMarkers.get(marker).first, true, false));
+                    } else {
                         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_managed_selected));
-                        managerEntityMarkers.put(marker,new Three<ManagerEntity_OLD, Boolean, Boolean>(managerEntityMarkers.get(marker).first,true,true));
+                        managerEntityMarkers.put(marker, new Three<ManagerEntity, Boolean, Boolean>(managerEntityMarkers.get(marker).first, true, true));
                     }
 
-                }else{// NO MANAGED ENTITY
-                    if(managerEntityMarkers.get(marker).third){
+                } else {// NO MANAGED ENTITY
+                    if (managerEntityMarkers.get(marker).third) {
                         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_no_managed_no_selected));
-                        managerEntityMarkers.put(marker,new Three<ManagerEntity_OLD, Boolean, Boolean>(managerEntityMarkers.get(marker).first,false,false));
-                    }else{
-                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_no_managed_selected));
-                        managerEntityMarkers.put(marker,new Three<ManagerEntity_OLD, Boolean, Boolean>(managerEntityMarkers.get(marker).first,false,true));
+                        managerEntityMarkers.put(marker, new Three<ManagerEntity, Boolean, Boolean>(managerEntityMarkers.get(marker).first, false, false));
+                    } else {
+                        boolean remember = myPreference.getBoolean(Globals.PROPERTY_REMEMBER_NO_MANAGED_SELECTION, false);
+                        if (!remember) {
+                            new AlertDialog.Builder(getContext())
+                                    .setTitle(getString(R.string.no_managed_entity_selected))
+                                    .setMessage(getString(R.string.no_managed_entity_selected_text))
+                                    .setMultiChoiceItems(R.array.remember_action, null, new DialogInterface.OnMultiChoiceClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                            SharedPreferences.Editor editor = myPreference.edit();
+                                            editor.putBoolean(Globals.PROPERTY_REMEMBER_NO_MANAGED_SELECTION, isChecked);
+                                            editor.commit();
+                                        }
+                                    })
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_no_managed_selected));
+                                            managerEntityMarkers.put(marker, new Three<ManagerEntity, Boolean, Boolean>(managerEntityMarkers.get(marker).first, false, true));
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                        }
+                                    })
+                                    .show();
+                        } else {
+                            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_no_managed_selected));
+                            managerEntityMarkers.put(marker, new Three<ManagerEntity, Boolean, Boolean>(managerEntityMarkers.get(marker).first, false, true));
+                        }
                     }
                 }
-
                 return false;
             }
         });
@@ -422,6 +449,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         TVMaxPlayers = (TextView) findViewById(R.id.TV_num_max_players);
         TVMaxPricePlayer = (TextView) findViewById(R.id.TV_max_price_player);
         TVDateHour = (TextView) findViewById(R.id.TV_date_hour);
+        TVDuration = (TextView) findViewById(R.id.TV_duration);
         TVField = (TextView) findViewById(R.id.TV_field);
         TVFieldTitle = (TextView) findViewById(R.id.TV_field_title);
     }
@@ -449,7 +477,6 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
                 @Override
                 public void onMapLongClick(LatLng latLng) {
-
 
                 }
             });
@@ -539,35 +566,36 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             managerEntityMarkers = new HashMap<>();
         }
 
-        ManagerEntity_OLD m1 = new ManagerEntityManaged();
-        m1.setLatitude(41.62792);
-        m1.setLongitude(0.629101);
-        m1.setName("GYM TONY");
-        m1.setId(1);
+        SoapWSCaller.getInstance().getSportsCall(this, new WSCallbackInterface() {
+            @Override
+            public void onProcesFinished(com.ssn.eps.model.Result res) {
+                if (!res.isValid()) {
+                    showToast(getString(R.string.server_error) + ": " + res.getError());
+                    return;
+                }
 
-        Marker mm1 = mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(m1.getLatitude(),m1.getLongitude()))
-                        .title(m1.getName())
-                        .draggable(true)
-                        .visible(false)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_managed_no_selected)));
+                for (Iterator it = res.getData().iterator(); it.hasNext(); ) {
+                    ManagerEntity me = (ManagerEntity) it.next();
 
-        managerEntityMarkers.put(mm1,new Three<ManagerEntity_OLD, Boolean, Boolean>(m1,true,false));
+                    if(!me.isValidForPrint()) continue;
 
-        ManagerEntity_OLD m2 = new ManagerEntityNoManaged();
-        m2.setLatitude(41.61780);
-        m2.setLongitude(0.629121);
-        m2.setName("Royal Machine");
-        m2.setId(1);
+                    Marker m = mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(me.getLatitude(), me.getLongitude()))
+                            .title(me.getName())
+                            .draggable(true)
+                            .visible(false));
 
-        Marker mm2 = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(m2.getLatitude(), m2.getLongitude()))
-                .title(m2.getName())
-                .draggable(true)
-                .visible(false)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_no_managed_no_selected)));
-
-        managerEntityMarkers.put(mm2, new Three<ManagerEntity_OLD, Boolean, Boolean>(m2, false, false));
+                    if(me.getType() == 1){
+                        m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_managed_no_selected));
+                        managerEntityMarkers.put(m, new Three<ManagerEntity, Boolean, Boolean>(me, true, false));
+                    }else if(me.getType() == 2){
+                        m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_no_managed_no_selected));
+                        managerEntityMarkers.put(m, new Three<ManagerEntity, Boolean, Boolean>(me, false, false));
+                    }
+                }
+                if(fieldRadioButton.isChecked()) showFieldsMap(true);
+            }
+        });
     }
 
     private void buildSummary() {
@@ -577,15 +605,16 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         TVMaxPlayers.setText(numMaxPlayersEditText.getText());
         TVMaxPricePlayer.setText(maxPricePlayerEditText.getText());
         TVDateHour.setText(dateHourEditText.getText());
+        TVDuration.setText(durationEditText.getText());
 
         if(zoneRadioButton.isChecked()){
             TVFieldTitle.setText(getString(R.string.radio_button_zone)+":");
-            //todo TVField.setText(zonesList.get(zoneSpinner.getSelectedItemPosition()));
+            TVField.setText(fullZoneText);
         }else if(fieldRadioButton.isChecked()){
             TVFieldTitle.setText(getString(R.string.radio_button_field)+":");
             String text = "";
             for(Three t : managerEntityMarkers.values()){
-                text +=  ((ManagerEntity_OLD)t.first).getName() + " ";
+                text +=  ((ManagerEntity)t.first).getName() + " ";
             }
             TVField.setText(text);
         }else{
@@ -609,7 +638,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             return;
         }
 
-        /*event = new Event_OLD(sportsList.get(sportsSpinner.getSelectedItemPosition())
+        /*event = new Event(sportsList.get(sportsSpinner.getSelectedItemPosition())
                 , numMinPlayersEditText.getText()
                 , numMaxPlayersEditText.getText()
                 , maxPricePlayerEditText.getText()
@@ -629,7 +658,8 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         if(Integer.parseInt(numMaxPlayersEditText.getText().toString()) < Integer.parseInt(numMinPlayersEditText.getText().toString())) return false;
         if(maxPricePlayerEditText.getText() == null || maxPricePlayerEditText.getText().toString().isEmpty() || !isNumeric(maxPricePlayerEditText.getText().toString())) return false;
         if(dateHourEditText.getText() == null || dateHourEditText.getText().toString().isEmpty()) return false;
-        //todo if(zoneRadioButton.isChecked() && zoneSpinner.getSelectedItemPosition() < 0) return false;
+        if(durationEditText.getText() == null || durationEditText.getText().toString().isEmpty() || Double.parseDouble(durationEditText.getText().toString()) < 0) return false;
+        if(zoneRadioButton.isChecked() && zoneEditText.getText().equals("")) return false;
         if(fieldRadioButton.isChecked() && !checkSelectedFields()) return false;
         if(mapRadioButton.isChecked() && (marker == null || circle == null)) return false;
 
@@ -704,6 +734,10 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             return false;
         }
         return true;
+    }
+
+    private Context getContext(){
+        return this;
     }
 
     private static class TimePickerFragment extends DialogFragment

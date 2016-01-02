@@ -19,6 +19,8 @@ public class Globals {
     public static final String PROPERTY_USER = "user";
     public static final String PROPERTY_USER_NAME = "userName";
 
+    public static final String PROPERTY_REMEMBER_NO_MANAGED_SELECTION = "remember_no_managed_selection";
+
     public static final long EXPIRATION_TIME_MS = 1000 * 3600 * 24 * 7;
 
     public static final String SENDER_ID = "1016170460617";
