@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.ssn.eps.model.Result;
+import com.ssn.eps.model.Event;
 import com.ssn.eps.ssn.R;
 import com.ssn.eps.ssn.wscaller.SoapWSCaller;
 import com.ssn.eps.ssn.wscaller.WSCallbackInterface;
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private TabLayout tabLayout;
+    private List<Event> events;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -176,13 +179,8 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
     }
 
     @Override
-    public List<Event_OLD> getEvents() {
-        Sport_OLD sport = new Sport_OLD(0, "Futbol");
-        List<Event_OLD> events = new ArrayList<>();
-        events.add(new Event_OLD(sport, 12, 22, 10, Calendar.getInstance(), Calendar.getInstance(), Calendar.getInstance(), Event_OLD.State.FILLING, "Lleida"));
-        events.add(new Event_OLD(sport, 12, 22, 10, Calendar.getInstance(), Calendar.getInstance(), Calendar.getInstance(), Event_OLD.State.FILLING, "Lleida"));
-        events.add(new Event_OLD(sport, 12, 22, 10, Calendar.getInstance(), Calendar.getInstance(), Calendar.getInstance(), Event_OLD.State.FILLING, "Lleida"));
-        events.add(new Event_OLD(sport, 12, 22, 10, Calendar.getInstance(), Calendar.getInstance(), Calendar.getInstance(), Event_OLD.State.FILLING, "Lleida"));
+    public List<Event> getEvents() {
+
         return events;
     }
 

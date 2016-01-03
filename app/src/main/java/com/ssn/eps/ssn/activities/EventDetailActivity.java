@@ -167,7 +167,7 @@ public class EventDetailActivity extends AppCompatActivity {
 
     private void initializeViews(Bundle savedInstanceState){
 
-        mapView = (MapView) findViewById(R.id.mapview);
+        mapView = (MapView) findViewById(R.id.mapview_eventdetail);
         zona_layout = (LinearLayout) findViewById(R.id.pistaLayout);
 
         mapView.onCreate(savedInstanceState);

@@ -19,9 +19,11 @@ import org.ksoap2.transport.HttpTransportSE;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ssn.eps.model.Filters;
 import com.ssn.eps.model.Result;
 import com.ssn.eps.model.Sport;
 import com.ssn.eps.model.User;
+import com.ssn.eps.model.Event;
 import com.ssn.eps.ssn.R;
 
 /**
@@ -32,7 +34,7 @@ public class SoapWSCaller {
     private static SoapWSCaller instance = new SoapWSCaller();
 
     private final static String NAMESPACE = "http://ws.ssn/";
-    private final String URL = "http://85.54.226.153:8080/SSN_WS/SSNWS";
+    private final String URL = "http://192.168.1.105:8080/SSN_WS/SSNWS";
 
     // Callbacks http://stackoverflow.com/questions/16800711/passing-function-as-a-parameter-in-java
 
@@ -79,6 +81,74 @@ public class SoapWSCaller {
         makeCall(act, "getSports", null, maList, callback);
     }
 
+    public void getEventsByFiltersCall(Activity act, Filters f, WSCallbackInterface callback){
+        List<PropertyInfo> piList = new ArrayList<PropertyInfo>();
+        PropertyInfo pi = new PropertyInfo();
+        pi.setName("iduser");
+        pi.setValue(f.getUserId());
+        piList.add(pi);
+
+        pi = new PropertyInfo();
+        pi.setName("idsport");
+        pi.setValue(f.getSportId());
+        piList.add(pi);
+
+        pi = new PropertyInfo();
+        pi.setName("minplayers");
+        pi.setValue(f.getMinPlayers());
+        piList.add(pi);
+
+        pi = new PropertyInfo();
+        pi.setName("maxprice");
+        pi.setValue(f.getMaxPrice());
+        pi.setType(Double.class);
+        piList.add(pi);
+
+        pi = new PropertyInfo();
+        pi.setName("fromdate");
+        pi.setValue(f.getFromDate());
+        piList.add(pi);
+
+        pi = new PropertyInfo();
+        pi.setName("todate");
+        pi.setValue(f.getToDate());
+        piList.add(pi);
+
+        List<Mapping> maList = new ArrayList<Mapping>();
+        Mapping m = new Mapping("event", new Event().getClass());
+        maList.add(m);
+
+        makeCall(act, "getUnjoinedEventsByFilters", piList, maList, callback);
+    }
+
+    public void getJoinedEventsCall(Activity act, int userId, WSCallbackInterface callback){
+        List<PropertyInfo> piList = new ArrayList<PropertyInfo>();
+        PropertyInfo pi = new PropertyInfo();
+        pi.setName("iduser");
+        pi.setValue(userId);
+        piList.add(pi);
+
+        List<Mapping> maList = new ArrayList<Mapping>();
+        Mapping m = new Mapping("event", new Event().getClass());
+        maList.add(m);
+
+        makeCall(act, "getEventsByUser", piList, maList, callback);
+    }
+
+    public void getHistoricalEventsCall(Activity act, int userId, WSCallbackInterface callback){
+        List<PropertyInfo> piList = new ArrayList<PropertyInfo>();
+        PropertyInfo pi = new PropertyInfo();
+        pi.setName("iduser");
+        pi.setValue(userId);
+        piList.add(pi);
+
+        List<Mapping> maList = new ArrayList<Mapping>();
+        Mapping m = new Mapping("event", new Event().getClass());
+        maList.add(m);
+
+        makeCall(act, "getEventsHistoryByUser", piList, maList, callback);
+    }
+
     private boolean checkNetwork(Activity act){
         ConnectivityManager connectivityManager = (ConnectivityManager) act.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -122,6 +192,9 @@ public class SoapWSCaller {
             envelope.dotNet = false;
             envelope.setAddAdornments(false);
             envelope.implicitTypes = false;
+
+            MarshalDouble md = new MarshalDouble();
+            md.register(envelope);
 
             envelope.setOutputSoapObject(request);
 

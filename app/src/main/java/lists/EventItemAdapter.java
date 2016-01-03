@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.ssn.eps.ssn.R;
 import com.ssn.eps.ssn.activities.EventDetailActivity;
+import com.ssn.eps.model.Event;
 
 import java.util.List;
 
@@ -25,11 +26,11 @@ import model.Event_OLD;
 public class EventItemAdapter extends BaseExpandableListAdapter {
 
     private Context context;
-    private List<Event_OLD> events;
+    private List<Event> events;
     private int tab;
     private Button butJoin, butLeave, butView;
 
-    public EventItemAdapter(Context context, List<Event_OLD> events, int tab){
+    public EventItemAdapter(Context context, List<Event> events, int tab){
         this.context = context;
         this.events = events;
         this.tab = tab;
@@ -81,14 +82,14 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
             rowView = inflater.inflate(R.layout.event_list_item, parent, false);
         }
 
-        Event_OLD e = this.events.get(groupPosition);
+        Event e = this.events.get(groupPosition);
 
 
         // Set data into the view.
         TextView tvCompressed = (TextView) rowView.findViewById(R.id.event_compressed_description);
-        tvCompressed.setText(e.getSport().getName() + " " + Globals.sdf.format(e.getEventDate().getTime()) + " " + e.getZone());
+        tvCompressed.setText(e.getSportName() + " " + Globals.sdfNoDay.format(e.getStartDate().getTime()) + " " + e.getCity());
 
-        Event_OLD item = this.events.get(groupPosition);
+        Event item = this.events.get(groupPosition);
 
         return rowView;
     }
@@ -106,19 +107,19 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
         else
             rowView = convertView;
 
-        Event_OLD e = this.events.get(groupPosition);
+        Event e = this.events.get(groupPosition);
 
         // Set data into the view.
         TextView tvSport = (TextView) rowView.findViewById(R.id.event_expanded_sport);
-        tvSport.setText(rowView.getResources().getText(R.string.sport) + " " + e.getSport().getName());
+        tvSport.setText(rowView.getResources().getText(R.string.sport) + " " + e.getSportName());
         TextView tvTime = (TextView) rowView.findViewById(R.id.event_expanded_time);
-        tvTime.setText(rowView.getResources().getText(R.string.date_hour) + " " + Globals.sdf.format(e.getEventDate().getTime()));
+        tvTime.setText(rowView.getResources().getText(R.string.date_hour) + " " + Globals.sdf.format(e.getStartDate().getTime()));
         TextView tvMinMaxPlayers = (TextView) rowView.findViewById(R.id.event_expanded_minmaxplayers);
-        tvMinMaxPlayers.setText(String.format(rowView.getResources().getText(R.string.players).toString(),e.getPlayers_list().size(), e.getMinPlayers(), e.getMaxPlayers()));
+        tvMinMaxPlayers.setText(String.format(rowView.getResources().getText(R.string.players).toString(), e.getActualPlayers(), e.getMinPlayers(), e.getMaxPlayers()));
         TextView tvMaxPrice = (TextView) rowView.findViewById(R.id.event_expanded_maxprice);
-        tvMaxPrice.setText(rowView.getResources().getText(R.string.max_price_player) + " " + e.getPrice());
+        tvMaxPrice.setText(rowView.getResources().getText(R.string.max_price_player) + " " + e.getMaxPrice());
         TextView tvZone = (TextView) rowView.findViewById(R.id.event_expanded_zone);
-        tvZone.setText(rowView.getResources().getText(R.string.place) + " " + e.getZone());
+        tvZone.setText(rowView.getResources().getText(R.string.place) + " " + e.getCity());
 
         butView = (Button) rowView.findViewById(R.id.button_event_details);
         butView.setOnClickListener(new View.OnClickListener() {

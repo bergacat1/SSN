@@ -24,7 +24,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.Marker;
+import com.ssn.eps.model.Filters;
+import com.ssn.eps.model.Result;
+import com.ssn.eps.model.Sport;
 import com.ssn.eps.ssn.R;
+import com.ssn.eps.ssn.wscaller.SoapWSCaller;
+import com.ssn.eps.ssn.wscaller.WSCallbackInterface;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -37,7 +42,7 @@ import General.Globals;
 public class FiltersActivity extends AppCompatActivity {
 
     private Activity context;
-    private List<String> sportsList = Arrays.asList("Hockey", "Rugby", "Futbol");
+    private List<Sport> sportsList;
     private List<String> zonesList = Arrays.asList("Lleida", "Torrefarrera", "Venavent");
     private List<String> fieldsList = Arrays.asList("EKKE", "Royal", "Trevol");
 
@@ -55,13 +60,17 @@ public class FiltersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_filters);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         this.context = this;
+        this.sportsList = new ArrayList<>();
 
         setSupportActionBar(toolbar);
+        SoapWSCaller.getInstance().getSportsCall(this, new WSCallbackInterface() {
+            @Override
+            public void onProcesFinished(Result res) {
+                if(res.isValid())
+                    createSportsSpinner(res.getData());
+            }
+        });
         sportsSpinner = (Spinner) findViewById(R.id.sport_filter);
-        //http://stackoverflow.com/questions/867518/how-to-make-an-android-spinner-with-initial-text-select-one
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, sportsList);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sportsSpinner.setAdapter(adapter);
 
         numMinPlayersEditText = (EditText) findViewById(R.id.min_players_filter);
 
@@ -107,24 +116,28 @@ public class FiltersActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = context.getIntent();
-                i.putExtra("SPORT", (String)sportsSpinner.getSelectedItem());
-                i.putExtra("MINPLAYERS", numMinPlayersEditText.getText());
-                i.putExtra("MAXPRICE", maxPricePlayerEditText.getText());
+                Filters f = null;
                 try {
-                    i.putExtra("DATEFROM", Globals.sdfNoHour.parse(dateFromET.getText().toString()));
-                }catch(ParseException e){
+                    f = new Filters(0, ((Sport)sportsSpinner.getSelectedItem()).getIdSport()
+                            , numMinPlayersEditText.getText().length() > 0  ? Integer.parseInt(numMinPlayersEditText.getText().toString()) : 0
+                            , maxPricePlayerEditText.getText().length() > 0 ? Integer.parseInt(maxPricePlayerEditText.getText().toString()) : 0
+                            , dateFromET.getText().length() > 0 ? Globals.sdfNoHour.parse(dateFromET.getText().toString()).getTime() : 0
+                            , dateToET.getText().length() > 0 ? Globals.sdfNoHour.parse(dateToET.getText().toString()).getTime() : 0);
+                } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                try {
-                    i.putExtra("DATETO", Globals.sdfNoHour.parse(dateToET.getText().toString()));
-                }catch(ParseException e){
-                    e.printStackTrace();
-                }
+                i.putExtra("filter", f);
 
 
                 setResult(0, i);
                 finish();
             }
         });
+    }
+    private void createSportsSpinner(List<Sport> sports){
+        sportsList.addAll(sports);
+        ArrayAdapter<Sport> adapter = new ArrayAdapter<Sport>(this, android.R.layout.simple_spinner_item, sportsList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sportsSpinner.setAdapter(adapter);
     }
 }

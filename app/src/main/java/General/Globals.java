@@ -11,6 +11,7 @@ public class Globals {
 
     public static SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm");
     public static SimpleDateFormat sdfNoHour = new SimpleDateFormat("EEE, d MMM yyyy");
+    public static SimpleDateFormat sdfNoDay = new SimpleDateFormat("d MMM yyyy HH:mm");
     public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     public static final String PROPERTY_REG_ID = "registration_id";

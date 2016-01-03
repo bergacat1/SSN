@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
     protected void onCreate(Bundle savedInstanceState) {
         // todo Powered by Google
         super.onCreate(savedInstanceState);
-        if(logged)finish();
+        //if(logged)finish();
         setContentView(R.layout.activity_login);
 
         myPreference = PreferenceManager.getDefaultSharedPreferences(this);
@@ -345,6 +345,7 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
                 if (id > 0) {
                     if (comeFromGCMTask)
                         setRegistrationId(getApplicationContext(), email, userName, regid);
+                    myPreference.edit().putInt("userid", id);
                     LoginActivity.logged = true;
                     Intent intent = new Intent(getContext(), MainActivity.class);
                     startActivity(intent);

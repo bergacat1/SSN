@@ -12,6 +12,8 @@ public class Event implements KvmSerializable{
 	private int idEvent;
 	private int idCreator;
 	private int idSport;
+    private String sportName;
+    private int actualPlayers;
 	private int minPlayers;
 	private int maxPlayers;
 	private Calendar startDate;
@@ -29,12 +31,14 @@ public class Event implements KvmSerializable{
         this.idCreator = 0;
         this.idEvent = 0;
         this.idSport = 0;
+        this.sportName = "";
         this.latitude = 0;
         this.longitude = 0;
         this.managerEntities = new ArrayList<Integer>();
+        this.actualPlayers = 0;
+        this.minPlayers = 0;
         this.maxPlayers = 0;
         this.maxPrice = 0;
-        this.minPlayers = 0;
         this.range = 0;
         this.startDate = Calendar.getInstance();
     }
@@ -164,13 +168,17 @@ public class Event implements KvmSerializable{
                 return this.maxPrice;
             case 12:
                 return this.managerEntities;
+            case 13:
+                return this.sportName;
+            case 14:
+                return this.actualPlayers;
 		}
         return null;
 	}
 
 	@Override
 	public int getPropertyCount() {
-		return 13;
+		return 15;
 	}
 
 	@Override
@@ -219,6 +227,12 @@ public class Event implements KvmSerializable{
                 break;
             case 12:
                 this.managerEntities = (List<Integer>)o;
+                break;
+            case 13:
+                this.sportName = o.toString();
+                break;
+            case 14:
+                this.actualPlayers = Integer.parseInt(o.toString());
                 break;
         }
 	}
@@ -278,6 +292,30 @@ public class Event implements KvmSerializable{
                 propertyInfo.type = List.class;
                 propertyInfo.name = "managerEntities";
                 break;
+            case 13:
+                propertyInfo.type = PropertyInfo.STRING_CLASS;
+                propertyInfo.name = "sportName";
+                break;
+            case 14:
+                propertyInfo.type = PropertyInfo.INTEGER_CLASS;
+                propertyInfo.name = "actualPlayers";
+                break;
         }
 	}
+
+    public String getSportName() {
+        return sportName;
+    }
+
+    public void setSportName(String sportName) {
+        this.sportName = sportName;
+    }
+
+    public int getActualPlayers() {
+        return actualPlayers;
+    }
+
+    public void setActualPlayers(int actualPlayers) {
+        this.actualPlayers = actualPlayers;
+    }
 }

@@ -131,4 +131,9 @@ public class Sport implements KvmSerializable {
                 break;
 		}
 	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
 }
