@@ -95,6 +95,10 @@
     <string name="no_managed_entity_selected_text">No es posible asegurar la disponibilidad de la pista, debido a que no existe una entidad registrada que la gestione.</string>
     <string name="duration">Duración:</string>
 
+    <!-- Notificaciones -->
+    <string name="notif_type_0">Nuevo evento</string>
+    <string name="notif_type_1">Un usuario se ha unido a un evento al que perteneces.</string>
+
     <string-array name="mapTypes">
         <item>De carreteras</item>
         <item>Satélite</item>

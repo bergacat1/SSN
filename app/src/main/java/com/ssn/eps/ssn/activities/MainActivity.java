@@ -31,6 +31,7 @@ import com.ssn.eps.ssn.wscaller.WSCallbackInterface;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 //import lists.EventItemAdapter;
 import General.Globals;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
     private ViewPager mViewPager;
     private TabLayout tabLayout;
     private List<Event> events;
+    private Map<Integer,Event> eventsMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +91,18 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
                 startActivity(intent);
             }
         });
+
+        Bundle extras = getIntent().getExtras();
+        if(extras.containsKey("type")){
+            switch (extras.getInt("type")){
+                case 0:
+                    break;
+                case 1:
+                    break;
+                default:
+            }
+
+        }
 
     }
 
@@ -176,6 +190,17 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
 
     private Context getContext(){
         return this;
+    }
+
+    private void goToEventById(int id){
+        if(eventsMap == null || !eventsMap.containsKey(id)){// todo: si el id no hi és pot ser que no estiguin els events actualitzats
+            showToast(getString(R.string.internal_error));
+            return;
+        }
+
+        Intent intent = new Intent(getContext(),EventDetailActivity.class);
+        intent.putExtra("eventId", id);
+        startActivity(intent);
     }
 
     @Override

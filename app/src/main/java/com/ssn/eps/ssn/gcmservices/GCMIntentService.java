@@ -51,10 +51,22 @@ public class GCMIntentService extends IntentService
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.logo1)
                         .setContentTitle(getString(R.string.app_name))
-                        .setContentText(extras.getString("msg"))
                         .setAutoCancel(true);
 
+        switch (extras.getInt("type")){
+            case 0: // NEW EVENT
+                mBuilder.setContentText(getString(R.string.notif_type_0));
+                break;
+            case 1: // USER JOINED IN EVENT
+                mBuilder.setContentText(getString(R.string.notif_type_1));
+                break;
+            default:
+                return;
+        }
+
         Intent notIntent =  new Intent(this, MainActivity.class);
+        notIntent.putExtras(extras);
+        notIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         PendingIntent contIntent = PendingIntent.getActivity(
                 this, 0, notIntent, 0);
 

@@ -22,6 +22,7 @@ public class MessageDialogFragment extends DialogFragment {
 
         String message = (String) getArguments().getSerializable("message");
         String title = (String) getArguments().getSerializable("title");
+        int positiveButtonTextId = getArguments().containsKey("positiveButtonText") ? (Integer) getArguments().getSerializable("positiveButtonText") : R.string.ok;
 
         finishAtTheEnd = getArguments().containsKey("finish") ? getArguments().getBoolean("finish") : false;
 
@@ -29,9 +30,9 @@ public class MessageDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(message)
                 .setTitle(title)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton(positiveButtonTextId, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        if(finishAtTheEnd){
+                        if(finishAtTheEnd && activity != null){
                             //Activity parent = (Activity) getActivity();
                             //parent.finish();
                             activity.finish();

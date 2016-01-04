@@ -3,6 +3,7 @@ package com.ssn.eps.ssn.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -115,6 +116,9 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
     }
 
     private Context getContext(){
+        return this;
+    }
+    private Activity getActivity(){
         return this;
     }
 
@@ -349,6 +353,7 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
                     LoginActivity.logged = true;
                     Intent intent = new Intent(getContext(), MainActivity.class);
                     startActivity(intent);
+                    getActivity().finish();
                 } else {
                     showToast(getString(R.string.server_error));
                 }
