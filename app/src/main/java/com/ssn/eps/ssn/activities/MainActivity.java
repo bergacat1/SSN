@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.ssn.eps.model.Result;
 import com.ssn.eps.model.Event;
 import com.ssn.eps.ssn.R;
+import com.ssn.eps.ssn.fragments.MessageDialogFragment;
 import com.ssn.eps.ssn.wscaller.SoapWSCaller;
 import com.ssn.eps.ssn.wscaller.WSCallbackInterface;
 
@@ -93,15 +94,33 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
         });
 
         Bundle extras = getIntent().getExtras();
-        if(extras.containsKey("type")){
+        if(extras.containsKey("type")){ // SHOW NOTIFICATION DIALOG
+
+            MessageDialogFragment dialog = new MessageDialogFragment();
+            Bundle bundle = new Bundle();
+
             switch (extras.getInt("type")){
-                case 0:
+                case 0: // New event
+                    // todo s'ha d'actualitzar la llista d'events, ja que s'acaba de crear-ne un.
+                    bundle.putSerializable("title",getString(R.string.notif_type_0));
+                    bundle.putSerializable("message", getString(R.string.notif_type_0_text));
+                    bundle.putSerializable("positiveButtonTextId",R.string.event_detail);
+                    bundle.putSerializable("cancellButton",true);
+                    bundle.putSerializable("eventId",extras.getInt("eventId"));
                     break;
-                case 1:
+                case 1: // Join event
+                    bundle.putSerializable("title",getString(R.string.notif_type_1));
+                    bundle.putSerializable("message", getString(R.string.notif_type_1_text));
+                    bundle.putSerializable("positiveButtonTextId",R.string.event_detail);
+                    bundle.putSerializable("cancellButton",true);
+                    bundle.putSerializable("eventId",extras.getInt("eventId"));
                     break;
                 default:
+                    return;
             }
 
+            dialog.setArguments(bundle);
+            dialog.show(getSupportFragmentManager(), "notification_dialog");
         }
 
     }
@@ -192,14 +211,17 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
         return this;
     }
 
-    private void goToEventById(int id){
+    public void goToEventById(int id){
         if(eventsMap == null || !eventsMap.containsKey(id)){// todo: si el id no hi és pot ser que no estiguin els events actualitzats
             showToast(getString(R.string.internal_error));
             return;
         }
 
         Intent intent = new Intent(getContext(),EventDetailActivity.class);
-        intent.putExtra("eventId", id);
+
+        Bundle extras = new Bundle();
+        extras.putSerializable("event", eventsMap.get(id));
+
         startActivity(intent);
     }
 

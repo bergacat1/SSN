@@ -308,7 +308,7 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
         }
     }
 
-    private void setRegistrationId(Context context, String user, String userName, String regId)
+    private void setRegistrationId(Context context, String user, String userName, String regId, int userId)
     {
         SharedPreferences prefs = getSharedPreferences(
                 MainActivity.class.getSimpleName(),
@@ -320,7 +320,7 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
         editor.putString(Globals.PROPERTY_USER, user);
         editor.putString(Globals.PROPERTY_USER_NAME, userName);
         editor.putString(Globals.PROPERTY_REG_ID, regId);
-        //editor.putString(Globals.PROPERTY_SERVER_ID, serverId);
+        editor.putInt(Globals.PROPERTY_USER_ID, userId);
         editor.putInt(Globals.PROPERTY_APP_VERSION, appVersion);
         editor.putLong(Globals.PROPERTY_EXPIRATION_TIME,
                 System.currentTimeMillis() + Globals.EXPIRATION_TIME_MS);
@@ -348,7 +348,7 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
 
                 if (id > 0) {
                     if (comeFromGCMTask)
-                        setRegistrationId(getApplicationContext(), email, userName, regid);
+                        setRegistrationId(getApplicationContext(), email, userName, regid,id);
                     myPreference.edit().putInt("userid", id);
                     LoginActivity.logged = true;
                     Intent intent = new Intent(getContext(), MainActivity.class);

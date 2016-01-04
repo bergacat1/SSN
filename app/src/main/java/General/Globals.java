@@ -18,6 +18,7 @@ public class Globals {
     public static final String PROPERTY_APP_VERSION = "appVersion";
     public static final String PROPERTY_EXPIRATION_TIME = "onServerExpirationTimeMs";
     public static final String PROPERTY_USER = "user";
+    public static final String PROPERTY_USER_ID = "userId";
     public static final String PROPERTY_USER_NAME = "userName";
 
     public static final String PROPERTY_REMEMBER_NO_MANAGED_SELECTION = "remember_no_managed_selection";

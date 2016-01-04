@@ -74,6 +74,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import General.Globals;
 import com.ssn.eps.model.Event;
@@ -92,9 +93,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
     private Button summaryButton;
     private Button createButton;
 
-    private List<String> sportsList = new ArrayList<String>();
-    private List<String> zonesList = new ArrayList<String>();
-    private List<String> fieldsList = new ArrayList<String>();
+    private Map<String, Integer> sportsMap = new HashMap<>();
 
     private Spinner sportsSpinner;
     private EditText numMinPlayersEditText;
@@ -547,13 +546,20 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                     return;
                 }
 
+                sportsMap.clear();
                 for (Iterator it = res.getData().iterator(); it.hasNext(); ) {
                     Sport sport = (Sport) it.next();
-                    sportsList.add(sport.getName());
+                    sportsMap.put(sport.getName(), sport.getIdSport());
                 }
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,android.R.layout.simple_spinner_item, sportsList);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,android.R.layout.simple_spinner_item, new ArrayList<String>(sportsMap.keySet()));
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                sportsSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        // todo esborrar les pistes marcades al canviar d'esport
+                    }
+                });
                 sportsSpinner.setAdapter(adapter);
             }
         });
@@ -566,7 +572,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             managerEntityMarkers = new HashMap<>();
         }
 
-        SoapWSCaller.getInstance().getSportsCall(this, new WSCallbackInterface() {
+        SoapWSCaller.getInstance().getFieldsCall(this, new WSCallbackInterface() {
             @Override
             public void onProcesFinished(com.ssn.eps.model.Result res) {
                 if (!res.isValid()) {
@@ -577,7 +583,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                 for (Iterator it = res.getData().iterator(); it.hasNext(); ) {
                     ManagerEntity me = (ManagerEntity) it.next();
 
-                    if(!me.isValidForPrint()) continue;
+                    if (!me.isValidForPrint()) continue;
 
                     Marker m = mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(me.getLatitude(), me.getLongitude()))
@@ -585,22 +591,22 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                             .draggable(true)
                             .visible(false));
 
-                    if(me.getType() == 1){
+                    if (me.getType() == 1) {
                         m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_managed_no_selected));
                         managerEntityMarkers.put(m, new Three<ManagerEntity, Boolean, Boolean>(me, true, false));
-                    }else if(me.getType() == 2){
+                    } else if (me.getType() == 2) {
                         m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_no_managed_no_selected));
                         managerEntityMarkers.put(m, new Three<ManagerEntity, Boolean, Boolean>(me, false, false));
                     }
                 }
-                if(fieldRadioButton.isChecked()) showFieldsMap(true);
+                if (fieldRadioButton.isChecked()) showFieldsMap(true);
             }
         });
     }
 
     private void buildSummary() {
 
-        TVSport.setText(sportsList.get(sportsSpinner.getSelectedItemPosition()));
+        TVSport.setText(new ArrayList<String>(sportsMap.keySet()).get(sportsSpinner.getSelectedItemPosition()));
         TVMinPlayers.setText(numMinPlayersEditText.getText());
         TVMaxPlayers.setText(numMaxPlayersEditText.getText());
         TVMaxPricePlayer.setText(maxPricePlayerEditText.getText());
@@ -637,12 +643,16 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             dialog.show(getSupportFragmentManager(),"error_message_new_event");
             return;
         }
-
-        /*event = new Event(sportsList.get(sportsSpinner.getSelectedItemPosition())
+        /*event = new Event();
+        event.setIdSport(sportsMap.);
+        event.setMaxPlayers();
+        event.setMinPlayers();
+        event = new Event(sportsList.get(sportsSpinner.getSelectedItemPosition())
                 , numMinPlayersEditText.getText()
                 , numMaxPlayersEditText.getText()
                 , maxPricePlayerEditText.getText()
-                , );*/
+                , );
+        */
 
         bundle.putSerializable("message", getString(R.string.ok_creation_event));
         bundle.putBoolean("finish", true);

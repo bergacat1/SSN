@@ -9,4 +9,5 @@ import com.ssn.eps.model.Event;
  */
 public interface FragmentsCommunicationInterface {
     public List<Event> getEvents();
+    public void goToEventById(int id);
 }

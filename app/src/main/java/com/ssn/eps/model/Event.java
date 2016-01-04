@@ -3,12 +3,13 @@ package com.ssn.eps.model;
 import org.ksoap2.serialization.KvmSerializable;
 import org.ksoap2.serialization.PropertyInfo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.List;
 
-public class Event implements KvmSerializable{
+public class Event implements KvmSerializable, Serializable{
 	private int idEvent;
 	private int idCreator;
 	private int idSport;

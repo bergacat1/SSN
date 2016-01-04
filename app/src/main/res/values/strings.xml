@@ -97,7 +97,10 @@
 
     <!-- Notificaciones -->
     <string name="notif_type_0">Nuevo evento</string>
-    <string name="notif_type_1">Un usuario se ha unido a un evento al que perteneces.</string>
+    <string name="notif_type_1">El evento crece</string>
+
+    <string name="notif_type_0_text">Se ha creado un nuevo evento</string>
+    <string name="notif_type_1_text">Un usuario se ha unido a un evento al que perteneces.</string>
 
     <string-array name="mapTypes">
         <item>De carreteras</item>

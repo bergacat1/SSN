@@ -25,6 +25,7 @@ import com.ssn.eps.model.Sport;
 import com.ssn.eps.model.User;
 import com.ssn.eps.model.Event;
 import com.ssn.eps.ssn.R;
+import com.ssn.eps.ssn.activities.NewEventWizardActivity;
 
 /**
  * Created by lluis on 24/12/15.
@@ -149,6 +150,10 @@ public class SoapWSCaller {
         makeCall(act, "getEventsHistoryByUser", piList, maList, callback);
     }
 
+    public void getFieldsCall(NewEventWizardActivity newEventWizardActivity, WSCallbackInterface wsCallbackInterface) {
+        // todo getFields filtered by sport
+    }
+
     private boolean checkNetwork(Activity act){
         ConnectivityManager connectivityManager = (ConnectivityManager) act.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -158,6 +163,8 @@ public class SoapWSCaller {
     public static SoapWSCaller getInstance(){
         return instance;
     }
+
+
 
     private class AsyncCallWS extends AsyncTask <String, Void, Result> {
 
