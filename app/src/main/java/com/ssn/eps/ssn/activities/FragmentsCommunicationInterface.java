@@ -8,6 +8,6 @@ import com.ssn.eps.model.Event;
  * Created by alber on 17/11/2015.
  */
 public interface FragmentsCommunicationInterface {
-    public List<Event> getEvents();
+    public void refreshTab(int tab);
     public void goToEventById(int id);
 }

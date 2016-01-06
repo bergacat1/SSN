@@ -113,5 +113,10 @@
         <item>4</item>
     </string-array>
     <string name="loading">Cargando...</string>
-    <string name="selectsport">Select a sport</string>
+    <string name="selectsport">Seleccione un deporte</string>
+    <string name="joinOk">Se ha unido al evento.</string>
+    <string name="leaveOk">Ha salido del evento.</string>
+    <string name="atencion">Atención!</string>
+    <string name="serverError">Error en el servidor: </string>
+    <string name="noEvents">No hay eventos.</string>
 </resources>

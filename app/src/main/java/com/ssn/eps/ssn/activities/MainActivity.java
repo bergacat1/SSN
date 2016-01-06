@@ -31,6 +31,8 @@ import com.ssn.eps.ssn.wscaller.WSCallbackInterface;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.EventListener;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +41,7 @@ import General.Globals;
 import model.Event_OLD;
 import model.Sport_OLD;
 
-public class MainActivity extends AppCompatActivity implements FragmentsCommunicationInterface{
+public class MainActivity extends AppCompatActivity{
 
     private SharedPreferences myPreference;
 
@@ -58,8 +60,6 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
      */
     private ViewPager mViewPager;
     private TabLayout tabLayout;
-    private List<Event> events;
-    private Map<Integer,Event> eventsMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
         });
 
         Bundle extras = getIntent().getExtras();
-        if(extras.containsKey("type")){ // SHOW NOTIFICATION DIALOG
+        if(extras != null && extras.containsKey("type")){ // SHOW NOTIFICATION DIALOG
 
             MessageDialogFragment dialog = new MessageDialogFragment();
             Bundle bundle = new Bundle();
@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
     }
 
     public void goToEventById(int id){
-        if(eventsMap == null || !eventsMap.containsKey(id)){// todo: si el id no hi és pot ser que no estiguin els events actualitzats
+        /*if(eventsMap == null || !eventsMap.containsKey(id)){// todo: si el id no hi és pot ser que no estiguin els events actualitzats
             showToast(getString(R.string.internal_error));
             return;
         }
@@ -222,13 +222,7 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
         Bundle extras = new Bundle();
         extras.putSerializable("event", eventsMap.get(id));
 
-        startActivity(intent);
-    }
-
-    @Override
-    public List<Event> getEvents() {
-
-        return events;
+        startActivity(intent);*/
     }
 
 
@@ -236,16 +230,25 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class SectionsPagerAdapter extends FragmentPagerAdapter implements FragmentsCommunicationInterface {
         private int activePage = -1;
+        private HashMap<Integer, EventsFragment> fragmentsMap;
+
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
+            fragmentsMap = new HashMap<>();
         }
 
         @Override
         public Fragment getItem(int position) {
-            return EventsFragment.getNewInstance(position);
+            if(!fragmentsMap.containsKey(position)) {
+                EventsFragment fragment = EventsFragment.getInstance(position, this);
+                fragmentsMap.put(position, fragment);
+            }
+            return fragmentsMap.get(position);
+
+
         }
 
         @Override
@@ -258,11 +261,11 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
         public CharSequence getPageTitle(int position) {
             this.activePage = position;
             switch (position) {
-                case 0:
+                case EventsFragment.TABEVENTS:
                     return getString(R.string.eventos);
-                case 1:
+                case EventsFragment.TABMYEVENTS:
                     return getString(R.string.mis_eventos);
-                case 2:
+                case EventsFragment.TABHISTORYEVENTS:
                     return getString(R.string.historico);
             }
             return null;
@@ -270,6 +273,17 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
 
         public int getActivePage(){
             return this.activePage;
+        }
+
+
+        @Override
+        public void refreshTab(int tab) {
+            fragmentsMap.get(tab).refreshEvents();
+        }
+
+        @Override
+        public void goToEventById(int id) {
+
         }
     }
 

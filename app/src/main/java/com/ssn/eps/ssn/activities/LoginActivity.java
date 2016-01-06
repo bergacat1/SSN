@@ -332,6 +332,10 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
 
         final String userName = myPreference.getString("userName", email);
 
+        final SharedPreferences prefs = getSharedPreferences(
+                MainActivity.class.getSimpleName(),
+                Context.MODE_PRIVATE);
+
         User me = new User();
         me.setEmail(email);
         me.setUsername(userName);
@@ -349,7 +353,9 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
                 if (id > 0) {
                     if (comeFromGCMTask)
                         setRegistrationId(getApplicationContext(), email, userName, regid,id);
-                    myPreference.edit().putInt("userid", id);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putInt(Globals.PROPERTY_USER_ID, id);
+                    editor.commit();
                     LoginActivity.logged = true;
                     Intent intent = new Intent(getContext(), MainActivity.class);
                     startActivity(intent);

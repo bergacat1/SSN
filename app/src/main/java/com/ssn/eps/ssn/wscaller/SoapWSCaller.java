@@ -35,7 +35,7 @@ public class SoapWSCaller {
     private static SoapWSCaller instance = new SoapWSCaller();
 
     private final static String NAMESPACE = "http://ws.ssn/";
-    private final String URL = "http://192.168.1.124:8080/SSN_WS/SSNWS";
+    private final String URL = "http://192.168.1.105:8080/SSN_WS/SSNWS";
 
     // Callbacks http://stackoverflow.com/questions/16800711/passing-function-as-a-parameter-in-java
 
@@ -154,6 +154,36 @@ public class SoapWSCaller {
         // todo getFields filtered by sport
     }
 
+    public void joinEventCall(Activity act, int idUser, int idEvent, WSCallbackInterface callback){
+        List<PropertyInfo> piList = new ArrayList<PropertyInfo>();
+        PropertyInfo pi = new PropertyInfo();
+        pi.setName("iduser");
+        pi.setValue(idUser);
+        piList.add(pi);
+
+        pi = new PropertyInfo();
+        pi.setName("idevent");
+        pi.setValue(idEvent);
+        piList.add(pi);
+
+        makeCall(act, "joinEvent", piList, null, callback);
+    }
+
+    public void leaveEventCall(Activity act, int idUser, int idEvent, WSCallbackInterface callback){
+        List<PropertyInfo> piList = new ArrayList<PropertyInfo>();
+        PropertyInfo pi = new PropertyInfo();
+        pi.setName("iduser");
+        pi.setValue(idUser);
+        piList.add(pi);
+
+        pi = new PropertyInfo();
+        pi.setName("idevent");
+        pi.setValue(idEvent);
+        piList.add(pi);
+
+        makeCall(act, "leaveEvent", piList, null, callback);
+    }
+
     private boolean checkNetwork(Activity act){
         ConnectivityManager connectivityManager = (ConnectivityManager) act.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -209,7 +239,7 @@ public class SoapWSCaller {
                 for(Mapping m : mapList)
                     envelope.addMapping(NAMESPACE,m.getName(),m.getaClass());
 
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL, 10000);
             //androidHttpTransport.debug = true;
 
             try{

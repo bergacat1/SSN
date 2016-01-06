@@ -12,14 +12,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 
+import com.ssn.eps.model.Event;
 import com.ssn.eps.model.Filters;
 import com.ssn.eps.model.Result;
 import com.ssn.eps.ssn.R;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
+import General.Globals;
 import lists.EventItemAdapter;
-import com.ssn.eps.model.Event;
+
 import com.ssn.eps.ssn.wscaller.SoapWSCaller;
 import com.ssn.eps.ssn.wscaller.WSCallbackInterface;
 
@@ -28,6 +34,10 @@ import com.ssn.eps.ssn.wscaller.WSCallbackInterface;
  */
 public class EventsFragment extends Fragment{
 
+    public static final int TABEVENTS = 0;
+    public static final int TABMYEVENTS = 1;
+    public static final int TABHISTORYEVENTS = 2;
+
     private int tab = -1;
     private int lastExpandedPosition = -1;
 
@@ -35,18 +45,21 @@ public class EventsFragment extends Fragment{
     private View rootView;
     private FragmentsCommunicationInterface mCallback;
     private ProgressDialog progress;
+    private EventItemAdapter adapter;
+    private Filters filter;
+    private FragmentsCommunicationInterface communicationInterface;
 
     public EventsFragment(){}
 
-    public static EventsFragment getNewInstance(int tab){
+    public static EventsFragment getInstance(int tab, FragmentsCommunicationInterface communicationInterface){
         EventsFragment e = new EventsFragment();
         e.setTab(tab);
+        e.setCommunicationInterface(communicationInterface);
         return e;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
@@ -54,66 +67,10 @@ public class EventsFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        progress = new ProgressDialog(getActivity());
-        progress.setMessage(getString(R.string.loading));
-        progress.show();
 
-        obtainEvents(new Filters());
-
-        Button filters = (Button)rootView.findViewById(R.id.button_filters);
-        if(tab != 0)
-            filters.setVisibility(View.GONE);
-        else
-            filters.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(getContext(), FiltersActivity.class);
-                    startActivityForResult(i, 1);
-                }
-            });
-
-        return rootView;
-    }
-
-    private void obtainEvents(Filters f){
-        SharedPreferences prefs = getActivity().getSharedPreferences(
-                MainActivity.class.getSimpleName(),
-                Context.MODE_PRIVATE);
-
-        if(f != null)
-            f.setUserId(8); //TODO: prefs.getInt("userid", -1)
-
-        switch(tab){
-            case 0:
-                SoapWSCaller.getInstance().getEventsByFiltersCall(getActivity(), f != null ? f : new Filters(), new WSCallbackInterface() {
-                    @Override
-                    public void onProcesFinished(Result res) {
-                        createListView(res.getData());
-                    }
-                });
-                break;
-            case 1:
-                SoapWSCaller.getInstance().getJoinedEventsCall(getActivity(), 8, new WSCallbackInterface() { //TODO:prefs.getInt("userid", -1)
-                    @Override
-                    public void onProcesFinished(Result res) {
-                        createListView(res.getData());
-                    }
-                });
-                break;
-            case 2:
-                SoapWSCaller.getInstance().getHistoricalEventsCall(getActivity(), 8, new WSCallbackInterface() { //TODO: prefs.getInt("userid", -1)
-                    @Override
-                    public void onProcesFinished(Result res) {
-                        createListView(res.getData());
-                    }
-                });
-                break;
-        }
-    }
-
-    public void createListView(List<Event> events){
         this.listView = (ExpandableListView) rootView.findViewById(R.id.eventsList);
-        this.listView.setAdapter(new EventItemAdapter(this.getContext(), events, tab));
+        this.adapter = new EventItemAdapter(this.getContext(), new ArrayList<Event>(), tab, this);
+        this.listView.setAdapter(adapter);
         this.listView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
 
             @Override
@@ -125,19 +82,78 @@ public class EventsFragment extends Fragment{
                 lastExpandedPosition = groupPosition;
             }
         });
-        progress.dismiss();
+
+        progress = new ProgressDialog(getActivity());
+        progress.setMessage(getString(R.string.loading));
+        progress.show();
+
+        obtainEvents(new Filters());
+        final Button filters = (Button)rootView.findViewById(R.id.button_filters);
+        if(tab != TABEVENTS)
+            filters.setVisibility(View.GONE);
+        else
+            filters.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getContext(), FiltersActivity.class);
+                    startActivityForResult(i, 1);
+                }
+            });
+        if(tab == TABEVENTS)
+            this.filter = new Filters();
+
+        int scheduleRatio = 10 + (tab != TABEVENTS ? 50 : 0);
+        ScheduledExecutorService schedule = new ScheduledThreadPoolExecutor(1);
+        schedule.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                obtainEvents(filter);
+            }
+        }, scheduleRatio, scheduleRatio, TimeUnit.SECONDS);
+
+
+        return rootView;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
-        try {
-            mCallback = (FragmentsCommunicationInterface) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement FragmentsCommunicationInterface");
+    private void obtainEvents(Filters f){
+        SharedPreferences prefs = getActivity().getSharedPreferences(
+                MainActivity.class.getSimpleName(),
+                Context.MODE_PRIVATE);
+
+        if(f != null)
+            f.setUserId(prefs.getInt(Globals.PROPERTY_USER_ID, -1)); //TODO: prefs.getInt("userid", -1)
+
+        switch(tab){
+            case TABEVENTS:
+                SoapWSCaller.getInstance().getEventsByFiltersCall(getActivity(), f != null ? f : new Filters(), new WSCallbackInterface() {
+                    @Override
+                    public void onProcesFinished(Result res) {
+                        adapter.setEvents(res.getData());
+                        progress.dismiss();
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+                break;
+            case TABMYEVENTS:
+                SoapWSCaller.getInstance().getJoinedEventsCall(getActivity(), prefs.getInt("userid", -1), new WSCallbackInterface() {
+                    @Override
+                    public void onProcesFinished(Result res) {
+                        adapter.setEvents(res.getData());
+                        progress.dismiss();
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+                break;
+            case TABHISTORYEVENTS:
+                SoapWSCaller.getInstance().getHistoricalEventsCall(getActivity(), prefs.getInt("userid", -1), new WSCallbackInterface() {
+                    @Override
+                    public void onProcesFinished(Result res) {
+                        adapter.setEvents(res.getData());
+                        progress.dismiss();
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+                break;
         }
     }
 
@@ -145,8 +161,22 @@ public class EventsFragment extends Fragment{
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == 0){
-            obtainEvents((Filters)data.getSerializableExtra("filter"));
+            this.filter = (Filters)data.getSerializableExtra("filter");
+            obtainEvents(filter);
         }
+    }
+
+    public void refreshEvents(){
+        obtainEvents(filter);
+    }
+
+    public void refreshTab(int tab){
+        communicationInterface.refreshTab(tab);
+    }
+
+    public void collapseAllList(){
+        listView.collapseGroup(lastExpandedPosition);
+        lastExpandedPosition = -1;
     }
 
     public void setTab(int tab)
@@ -154,4 +184,7 @@ public class EventsFragment extends Fragment{
         this.tab = tab;
     }
 
+    public void setCommunicationInterface(FragmentsCommunicationInterface communicationInterface) {
+        this.communicationInterface = communicationInterface;
+    }
 }
