@@ -32,6 +32,24 @@ public class Filters implements Serializable{
         this.userId = userId;
     }
 
+    public boolean isCleared(){
+        return this.fromDate == 0 &&
+                this.maxPrice == 0 &&
+                this.minPlayers == 0 &&
+                this.sportId == 0 &&
+                this.toDate == 0 &&
+                this.userId == 0;
+    }
+
+    public void clear(){
+        this.fromDate = 0;
+        this.maxPrice = 0;
+        this.minPlayers = 0;
+        this.sportId = 0;
+        this.toDate = 0;
+        this.userId = 0;
+    }
+
     public long getFromDate() {
         return fromDate;
     }

@@ -5,4 +5,5 @@
     <color name="colorAccent">#ffac40</color>
     <color name="list_overview">#0080FF</color>
     <color name="list_detail">#00BFFF</color>
+    <color name="light_red">#ff8080</color>
 </resources>

@@ -7,17 +7,32 @@
     android:orientation="vertical"
     tools:context="com.ssn.eps.ssn.activities.MainActivity$PlaceholderFragment">
 
-    <Button
-        android:layout_height="wrap_content"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:text="@string/filters"
-        android:id="@+id/button_filters"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="@string/filters"
+            android:id="@+id/button_filters"
+            android:layout_weight="1"/>
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="@string/clera_filters"
+            android:id="@+id/button_clear_filters"
+            android:enabled="false"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_no_events"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
+        android:paddingTop="20dp"
         android:visibility="gone"
         android:text="@string/noEvents"
         android:gravity="center_horizontal" />

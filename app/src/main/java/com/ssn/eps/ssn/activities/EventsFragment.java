@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 
 import com.ssn.eps.model.Event;
 import com.ssn.eps.model.Filters;
@@ -43,9 +44,12 @@ public class EventsFragment extends Fragment{
 
     private ExpandableListView listView;
     private View rootView;
+    private TextView tvNoEvents;
     private FragmentsCommunicationInterface mCallback;
     private ProgressDialog progress;
     private EventItemAdapter adapter;
+    private Button filtersButton;
+    private Button clearFiltersButton;
     private Filters filter;
     private FragmentsCommunicationInterface communicationInterface;
 
@@ -82,23 +86,34 @@ public class EventsFragment extends Fragment{
                 lastExpandedPosition = groupPosition;
             }
         });
+        this.tvNoEvents = (TextView) rootView.findViewById(R.id.tv_no_events);
 
         progress = new ProgressDialog(getActivity());
         progress.setMessage(getString(R.string.loading));
         progress.show();
 
         obtainEvents(new Filters());
-        final Button filters = (Button)rootView.findViewById(R.id.button_filters);
-        if(tab != TABEVENTS)
-            filters.setVisibility(View.GONE);
-        else
-            filters.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(getContext(), FiltersActivity.class);
-                    startActivityForResult(i, 1);
-                }
-            });
+        filtersButton = (Button)rootView.findViewById(R.id.button_filters);
+        filtersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(), FiltersActivity.class);
+                startActivityForResult(i, 1);
+            }
+        });
+        clearFiltersButton = (Button)rootView.findViewById(R.id.button_clear_filters);
+        clearFiltersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filter.clear();
+                clearFiltersButton.setEnabled(false);
+                obtainEvents(filter);
+            }
+        });
+        if(tab != TABEVENTS) {
+            filtersButton.setVisibility(View.GONE);
+            clearFiltersButton.setVisibility(View.GONE);
+        }
         if(tab == TABEVENTS)
             this.filter = new Filters();
 
@@ -131,26 +146,38 @@ public class EventsFragment extends Fragment{
                         adapter.setEvents(res.getData());
                         progress.dismiss();
                         adapter.notifyDataSetChanged();
+                        if(res.getData().isEmpty())
+                            tvNoEvents.setVisibility(View.VISIBLE);
+                        else
+                            tvNoEvents.setVisibility(View.GONE);
                     }
                 });
                 break;
             case TABMYEVENTS:
-                SoapWSCaller.getInstance().getJoinedEventsCall(getActivity(), prefs.getInt("userid", -1), new WSCallbackInterface() {
+                SoapWSCaller.getInstance().getJoinedEventsCall(getActivity(), prefs.getInt(Globals.PROPERTY_USER_ID, -1), new WSCallbackInterface() {
                     @Override
                     public void onProcesFinished(Result res) {
                         adapter.setEvents(res.getData());
                         progress.dismiss();
                         adapter.notifyDataSetChanged();
+                        if(res.getData().isEmpty())
+                            tvNoEvents.setVisibility(View.VISIBLE);
+                        else
+                            tvNoEvents.setVisibility(View.GONE);
                     }
                 });
                 break;
             case TABHISTORYEVENTS:
-                SoapWSCaller.getInstance().getHistoricalEventsCall(getActivity(), prefs.getInt("userid", -1), new WSCallbackInterface() {
+                SoapWSCaller.getInstance().getHistoricalEventsCall(getActivity(), prefs.getInt(Globals.PROPERTY_USER_ID, -1), new WSCallbackInterface() {
                     @Override
                     public void onProcesFinished(Result res) {
                         adapter.setEvents(res.getData());
                         progress.dismiss();
                         adapter.notifyDataSetChanged();
+                        if(res.getData().isEmpty())
+                            tvNoEvents.setVisibility(View.VISIBLE);
+                        else
+                            tvNoEvents.setVisibility(View.GONE);
                     }
                 });
                 break;
@@ -163,6 +190,8 @@ public class EventsFragment extends Fragment{
         if (requestCode == 1 && resultCode == 0){
             this.filter = (Filters)data.getSerializableExtra("filter");
             obtainEvents(filter);
+            if(!this.filter.isCleared())
+                clearFiltersButton.setEnabled(true);
         }
     }
 
