@@ -135,6 +135,9 @@ public class FiltersActivity extends AppCompatActivity {
         });
     }
     private void createSportsSpinner(List<Sport> sports){
+        Sport fakeSport = new Sport();
+        fakeSport.setIdSport(-1);
+        sportsList.add(fakeSport);
         sportsList.addAll(sports);
         ArrayAdapter<Sport> adapter = new ArrayAdapter<Sport>(this, android.R.layout.simple_spinner_item, sportsList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
