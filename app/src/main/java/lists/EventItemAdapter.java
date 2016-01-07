@@ -143,7 +143,7 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(context,EventDetailActivity.class);
-                i.putExtra("idevent", e);
+                i.putExtra("idevent", e.getIdEvent());
                 context.startActivity(i);
             }
         });
