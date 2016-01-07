@@ -10,6 +10,8 @@ import java.util.Hashtable;
 import java.util.List;
 
 public class Event implements KvmSerializable, Serializable{
+
+    public enum States {OPEN, RESERVED, COMPLETED, FINISHED};
 	private int idEvent;
 	private int idCreator;
 	private int idSport;
@@ -22,9 +24,13 @@ public class Event implements KvmSerializable, Serializable{
 	private String city;
 	private double latitude;
 	private double longitude;
-	private int range;
+	private double range;
 	private double maxPrice;
 	private List<Integer> managerEntities;
+    private boolean joined;
+    private States state;
+    private Calendar limitDate;
+    private int idReservation;
 
     public Event() {
         this.city = "";
@@ -42,24 +48,11 @@ public class Event implements KvmSerializable, Serializable{
         this.maxPrice = 0;
         this.range = 0;
         this.startDate = Calendar.getInstance();
+        this.joined = false;
+        this.state = States.OPEN;
+        this.limitDate = Calendar.getInstance();
+        this.idReservation = 0;
     }
-
-    public Event(String city, Calendar endDate, int idCreator, int idEvent, int idSport, double latitude, double longitude,
-				 List<Integer> managerEntities, int maxPlayers, double maxPrice, int minPlayers, int range, Calendar startDate) {
-		this.city = city;
-		this.endDate = endDate;
-		this.idCreator = idCreator;
-		this.idEvent = idEvent;
-		this.idSport = idSport;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.managerEntities = managerEntities;
-		this.maxPlayers = maxPlayers;
-		this.maxPrice = maxPrice;
-		this.minPlayers = minPlayers;
-		this.range = range;
-		this.startDate = startDate;
-	}
 
 	public int getIdEvent() {
 		return idEvent;
@@ -121,10 +114,10 @@ public class Event implements KvmSerializable, Serializable{
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
-	public int getRange() {
+	public double getRange() {
 		return range;
 	}
-	public void setRange(int range) {
+	public void setRange(double range) {
 		this.range = range;
 	}
 	public List<Integer> getManagerEntities() {
@@ -139,6 +132,37 @@ public class Event implements KvmSerializable, Serializable{
 	public void setMaxPrice(double maxPrice) {
 		this.maxPrice = maxPrice;
 	}
+    public boolean isJoined() {
+        return joined;
+    }
+
+    public void setJoined(boolean joined) {
+        this.joined = joined;
+    }
+
+    public States getState() {
+        return state;
+    }
+
+    public void setState(States state) {
+        this.state = state;
+    }
+
+    public Calendar getLimitDate() {
+        return limitDate;
+    }
+
+    public void setLimitDate(Calendar limitDate) {
+        this.limitDate = limitDate;
+    }
+
+    public int getIdReservation() {
+        return idReservation;
+    }
+
+    public void setIdReservation(int idReservation) {
+        this.idReservation = idReservation;
+    }
 
 	@Override
 	public Object getProperty(int i) {
@@ -173,13 +197,21 @@ public class Event implements KvmSerializable, Serializable{
                 return this.sportName;
             case 14:
                 return this.actualPlayers;
+            case 15:
+                return this.joined;
+            case 16:
+                return this.state;
+            case 17:
+                return this.limitDate;
+            case 18:
+                return this.idReservation;
 		}
         return null;
 	}
 
 	@Override
 	public int getPropertyCount() {
-		return 15;
+		return 19;
 	}
 
 	@Override
@@ -234,6 +266,20 @@ public class Event implements KvmSerializable, Serializable{
                 break;
             case 14:
                 this.actualPlayers = Integer.parseInt(o.toString());
+                break;
+            case 15:
+                this.joined = Boolean.getBoolean(o.toString());
+                break;
+            case 16:
+                this.state = States.valueOf(o.toString());
+                break;
+            case 17:
+                c = Calendar.getInstance();
+                c.setTimeInMillis(Long.parseLong(o.toString()));
+                this.limitDate = c;
+                break;
+            case 18:
+                this.idReservation = Integer.parseInt(o.toString());
                 break;
         }
 	}
@@ -300,6 +346,22 @@ public class Event implements KvmSerializable, Serializable{
             case 14:
                 propertyInfo.type = PropertyInfo.INTEGER_CLASS;
                 propertyInfo.name = "actualPlayers";
+                break;
+            case 15:
+                propertyInfo.type = PropertyInfo.BOOLEAN_CLASS;
+                propertyInfo.name = "joined";
+                break;
+            case 16:
+                propertyInfo.type = States.class;
+                propertyInfo.name = "state";
+                break;
+            case 17:
+                propertyInfo.type = Calendar.class;
+                propertyInfo.name = "limitDate";
+                break;
+            case 18:
+                propertyInfo.type = PropertyInfo.INTEGER_CLASS;
+                propertyInfo.name = "idReservation";
                 break;
         }
 	}
