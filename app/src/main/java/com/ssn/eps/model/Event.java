@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Event implements KvmSerializable, Serializable{
 
-    public enum States {OPEN, RESERVED, COMPLETED, FINISHED};
+    public enum States {OPEN, RESERVED, FINISHED, CANCELED};
 	private int idEvent;
 	private int idCreator;
 	private int idSport;
@@ -259,7 +259,8 @@ public class Event implements KvmSerializable, Serializable{
                 this.maxPrice = Double.parseDouble(o.toString());
                 break;
             case 12:
-                this.managerEntities = (List<Integer>)o;
+                if(managerEntities == null) managerEntities = new ArrayList<>();
+                this.managerEntities.add(Integer.parseInt(o.toString()));
                 break;
             case 13:
                 this.sportName = o.toString();
@@ -268,7 +269,7 @@ public class Event implements KvmSerializable, Serializable{
                 this.actualPlayers = Integer.parseInt(o.toString());
                 break;
             case 15:
-                this.joined = Boolean.getBoolean(o.toString());
+                this.joined = Boolean.parseBoolean(o.toString());
                 break;
             case 16:
                 this.state = States.valueOf(o.toString());
