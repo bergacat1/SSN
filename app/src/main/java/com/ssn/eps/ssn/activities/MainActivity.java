@@ -187,10 +187,9 @@ public class MainActivity extends AppCompatActivity{
                 int id = (Integer) res.getData().get(0);
 
                 if (id > 0) {
+                    setUnRegistrationId();
 
                     getActivity().finish();
-
-                    LoginActivity.logged = false;
 
                     Intent intent = new Intent(Intent.ACTION_MAIN);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -200,7 +199,22 @@ public class MainActivity extends AppCompatActivity{
                     showToast(getString(R.string.server_error));
                 }
             }
+            @Override
+            public void onProcessError() {
+                showToast(getString(R.string.server_error));
+            }
         });
+    }
+
+    private void setUnRegistrationId()
+    {
+        SharedPreferences.Editor editor = myPreference.edit();
+        editor.putString(Globals.PROPERTY_USER, "user");
+        editor.putString(Globals.PROPERTY_USER_NAME, "userName");
+        editor.putString(Globals.PROPERTY_REG_ID, "regId");
+        editor.putInt(Globals.PROPERTY_USER_ID, -1);
+
+        editor.commit();
     }
 
     private Activity getActivity(){
@@ -212,17 +226,17 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public void goToEventById(int id){
-        /*if(eventsMap == null || !eventsMap.containsKey(id)){// todo: si el id no hi és pot ser que no estiguin els events actualitzats
+        if(id < 0){
             showToast(getString(R.string.internal_error));
             return;
         }
 
+        mSectionsPagerAdapter.refreshTab(EventsFragment.TABEVENTS);
+
         Intent intent = new Intent(getContext(),EventDetailActivity.class);
+        intent.putExtra("idevent",id);
 
-        Bundle extras = new Bundle();
-        extras.putSerializable("event", eventsMap.get(id));
-
-        startActivity(intent);*/
+        startActivity(intent);
     }
 
 

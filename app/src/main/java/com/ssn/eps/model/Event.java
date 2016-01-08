@@ -202,7 +202,7 @@ public class Event implements KvmSerializable, Serializable{
             case 16:
                 return this.state;
             case 17:
-                return this.limitDate;
+                return this.limitDate.getTime();
             case 18:
                 return this.idReservation;
 		}
@@ -308,11 +308,11 @@ public class Event implements KvmSerializable, Serializable{
                 propertyInfo.name = "maxPlayers";
                 break;
             case 5:
-                propertyInfo.type = Calendar.class;
+                propertyInfo.type = PropertyInfo.LONG_CLASS;
                 propertyInfo.name = "startDate";
                 break;
             case 6:
-                propertyInfo.type = Calendar.class;
+                propertyInfo.type = PropertyInfo.LONG_CLASS;
                 propertyInfo.name = "endDate";
                 break;
             case 7:
@@ -356,7 +356,7 @@ public class Event implements KvmSerializable, Serializable{
                 propertyInfo.name = "state";
                 break;
             case 17:
-                propertyInfo.type = Calendar.class;
+                propertyInfo.type = PropertyInfo.LONG_CLASS;
                 propertyInfo.name = "limitDate";
                 break;
             case 18:
@@ -380,5 +380,10 @@ public class Event implements KvmSerializable, Serializable{
 
     public void setActualPlayers(int actualPlayers) {
         this.actualPlayers = actualPlayers;
+    }
+
+    public void addManagerEntity(int id){
+        if (managerEntities == null) managerEntities = new ArrayList<>();
+        managerEntities.add(id);
     }
 }

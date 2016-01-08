@@ -19,6 +19,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -68,6 +69,10 @@ public class FiltersActivity extends AppCompatActivity {
             public void onProcesFinished(Result res) {
                 if(res.isValid())
                     createSportsSpinner(res.getData());
+            }
+            @Override
+            public void onProcessError() {
+                showToast(getString(R.string.server_error));
             }
         });
         sportsSpinner = (Spinner) findViewById(R.id.sport_filter);
@@ -142,5 +147,8 @@ public class FiltersActivity extends AppCompatActivity {
         ArrayAdapter<Sport> adapter = new ArrayAdapter<Sport>(this, android.R.layout.simple_spinner_item, sportsList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sportsSpinner.setAdapter(adapter);
+    }
+    private void showToast(CharSequence text){
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
     }
 }

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ssn.eps.model.Filters;
+import com.ssn.eps.model.ManagerEntity;
 import com.ssn.eps.model.Result;
 import com.ssn.eps.model.Sport;
 import com.ssn.eps.model.User;
@@ -150,8 +151,22 @@ public class SoapWSCaller {
         makeCall(act, "getEventsHistoryByUser", piList, maList, callback);
     }
 
-    public void getFieldsCall(NewEventWizardActivity newEventWizardActivity, WSCallbackInterface wsCallbackInterface) {
-        // todo getFields filtered by sport
+    public void getFieldsCall(Activity act, WSCallbackInterface wsCallbackInterface) {
+
+    }
+
+    public void getManagerEntitiesByIdSportCall(Activity act, int sportId, WSCallbackInterface callback){
+        List<PropertyInfo> piList = new ArrayList<PropertyInfo>();
+        PropertyInfo pi = new PropertyInfo();
+        pi.setName("idsport");
+        pi.setValue(sportId);
+        piList.add(pi);
+
+        List<Mapping> maList = new ArrayList<Mapping>();
+        Mapping m = new Mapping("managerEntity", new ManagerEntity().getClass());
+        maList.add(m);
+
+        makeCall(act, "getManagerEntitiesBySport", piList, maList, callback);
     }
 
     public void joinEventCall(Activity act, int idUser, int idEvent, WSCallbackInterface callback){
@@ -184,6 +199,18 @@ public class SoapWSCaller {
         makeCall(act, "leaveEvent", piList, null, callback);
     }
 
+    public void createEventCall(Activity act, Event event, WSCallbackInterface callback) {
+
+        List<PropertyInfo> piList = new ArrayList<PropertyInfo>();
+        PropertyInfo pi = new PropertyInfo();
+
+        pi.setName("event");
+        pi.setValue(event);
+        piList.add(pi);
+
+        makeCall(act, "createEvent", piList, null, callback);
+    }
+
     private boolean checkNetwork(Activity act){
         ConnectivityManager connectivityManager = (ConnectivityManager) act.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -193,6 +220,7 @@ public class SoapWSCaller {
     public static SoapWSCaller getInstance(){
         return instance;
     }
+
 
 
 
@@ -277,8 +305,13 @@ public class SoapWSCaller {
         @Override
         protected void onPostExecute(Result obj) {
             super.onPostExecute(obj);
-            if (obj == null) return;
-            if (callback != null) callback.onProcesFinished(obj);
+            if (callback != null){
+                if (obj == null){
+                    callback.onProcessError();
+                    return;
+                }
+                callback.onProcesFinished(obj);
+            }
         }
 
         @Override

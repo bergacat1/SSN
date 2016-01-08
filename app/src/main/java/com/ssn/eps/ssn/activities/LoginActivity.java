@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -57,8 +58,6 @@ import model.User_OLD;
  */
 public class LoginActivity extends AppCompatActivity  implements GoogleApiClient.OnConnectionFailedListener {
 
-    public static boolean logged = false;
-
     private static final int RC_SIGN_IN = 9001;
     private GoogleApiClient mGoogleApiClient;
     private GoogleCloudMessaging gcm;
@@ -71,14 +70,19 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
 
     private SharedPreferences myPreference;
 
+    ProgressDialog progress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // todo Powered by Google
         super.onCreate(savedInstanceState);
-        //if(logged)finish();
+
         setContentView(R.layout.activity_login);
 
         myPreference = PreferenceManager.getDefaultSharedPreferences(this);
+
+        progress = new ProgressDialog(getActivity());
+        progress.setMessage(getString(R.string.loading));
 
         Button mSignInButton = (Button) findViewById(R.id.sign_in_button);
         mSignInButton.setOnClickListener(new OnClickListener() {
@@ -109,10 +113,13 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
         super.onResume();
 
         checkPlayServices();
-        /*if(MyDevice.getInstance().isOnline()){
-            startMainActivity();
-            finish();
-        }*/
+
+        int userId = myPreference.getInt(Globals.PROPERTY_USER_ID,-1);
+        if(userId > 0){
+            Intent intent = new Intent(getContext(), MainActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+        }
     }
 
     private Context getContext(){
@@ -140,6 +147,7 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
 
         if(!cancel){
             //showProgress(true);
+            //progress.show();
             signIn();
         }
     }
@@ -356,13 +364,18 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putInt(Globals.PROPERTY_USER_ID, id);
                     editor.commit();
-                    LoginActivity.logged = true;
+
                     Intent intent = new Intent(getContext(), MainActivity.class);
                     startActivity(intent);
                     getActivity().finish();
                 } else {
                     showToast(getString(R.string.server_error));
                 }
+            }
+
+            @Override
+            public void onProcessError() {
+                showToast(getString(R.string.server_error));
             }
         });
 

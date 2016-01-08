@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ssn.eps.model.Event;
 import com.ssn.eps.model.Filters;
@@ -151,6 +152,10 @@ public class EventsFragment extends Fragment{
                         else
                             tvNoEvents.setVisibility(View.GONE);
                     }
+                    @Override
+                    public void onProcessError() {
+                        showToast(getString(R.string.server_error));
+                    }
                 });
                 break;
             case TABMYEVENTS:
@@ -165,6 +170,10 @@ public class EventsFragment extends Fragment{
                         else
                             tvNoEvents.setVisibility(View.GONE);
                     }
+                    @Override
+                    public void onProcessError() {
+                        showToast(getString(R.string.server_error));
+                    }
                 });
                 break;
             case TABHISTORYEVENTS:
@@ -178,6 +187,10 @@ public class EventsFragment extends Fragment{
                             tvNoEvents.setVisibility(View.VISIBLE);
                         else
                             tvNoEvents.setVisibility(View.GONE);
+                    }
+                    @Override
+                    public void onProcessError() {
+                        showToast(getString(R.string.server_error));
                     }
                 });
                 break;
@@ -215,5 +228,9 @@ public class EventsFragment extends Fragment{
 
     public void setCommunicationInterface(FragmentsCommunicationInterface communicationInterface) {
         this.communicationInterface = communicationInterface;
+    }
+
+    private void showToast(CharSequence text){
+        Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
     }
 }

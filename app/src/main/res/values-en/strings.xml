@@ -53,7 +53,7 @@
 
     <string name="sport_spinner_prompt">Select a sport</string>
 
-    <string name="radio_button_zone">Zone</string>
+    <string name="radio_button_zone">City</string>
     <string name="radio_button_field">Field</string>
     <string name="radio_button_map">Map</string>
     <string name="marker_title">Search area</string>

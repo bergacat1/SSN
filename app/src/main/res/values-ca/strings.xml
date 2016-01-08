@@ -52,7 +52,7 @@
 
     <string name="sport_spinner_prompt">Seleccioni un esport</string>
 
-    <string name="radio_button_zone">Zona</string>
+    <string name="radio_button_zone">Població</string>
     <string name="radio_button_field">Pista</string>
     <string name="radio_button_map">Mapa</string>
     <string name="marker_title">Àrea de busqueda</string>

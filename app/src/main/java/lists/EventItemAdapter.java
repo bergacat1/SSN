@@ -178,6 +178,10 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
                                             }
 
                                         }
+                                        @Override
+                                        public void onProcessError() {
+                                            showToast(context.getText(R.string.server_error));
+                                        }
                                     });
                             }
                         })
@@ -219,6 +223,10 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
                                             }
 
                                         }
+                                        @Override
+                                        public void onProcessError() {
+                                            showToast(context.getText(R.string.server_error));
+                                        }
                                     });
                             }
                         })
@@ -253,4 +261,8 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
     }
 
     public void setEvents(List<Event> events){ this.events = events;}
+
+    private void showToast(CharSequence text){
+        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+    }
 }

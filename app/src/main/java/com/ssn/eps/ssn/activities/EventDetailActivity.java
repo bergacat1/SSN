@@ -123,7 +123,7 @@ public class EventDetailActivity extends AppCompatActivity {
                 dialog.setTitle(getString(R.string.user_info));
                 dialog.setContentView(R.layout.content_window_user_detail);
 
-                close_button =  (Button) dialog.findViewById(R.id.button_close);
+                close_button = (Button) dialog.findViewById(R.id.button_close);
                 close_button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

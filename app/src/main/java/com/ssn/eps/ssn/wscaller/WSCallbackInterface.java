@@ -7,4 +7,5 @@ import com.ssn.eps.model.Result;
  */
 public interface WSCallbackInterface {
     void onProcesFinished(Result res);
+    void onProcessError();
 }

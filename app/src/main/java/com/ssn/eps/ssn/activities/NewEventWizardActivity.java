@@ -60,6 +60,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.ssn.eps.model.Result;
 import com.ssn.eps.model.Sport;
 import com.ssn.eps.ssn.R;
 import com.ssn.eps.ssn.fragments.MessageDialogFragment;
@@ -93,7 +94,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
     private Button summaryButton;
     private Button createButton;
 
-    private Map<String, Integer> sportsMap = new HashMap<>();
+    private List<Sport> sportsList = new ArrayList<>();
 
     private Spinner sportsSpinner;
     private EditText numMinPlayersEditText;
@@ -161,7 +162,6 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
 
         initializeViews(savedInstanceState);
         getSports();
-        getFields();
 
         //showInitialMessage();
 
@@ -310,13 +310,13 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                 LatLngBounds bounds = new LatLngBounds(southWest, northEast);
 
                 List<Integer> autocompleteFilter = new ArrayList<>();
-                autocompleteFilter.add(Place.TYPE_COUNTRY);
+                //autocompleteFilter.add(Place.TYPE_COUNTRY);
                 autocompleteFilter.add(Place.TYPE_LOCALITY);
                 AutocompleteFilter filter = AutocompleteFilter.create(autocompleteFilter);
 
                 PendingResult result = Places.GeoDataApi.getAutocompletePredictions(mGoogleApiClient,
-                        s.toString(), bounds, AutocompleteFilter.create(Arrays.asList(
-                                Place.TYPE_LOCALITY/*, Place.TYPE_ADMINISTRATIVE_AREA_LEVEL_3*/)));
+                        s.toString(), bounds, filter/*AutocompleteFilter.create(Arrays.asList(
+                                Place.TYPE_LOCALITY, Place.TYPE_ADMINISTRATIVE_AREA_LEVEL_3))*/);
                 result.setResultCallback(new ResultCallback<AutocompletePredictionBuffer>() {
 
                     List<String> zonesList;
@@ -546,21 +546,33 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                     return;
                 }
 
-                sportsMap.clear();
+                sportsList.clear();
                 for (Iterator it = res.getData().iterator(); it.hasNext(); ) {
                     Sport sport = (Sport) it.next();
-                    sportsMap.put(sport.getName(), sport.getIdSport());
+                    sportsList.add(sport);
                 }
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,android.R.layout.simple_spinner_item, new ArrayList<String>(sportsMap.keySet()));
+                ArrayAdapter<Sport> adapter = new ArrayAdapter<Sport>(context, android.R.layout.simple_spinner_item, sportsList);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                sportsSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                sportsSpinner.setAdapter(adapter);
+                sportsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        // todo esborrar les pistes marcades al canviar d'esport
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        getFields();
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
                     }
                 });
-                sportsSpinner.setAdapter(adapter);
+
+                getFields();
+            }
+            @Override
+            public void onProcessError() {
+                showToast(getString(R.string.server_error));
             }
         });
 
@@ -572,14 +584,16 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             managerEntityMarkers = new HashMap<>();
         }
 
-        SoapWSCaller.getInstance().getFieldsCall(this, new WSCallbackInterface() {
+        int sportIdSelected = ((Sport) sportsSpinner.getSelectedItem()).getIdSport();
+
+        SoapWSCaller.getInstance().getManagerEntitiesByIdSportCall(this, sportIdSelected, new WSCallbackInterface() {
             @Override
             public void onProcesFinished(com.ssn.eps.model.Result res) {
                 if (!res.isValid()) {
                     showToast(getString(R.string.server_error) + ": " + res.getError());
                     return;
                 }
-
+                managerEntityMarkers.clear();
                 for (Iterator it = res.getData().iterator(); it.hasNext(); ) {
                     ManagerEntity me = (ManagerEntity) it.next();
 
@@ -591,22 +605,27 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                             .draggable(true)
                             .visible(false));
 
-                    if (me.getType() == 1) {
+                    if (me.getType() == 0) {
                         m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_managed_no_selected));
                         managerEntityMarkers.put(m, new Three<ManagerEntity, Boolean, Boolean>(me, true, false));
-                    } else if (me.getType() == 2) {
+                    } else if (me.getType() == 1) {
                         m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_no_managed_no_selected));
                         managerEntityMarkers.put(m, new Three<ManagerEntity, Boolean, Boolean>(me, false, false));
                     }
                 }
                 if (fieldRadioButton.isChecked()) showFieldsMap(true);
             }
+
+            @Override
+            public void onProcessError() {
+                showToast(getString(R.string.server_error));
+            }
         });
     }
 
     private void buildSummary() {
 
-        TVSport.setText(new ArrayList<String>(sportsMap.keySet()).get(sportsSpinner.getSelectedItemPosition()));
+        TVSport.setText(sportsSpinner.getSelectedItem().toString());
         TVMinPlayers.setText(numMinPlayersEditText.getText());
         TVMaxPlayers.setText(numMaxPlayersEditText.getText());
         TVMaxPricePlayer.setText(maxPricePlayerEditText.getText());
@@ -634,8 +653,8 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
     }
 
     public void createEvent(View v){
-        MessageDialogFragment dialog = new MessageDialogFragment();
-        Bundle bundle = new Bundle();
+        final MessageDialogFragment dialog = new MessageDialogFragment();
+        final Bundle bundle = new Bundle();
         bundle.putSerializable("title",getString(R.string.new_event));
         if(!validate()){
             bundle.putSerializable("message",getString(R.string.error_validate_event));
@@ -643,21 +662,65 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             dialog.show(getSupportFragmentManager(),"error_message_new_event");
             return;
         }
-        /*event = new Event();
-        event.setIdSport(sportsMap.);
-        event.setMaxPlayers();
-        event.setMinPlayers();
-        event = new Event(sportsList.get(sportsSpinner.getSelectedItemPosition())
-                , numMinPlayersEditText.getText()
-                , numMaxPlayersEditText.getText()
-                , maxPricePlayerEditText.getText()
-                , );
-        */
+        event = new Event();
+        event.setIdSport(((Sport) sportsSpinner.getSelectedItem()).getIdSport());
+        event.setMaxPlayers(Integer.parseInt(numMaxPlayersEditText.getText().toString()));
+        event.setMinPlayers(Integer.parseInt(numMinPlayersEditText.getText().toString()));
+        event.setMaxPrice(Double.parseDouble(maxPricePlayerEditText.getText().toString()));
 
-        bundle.putSerializable("message", getString(R.string.ok_creation_event));
-        bundle.putBoolean("finish", true);
-        dialog.setArguments(bundle);
-        dialog.show(getSupportFragmentManager(), "ok_message_new_event");
+        Calendar c = null;
+        try {
+            c = Calendar.getInstance();
+            c.setTime(Globals.sdf.parse(dateHourEditText.getText().toString()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            showToast(getString(R.string.internal_error));
+            return;
+        }
+
+        event.setStartDate(c);
+        c.add(Calendar.MINUTE, Integer.parseInt(durationEditText.getText().toString()));
+        event.setEndDate(c);
+
+        if(zoneRadioButton.isChecked()){
+            event.setCity(zoneEditText.getText().toString());
+        }else if(fieldRadioButton.isChecked()){
+            for(Three t : managerEntityMarkers.values()){
+                if((boolean)t.third){
+                    event.addManagerEntity(((ManagerEntity)t.first).getIdManagerEntity());
+                }
+            }
+        }else if(mapRadioButton.isChecked()){
+            event.setLatitude(marker.getPosition().latitude);
+            event.setLongitude(marker.getPosition().longitude);
+            event.setRange(circle.getRadius());
+        }
+
+        event.setIdCreator(myPreference.getInt(Globals.PROPERTY_USER_ID, -1));
+
+        SoapWSCaller.getInstance().createEventCall(this, event, new WSCallbackInterface() {
+            @Override
+            public void onProcesFinished(Result res) {
+                if (!res.isValid()) {
+                    showToast(getString(R.string.server_error) + ": " + res.getError());
+                    return;
+                }
+                int id = (Integer) res.getData().get(0);
+                if (id > 0) {
+                    bundle.putSerializable("message", getString(R.string.ok_creation_event));
+                    bundle.putBoolean("finish", true);
+                    dialog.setArguments(bundle);
+                    dialog.show(getSupportFragmentManager(), "ok_message_new_event");
+                } else {
+                    showToast(getString(R.string.server_error));
+                }
+            }
+
+            @Override
+            public void onProcessError() {
+                showToast(getString(R.string.server_error));
+            }
+        });
     }
 
     private boolean validate(){
@@ -668,7 +731,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         if(Integer.parseInt(numMaxPlayersEditText.getText().toString()) < Integer.parseInt(numMinPlayersEditText.getText().toString())) return false;
         if(maxPricePlayerEditText.getText() == null || maxPricePlayerEditText.getText().toString().isEmpty() || !isNumeric(maxPricePlayerEditText.getText().toString())) return false;
         if(dateHourEditText.getText() == null || dateHourEditText.getText().toString().isEmpty()) return false;
-        if(durationEditText.getText() == null || durationEditText.getText().toString().isEmpty() || Double.parseDouble(durationEditText.getText().toString()) < 0) return false;
+        if(durationEditText.getText() == null || durationEditText.getText().toString().isEmpty() || Integer.parseInt(durationEditText.getText().toString()) < 0) return false;
         if(zoneRadioButton.isChecked() && zoneEditText.getText().equals("")) return false;
         if(fieldRadioButton.isChecked() && !checkSelectedFields()) return false;
         if(mapRadioButton.isChecked() && (marker == null || circle == null)) return false;
