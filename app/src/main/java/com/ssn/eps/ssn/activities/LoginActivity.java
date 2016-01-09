@@ -356,13 +356,13 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
                     showToast(getString(R.string.server_error) +": " + res.getError());
                     return;
                 }
-                int id = (Integer) res.getData().get(0);
+                User u = (User) res.getData().get(0);
 
-                if (id > 0) {
+                if (u.getId() > 0) {
                     if (comeFromGCMTask)
-                        setRegistrationId(getApplicationContext(), email, userName, regid,id);
+                        setRegistrationId(getApplicationContext(), email, userName, regid,u.getId());
                     SharedPreferences.Editor editor = myPreference.edit();
-                    editor.putInt(Globals.PROPERTY_USER_ID, id);
+                    editor.putInt(Globals.PROPERTY_USER_ID, u.getId());
                     editor.commit();
 
                     Intent intent = new Intent(getContext(), MainActivity.class);
