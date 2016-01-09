@@ -268,12 +268,12 @@ public class SoapWSCaller {
                     envelope.addMapping(NAMESPACE,m.getName(),m.getaClass());
 
             HttpTransportSE androidHttpTransport = new HttpTransportSE(URL, 10000);
-            //androidHttpTransport.debug = true;
+            androidHttpTransport.debug = true;
 
             try{
 
                 androidHttpTransport.call(soapAction, envelope);
-                //Log.d("SOAP Request: ", androidHttpTransport.requestDump);
+                Log.e("SOAP Request: ", androidHttpTransport.requestDump);
                 //Log.d("SOAP Response: ", androidHttpTransport.responseDump);
                 if(envelope.bodyIn instanceof SoapFault){
                     String strFault = ((SoapFault) envelope.bodyIn).faultstring;

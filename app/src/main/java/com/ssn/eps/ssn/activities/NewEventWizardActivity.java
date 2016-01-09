@@ -415,13 +415,13 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                                             editor.commit();
                                         }
                                     })
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    .setPositiveButton(R.string.continue_, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_no_managed_selected));
                                             managerEntityMarkers.put(marker, new Three<ManagerEntity, Boolean, Boolean>(managerEntityMarkers.get(marker).first, false, true));
                                         }
                                     })
-                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                         }
                                     })
@@ -570,6 +570,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
 
                 getFields();
             }
+
             @Override
             public void onProcessError() {
                 showToast(getString(R.string.server_error));
@@ -594,6 +595,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                     return;
                 }
                 managerEntityMarkers.clear();
+                mMap.clear();
                 for (Iterator it = res.getData().iterator(); it.hasNext(); ) {
                     ManagerEntity me = (ManagerEntity) it.next();
 
@@ -613,7 +615,10 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
                         managerEntityMarkers.put(m, new Three<ManagerEntity, Boolean, Boolean>(me, false, false));
                     }
                 }
-                if (fieldRadioButton.isChecked()) showFieldsMap(true);
+
+                if (fieldRadioButton.isChecked()) {
+                    showFieldsMap(true);
+                }
             }
 
             @Override
@@ -639,7 +644,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             TVFieldTitle.setText(getString(R.string.radio_button_field)+":");
             String text = "";
             for(Three t : managerEntityMarkers.values()){
-                text +=  ((ManagerEntity)t.first).getName() + " ";
+                if((boolean)t.third) text +=  ((ManagerEntity)t.first).getName() + " ";
             }
             TVField.setText(text);
         }else{
@@ -668,19 +673,21 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         event.setMinPlayers(Integer.parseInt(numMinPlayersEditText.getText().toString()));
         event.setMaxPrice(Double.parseDouble(maxPricePlayerEditText.getText().toString()));
 
-        Calendar c = null;
+        Calendar startDate = null;
+        Calendar endDate = null;
         try {
-            c = Calendar.getInstance();
-            c.setTime(Globals.sdf.parse(dateHourEditText.getText().toString()));
+            startDate = Calendar.getInstance();
+            startDate.setTime(Globals.sdf.parse(dateHourEditText.getText().toString()));
         } catch (ParseException e) {
             e.printStackTrace();
             showToast(getString(R.string.internal_error));
             return;
         }
 
-        event.setStartDate(c);
-        c.add(Calendar.MINUTE, Integer.parseInt(durationEditText.getText().toString()));
-        event.setEndDate(c);
+        event.setStartDate(startDate);
+        endDate = startDate;
+        endDate.add(Calendar.MINUTE, Integer.parseInt(durationEditText.getText().toString()));
+        event.setEndDate(endDate);
 
         if(zoneRadioButton.isChecked()){
             event.setCity(zoneEditText.getText().toString());

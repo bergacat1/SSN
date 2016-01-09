@@ -338,7 +338,7 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
 
     private void registerUserInServer(final String email, final String regid, final boolean comeFromGCMTask){
 
-        final String userName = myPreference.getString("userName", email);
+        final String userName = myPreference.getString("userName", email.split("@")[0]);
 
         final SharedPreferences prefs = getSharedPreferences(
                 MainActivity.class.getSimpleName(),
@@ -361,7 +361,7 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
                 if (id > 0) {
                     if (comeFromGCMTask)
                         setRegistrationId(getApplicationContext(), email, userName, regid,id);
-                    SharedPreferences.Editor editor = prefs.edit();
+                    SharedPreferences.Editor editor = myPreference.edit();
                     editor.putInt(Globals.PROPERTY_USER_ID, id);
                     editor.commit();
 

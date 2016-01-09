@@ -1,5 +1,7 @@
 package com.ssn.eps.model;
 
+import com.ssn.eps.ssn.wscaller.SerializerIntArray;
+
 import org.ksoap2.serialization.KvmSerializable;
 import org.ksoap2.serialization.PropertyInfo;
 
@@ -8,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Vector;
 
 public class Event implements KvmSerializable, Serializable{
 
@@ -26,7 +29,7 @@ public class Event implements KvmSerializable, Serializable{
 	private double longitude;
 	private double range;
 	private double maxPrice;
-	private List<Integer> managerEntities;
+	private SerializerIntArray managerEntities;
     private boolean joined;
     private States state;
     private Calendar limitDate;
@@ -39,14 +42,14 @@ public class Event implements KvmSerializable, Serializable{
         this.idEvent = 0;
         this.idSport = 0;
         this.sportName = "";
-        this.latitude = 0;
-        this.longitude = 0;
-        this.managerEntities = new ArrayList<Integer>();
+        this.latitude = 0.0;
+        this.longitude = 0.0;
+        this.managerEntities = new SerializerIntArray();
         this.actualPlayers = 0;
         this.minPlayers = 0;
         this.maxPlayers = 0;
-        this.maxPrice = 0;
-        this.range = 0;
+        this.maxPrice = 0.0;
+        this.range = 0.0;
         this.startDate = Calendar.getInstance();
         this.joined = false;
         this.state = States.OPEN;
@@ -123,8 +126,8 @@ public class Event implements KvmSerializable, Serializable{
 	public List<Integer> getManagerEntities() {
 		return managerEntities;
 	}
-	public void setManagerEntities(List<Integer> managerEntities) {
-		this.managerEntities = managerEntities;
+	public void setManagerEntities(Vector<Integer> managerEntities) {
+		this.managerEntities = (SerializerIntArray)managerEntities;
 	}
 	public double getMaxPrice() {
 		return maxPrice;
@@ -178,9 +181,9 @@ public class Event implements KvmSerializable, Serializable{
             case 4:
                 return this.maxPlayers;
             case 5:
-                return this.startDate.getTime();
+                return this.startDate.getTimeInMillis();
             case 6:
-                return this.endDate.getTime();
+                return this.endDate.getTimeInMillis();
             case 7:
                 return this.city;
             case 8:
@@ -200,9 +203,9 @@ public class Event implements KvmSerializable, Serializable{
             case 15:
                 return this.joined;
             case 16:
-                return this.state;
+                return this.state.toString();
             case 17:
-                return this.limitDate.getTime();
+                return this.limitDate.getTimeInMillis();
             case 18:
                 return this.idReservation;
 		}
@@ -253,13 +256,13 @@ public class Event implements KvmSerializable, Serializable{
                 this.longitude = Double.parseDouble(o.toString());
                 break;
             case 10:
-                this.range = Integer.parseInt(o.toString());
+                this.range = Double.parseDouble(o.toString());
                 break;
             case 11:
                 this.maxPrice = Double.parseDouble(o.toString());
                 break;
             case 12:
-                if(managerEntities == null) managerEntities = new ArrayList<>();
+                if(managerEntities == null) managerEntities = new SerializerIntArray();
                 this.managerEntities.add(Integer.parseInt(o.toString()));
                 break;
             case 13:
@@ -384,7 +387,7 @@ public class Event implements KvmSerializable, Serializable{
     }
 
     public void addManagerEntity(int id){
-        if (managerEntities == null) managerEntities = new ArrayList<>();
+        if (managerEntities == null) managerEntities = new SerializerIntArray();
         managerEntities.add(id);
     }
 }

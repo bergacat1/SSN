@@ -4,6 +4,8 @@
     <string name="internal_error">Error interno</string>
     <string name="server_error">Error en el servidor de la app</string>
 
+    <string name="continue_">Continuar</string>
+
     <string name="leave_app_text">Está seguro que desea salir de la aplicación? De este modo dejará de recibir notificaciones.</string>
     
     <!-- Strings related to login -->
