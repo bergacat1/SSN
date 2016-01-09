@@ -170,6 +170,7 @@ public class User implements KvmSerializable{
 			case 10:
 				StringBuilder sb = new StringBuilder();
 				sb.append(mapType);
+				sb.append(edificios3D ? "1" : "0");
 				sb.append(notifNewEventManaged ? "1" : "0");
 				sb.append(notifNewEventUnmanaged ? "1" : "0");
 				sb.append(notifNewMemberEvent ? "1" : "0");
@@ -219,9 +220,10 @@ public class User implements KvmSerializable{
 			case 10:
 				String settings = o.toString();
 				this.mapType = Integer.parseInt(String.valueOf(settings.charAt(0)));
-				this.notifNewEventManaged = settings.charAt(1) == '1';
-				this.notifNewEventUnmanaged = settings.charAt(2) == '1';
-				this.notifNewMemberEvent = settings.charAt(3) == '1';
+				this.edificios3D = settings.charAt(1) == '1';
+				this.notifNewEventManaged = settings.charAt(2) == '1';
+				this.notifNewEventUnmanaged = settings.charAt(3) == '1';
+				this.notifNewMemberEvent = settings.charAt(4) == '1';
 				break;
         }
 	}
