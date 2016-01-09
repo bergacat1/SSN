@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,6 +57,7 @@ public class EventsFragment extends Fragment{
     private FragmentsCommunicationInterface communicationInterface;
     private ScheduledExecutorService schedule;
     private Future<?> future;
+    private SharedPreferences myPreference;
 
     public EventsFragment(){}
 
@@ -75,6 +77,7 @@ public class EventsFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        myPreference = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         this.listView = (ExpandableListView) rootView.findViewById(R.id.eventsList);
         this.adapter = new EventItemAdapter(this.getContext(), new ArrayList<Event>(), tab, this);
@@ -96,7 +99,7 @@ public class EventsFragment extends Fragment{
         progress.setMessage(getString(R.string.loading));
         progress.show();
 
-        obtainEvents(new Filters());
+        //obtainEvents(new Filters());
         filtersButton = (Button) rootView.findViewById(R.id.button_filters);
         filtersButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,12 +130,9 @@ public class EventsFragment extends Fragment{
     }
 
     private void obtainEvents(Filters f){
-        SharedPreferences prefs = getActivity().getSharedPreferences(
-                MainActivity.class.getSimpleName(),
-                Context.MODE_PRIVATE);
 
         if(f != null)
-            f.setUserId(prefs.getInt(Globals.PROPERTY_USER_ID, -1)); //TODO: prefs.getInt("userid", -1)
+            f.setUserId(myPreference.getInt(Globals.PROPERTY_USER_ID, -1));
 
         switch(tab){
             case TABEVENTS:
@@ -154,7 +154,7 @@ public class EventsFragment extends Fragment{
                 });
                 break;
             case TABMYEVENTS:
-                SoapWSCaller.getInstance().getJoinedEventsCall(getActivity(), prefs.getInt(Globals.PROPERTY_USER_ID, -1), new WSCallbackInterface() {
+                SoapWSCaller.getInstance().getJoinedEventsCall(getActivity(), myPreference.getInt(Globals.PROPERTY_USER_ID, -1), new WSCallbackInterface() {
                     @Override
                     public void onProcesFinished(Result res) {
                         adapter.setEvents(res.getData());
@@ -172,7 +172,7 @@ public class EventsFragment extends Fragment{
                 });
                 break;
             case TABHISTORYEVENTS:
-                SoapWSCaller.getInstance().getHistoricalEventsCall(getActivity(), prefs.getInt(Globals.PROPERTY_USER_ID, -1), new WSCallbackInterface() {
+                SoapWSCaller.getInstance().getHistoricalEventsCall(getActivity(), myPreference.getInt(Globals.PROPERTY_USER_ID, -1), new WSCallbackInterface() {
                     @Override
                     public void onProcesFinished(Result res) {
                         adapter.setEvents(res.getData());
