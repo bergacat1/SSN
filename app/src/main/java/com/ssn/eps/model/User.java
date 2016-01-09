@@ -18,6 +18,14 @@ public class User implements KvmSerializable{
 	private int type;
 	private String gcmId;
 
+	//Configuració
+	private int mapType;
+	private boolean edificios3D;
+	private boolean notifNewEventManaged;
+	private boolean notifNewEventUnmanaged;
+	private boolean notifNewMemberEvent;
+
+
 	public User() {
 		this.id = 0;
 		this.username = "";
@@ -29,20 +37,10 @@ public class User implements KvmSerializable{
 		this.telephone = 0;
 		this.type = 0;
 		this.gcmId = "";
-	}
-
-	public User(int id, String username, String email, String name, String surname1, String surname2,
-				int currentAccount, int telephone, int type, String gcmId) {
-		this.id = id;
-		this.username = username;
-		this.email = email;
-		this.name = name;
-		this.surname1 = surname1;
-		this.surname2 = surname2;
-		this.currentAccount = currentAccount;
-		this.telephone = telephone;
-		this.type = type;
-		this.gcmId = gcmId;
+		this.mapType = 1;
+		this.notifNewEventManaged = false;
+		this.notifNewEventUnmanaged = false;
+		this.notifNewMemberEvent = true;
 	}
 
 	public int getId() {
@@ -106,6 +104,46 @@ public class User implements KvmSerializable{
 		this.gcmId = gcmId;
 	}
 
+	public boolean isEdificios3D() {
+		return edificios3D;
+	}
+
+	public void setEdificios3D(boolean edificios3D) {
+		this.edificios3D = edificios3D;
+	}
+
+	public int getMapType() {
+		return mapType;
+	}
+
+	public void setMapType(int mapType) {
+		this.mapType = mapType;
+	}
+
+	public boolean isNotifNewEventManaged() {
+		return notifNewEventManaged;
+	}
+
+	public void setNotifNewEventManaged(boolean notifNewEventManaged) {
+		this.notifNewEventManaged = notifNewEventManaged;
+	}
+
+	public boolean isNotifNewEventUnmanaged() {
+		return notifNewEventUnmanaged;
+	}
+
+	public void setNotifNewEventUnmanaged(boolean notifNewEventUnmanaged) {
+		this.notifNewEventUnmanaged = notifNewEventUnmanaged;
+	}
+
+	public boolean isNotifNewMemberEvent() {
+		return notifNewMemberEvent;
+	}
+
+	public void setNotifNewMemberEvent(boolean notifNewMemberEvent) {
+		this.notifNewMemberEvent = notifNewMemberEvent;
+	}
+
 	@Override
 	public Object getProperty(int i) {
 		switch(i){
@@ -129,13 +167,20 @@ public class User implements KvmSerializable{
 				return type;
 			case 9:
 				return gcmId;
+			case 10:
+				StringBuilder sb = new StringBuilder();
+				sb.append(mapType);
+				sb.append(notifNewEventManaged ? "1" : "0");
+				sb.append(notifNewEventUnmanaged ? "1" : "0");
+				sb.append(notifNewMemberEvent ? "1" : "0");
+				break;
 		}
         return null;
 	}
 
 	@Override
 	public int getPropertyCount() {
-		return 10;
+		return 11;
 	}
 
 	@Override
@@ -171,6 +216,13 @@ public class User implements KvmSerializable{
             case 9:
                 this.gcmId = o.toString();
                 break;
+			case 10:
+				String settings = o.toString();
+				this.mapType = Integer.parseInt(String.valueOf(settings.charAt(0)));
+				this.notifNewEventManaged = settings.charAt(1) == '1';
+				this.notifNewEventUnmanaged = settings.charAt(2) == '1';
+				this.notifNewMemberEvent = settings.charAt(3) == '1';
+				break;
         }
 	}
 
@@ -217,6 +269,9 @@ public class User implements KvmSerializable{
                 propertyInfo.type = PropertyInfo.STRING_CLASS;
                 propertyInfo.name = "gcmId";
                 break;
+			case 10:
+				propertyInfo.type = PropertyInfo.STRING_CLASS;
+				propertyInfo.name = "settings";
         }
 	}
 }
