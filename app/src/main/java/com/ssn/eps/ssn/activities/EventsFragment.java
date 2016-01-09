@@ -53,6 +53,7 @@ public class EventsFragment extends Fragment{
     private Button clearFiltersButton;
     private Filters filter;
     private FragmentsCommunicationInterface communicationInterface;
+    private ScheduledExecutorService schedule;
 
     public EventsFragment(){}
 
@@ -94,7 +95,7 @@ public class EventsFragment extends Fragment{
         progress.show();
 
         obtainEvents(new Filters());
-        filtersButton = (Button)rootView.findViewById(R.id.button_filters);
+        filtersButton = (Button) rootView.findViewById(R.id.button_filters);
         filtersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,7 +103,7 @@ public class EventsFragment extends Fragment{
                 startActivityForResult(i, 1);
             }
         });
-        clearFiltersButton = (Button)rootView.findViewById(R.id.button_clear_filters);
+        clearFiltersButton = (Button) rootView.findViewById(R.id.button_clear_filters);
         clearFiltersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,22 +112,14 @@ public class EventsFragment extends Fragment{
                 obtainEvents(filter);
             }
         });
-        if(tab != TABEVENTS) {
+        if (tab != TABEVENTS) {
             filtersButton.setVisibility(View.GONE);
             clearFiltersButton.setVisibility(View.GONE);
         }
-        if(tab == TABEVENTS)
+        if (tab == TABEVENTS)
             this.filter = new Filters();
 
-        int scheduleRatio = 10 + (tab != TABEVENTS ? 50 : 0);
-        ScheduledExecutorService schedule = new ScheduledThreadPoolExecutor(1);
-        schedule.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                obtainEvents(filter);
-            }
-        }, scheduleRatio, scheduleRatio, TimeUnit.SECONDS);
-
+        schedule = new ScheduledThreadPoolExecutor(1);
 
         return rootView;
     }
@@ -206,6 +199,24 @@ public class EventsFragment extends Fragment{
             if(!this.filter.isCleared())
                 clearFiltersButton.setEnabled(true);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        int scheduleRatio = 10 + (tab != TABEVENTS ? 50 : 0);
+        schedule.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                obtainEvents(filter);
+            }
+        }, 0, scheduleRatio, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        schedule.shutdown();
     }
 
     public void refreshEvents(){
