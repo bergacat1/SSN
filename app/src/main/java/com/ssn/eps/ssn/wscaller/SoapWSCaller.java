@@ -120,7 +120,7 @@ public class SoapWSCaller {
         Mapping m = new Mapping("event", new Event().getClass());
         maList.add(m);
 
-        makeCall(act, "getUnjoinedEventsByFilters", piList, maList, callback);
+        makeCall(act, "getEventsByFilters", piList, maList, callback);
     }
 
     public void getJoinedEventsCall(Activity act, int userId, WSCallbackInterface callback){
