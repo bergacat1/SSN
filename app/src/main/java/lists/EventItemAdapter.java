@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.TextView;
@@ -27,7 +26,6 @@ import com.ssn.eps.ssn.wscaller.WSCallbackInterface;
 import java.util.List;
 
 import General.Globals;
-import model.Event_OLD;
 
 /**
  * Created by alber on 17/11/2015.
@@ -100,7 +98,7 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
         }
 
         Event e = this.events.get(groupPosition);
-
+        rowView.setBackgroundColor(getLightColorByState(e.getState()));
 
         // Set data into the view.
         TextView tvCompressed = (TextView) rowView.findViewById(R.id.event_compressed_description);
@@ -127,10 +125,15 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
         final Event e = this.events.get(groupPosition);
 
         // Set data into the view.
+        TextView tvState = (TextView) rowView.findViewById(R.id.event_state);
+        tvState.setText(e.getState().toString());
+        tvState.setTextColor(getHeavyColorByState(e.getState()));
         TextView tvSport = (TextView) rowView.findViewById(R.id.event_expanded_sport);
         tvSport.setText(rowView.getResources().getText(R.string.sport) + " " + e.getSportName());
         TextView tvTime = (TextView) rowView.findViewById(R.id.event_expanded_time);
         tvTime.setText(rowView.getResources().getText(R.string.date_hour) + " " + Globals.sdf.format(e.getStartDate().getTime()));
+        TextView tvLimitTime = (TextView) rowView.findViewById(R.id.event_expanded_time);
+        tvLimitTime.setText(rowView.getResources().getText(R.string.date_hour) + " " + Globals.sdf.format(e.getStartDate().getTime()));
         TextView tvMinMaxPlayers = (TextView) rowView.findViewById(R.id.event_expanded_minmaxplayers);
         tvMinMaxPlayers.setText(String.format(rowView.getResources().getText(R.string.players).toString(), e.getActualPlayers(), e.getMinPlayers(), e.getMaxPlayers()));
         TextView tvMaxPrice = (TextView) rowView.findViewById(R.id.event_expanded_maxprice);
@@ -163,10 +166,7 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
                                         @Override
                                         public void onProcesFinished(Result res) {
                                             if (res.isValid()){
-                                                events.remove(e);
-                                                adapter.notifyDataSetChanged();
                                                 fragment.refreshTab(EventsFragment.TABMYEVENTS);
-                                                fragment.collapseAllList();
                                                 Toast.makeText(context, context.getText(R.string.joinOk).toString(), Toast.LENGTH_LONG).show();
                                             }else{
                                                 new AlertDialog.Builder(context)
@@ -208,10 +208,12 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
                                         @Override
                                         public void onProcesFinished(Result res) {
                                             if (res.isValid()) {
-                                                events.remove(e);
-                                                adapter.notifyDataSetChanged();
-                                                fragment.refreshTab(EventsFragment.TABEVENTS);
-                                                fragment.collapseAllList();
+                                                if(tab == EventsFragment.TABMYEVENTS) {
+                                                    events.remove(e);
+                                                    adapter.notifyDataSetChanged();
+                                                    fragment.collapseAllList();
+                                                }
+                                                if(tab != EventsFragment.TABEVENTS) fragment.refreshTab(EventsFragment.TABEVENTS);
                                                 Toast.makeText(context, context.getText(R.string.leaveOk).toString(), Toast.LENGTH_LONG).show();
                                             } else {
                                                 new AlertDialog.Builder(context)
@@ -241,7 +243,10 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
         switch(this.tab)
         {
             case EventsFragment.TABEVENTS:
-                butLeave.setVisibility(View.GONE);
+                if(e.isJoined())
+                    butJoin.setVisibility(View.GONE);
+                else
+                    butLeave.setVisibility(View.GONE);
                 break;
             case EventsFragment.TABMYEVENTS:
                 butJoin.setVisibility(View.GONE);
@@ -253,6 +258,36 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
         }
 
         return rowView;
+    }
+
+    private int getLightColorByState(Event.States state){
+
+        switch(state){
+            case OPEN:
+                return context.getResources().getColor(R.color.light_green);
+            case RESERVED:
+                return context.getResources().getColor(R.color.light_orange);
+            case FINISHED:
+                return context.getResources().getColor(R.color.light_blue);
+            case CANCELED:
+                return context.getResources().getColor(R.color.light_red);
+        }
+        return 0;
+    }
+
+    private int getHeavyColorByState(Event.States state){
+
+        switch(state){
+            case OPEN:
+                return context.getResources().getColor(R.color.heavy_green);
+            case RESERVED:
+                return context.getResources().getColor(R.color.heavy_orange);
+            case FINISHED:
+                return context.getResources().getColor(R.color.heavy_blue);
+            case CANCELED:
+                return context.getResources().getColor(R.color.heavy_red);
+        }
+        return 0;
     }
 
     @Override

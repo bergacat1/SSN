@@ -5,5 +5,14 @@
     <color name="colorAccent">#ffac40</color>
     <color name="list_overview">#0080FF</color>
     <color name="list_detail">#00BFFF</color>
-    <color name="light_red">#ff8080</color>
+    <color name="light_red">#ffcccc</color>
+    <color name="light_green">#e5ffe5</color>
+    <color name="light_yellow">#ffffe5</color>
+    <color name="light_blue">#e5f7ff</color>
+    <color name="light_orange">#ffe7cc</color>
+    <color name="heavy_red">#ff0000</color>
+    <color name="heavy_green">#00ff00</color>
+    <color name="hevay_yellow">#ffff00</color>
+    <color name="heavy_blue">#0000ff</color>
+    <color name="heavy_orange">#ff6600</color>
 </resources>

@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -123,8 +124,8 @@ public class FiltersActivity extends AppCompatActivity {
                 Intent i = context.getIntent();
                 Filters f = null;
                 try {
-                    f = new Filters(0, ((Sport)sportsSpinner.getSelectedItem()).getIdSport()
-                            , numMinPlayersEditText.getText().length() > 0  ? Integer.parseInt(numMinPlayersEditText.getText().toString()) : 0
+                    f = new Filters(0, ((Sport) sportsSpinner.getSelectedItem()).getIdSport()
+                            , numMinPlayersEditText.getText().length() > 0 ? Integer.parseInt(numMinPlayersEditText.getText().toString()) : 0
                             , maxPricePlayerEditText.getText().length() > 0 ? Integer.parseInt(maxPricePlayerEditText.getText().toString()) : 0
                             , dateFromET.getText().length() > 0 ? Globals.sdfNoHour.parse(dateFromET.getText().toString()).getTime() : 0
                             , dateToET.getText().length() > 0 ? Globals.sdfNoHour.parse(dateToET.getText().toString()).getTime() : 0);
@@ -134,7 +135,7 @@ public class FiltersActivity extends AppCompatActivity {
                 i.putExtra("filter", f);
 
 
-                setResult(0, i);
+                setResult(RESULT_OK, i);
                 finish();
             }
         });
@@ -150,5 +151,14 @@ public class FiltersActivity extends AppCompatActivity {
     }
     private void showToast(CharSequence text){
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = this.getIntent();
+        this.setResult(RESULT_CANCELED, intent);
+        finish();
+        finish();
     }
 }

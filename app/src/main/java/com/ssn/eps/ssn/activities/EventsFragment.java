@@ -21,6 +21,7 @@ import com.ssn.eps.ssn.R;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -54,6 +55,7 @@ public class EventsFragment extends Fragment{
     private Filters filter;
     private FragmentsCommunicationInterface communicationInterface;
     private ScheduledExecutorService schedule;
+    private Future<?> future;
 
     public EventsFragment(){}
 
@@ -193,7 +195,7 @@ public class EventsFragment extends Fragment{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == 0){
+        if (requestCode == 1 && resultCode == -1){
             this.filter = (Filters)data.getSerializableExtra("filter");
             obtainEvents(filter);
             if(!this.filter.isCleared())
@@ -205,7 +207,8 @@ public class EventsFragment extends Fragment{
     public void onStart() {
         super.onStart();
         int scheduleRatio = 10 + (tab != TABEVENTS ? 50 : 0);
-        schedule.scheduleAtFixedRate(new Runnable() {
+
+        future = schedule.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
                 obtainEvents(filter);
@@ -216,7 +219,7 @@ public class EventsFragment extends Fragment{
     @Override
     public void onStop() {
         super.onStop();
-        schedule.shutdown();
+        future.cancel(false);
     }
 
     public void refreshEvents(){

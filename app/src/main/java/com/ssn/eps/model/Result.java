@@ -78,10 +78,11 @@ public class Result<T> implements KvmSerializable{
     public void setProperty(int i, Object o) {
         switch (i){
             case 0:
-                data = (List<T>) o;
+                if(this.data == null) this.data = new ArrayList<>();
+                data.add((T)o);
                 break;
             case 1:
-                valid = Boolean.getBoolean(o.toString());
+                valid = Boolean.parseBoolean(o.toString());
                 break;
             case 2:
                 error = o.toString();
