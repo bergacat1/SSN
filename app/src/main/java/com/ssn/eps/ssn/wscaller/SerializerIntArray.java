@@ -33,4 +33,5 @@ public class SerializerIntArray extends Vector<Integer> implements Serializable,
         propertyInfo.type = Integer.class;
         propertyInfo.name = "managerEntities";
     }
+
 }

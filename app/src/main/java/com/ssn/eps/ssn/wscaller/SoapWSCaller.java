@@ -260,6 +260,8 @@ public class SoapWSCaller {
 
             MarshalDouble md = new MarshalDouble();
             md.register(envelope);
+            //MarshalList<Integer> ml = new MarshalList<Integer>();
+            //ml.register(envelope);
 
             envelope.setOutputSoapObject(request);
 

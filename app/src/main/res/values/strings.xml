@@ -95,7 +95,7 @@
 
     <string name="no_managed_entity_selected">Entidad no gestionada seleccionada</string>
     <string name="no_managed_entity_selected_text">No es posible asegurar la disponibilidad de la pista, debido a que no existe una entidad registrada que la gestione.</string>
-    <string name="duration">Duración:</string>
+    <string name="duration">Tiempo de juego (min):</string>
 
     <!-- Notificaciones -->
     <string name="notif_type_0">Nuevo evento</string>
@@ -122,4 +122,7 @@
     <string name="serverError">Error en el servidor: </string>
     <string name="noEvents">No hay eventos.</string>
     <string name="clera_filters">Eliminar filtro</string>
+
+
+    <string name="cancelation">Tiempo límite para cancelación (min):</string>
 </resources>

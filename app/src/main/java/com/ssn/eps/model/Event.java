@@ -29,7 +29,7 @@ public class Event implements KvmSerializable, Serializable{
 	private double longitude;
 	private double range;
 	private double maxPrice;
-	private SerializerIntArray managerEntities;
+	private Vector managerEntities;
     private boolean joined;
     private States state;
     private Calendar limitDate;
@@ -44,7 +44,7 @@ public class Event implements KvmSerializable, Serializable{
         this.sportName = "";
         this.latitude = 0.0;
         this.longitude = 0.0;
-        this.managerEntities = new SerializerIntArray();
+        this.managerEntities = new Vector();
         this.actualPlayers = 0;
         this.minPlayers = 0;
         this.maxPlayers = 0;
@@ -127,7 +127,7 @@ public class Event implements KvmSerializable, Serializable{
 		return managerEntities;
 	}
 	public void setManagerEntities(Vector<Integer> managerEntities) {
-		this.managerEntities = (SerializerIntArray)managerEntities;
+		this.managerEntities = managerEntities;
 	}
 	public double getMaxPrice() {
 		return maxPrice;
@@ -262,7 +262,7 @@ public class Event implements KvmSerializable, Serializable{
                 this.maxPrice = Double.parseDouble(o.toString());
                 break;
             case 12:
-                if(managerEntities == null) managerEntities = new SerializerIntArray();
+                if(managerEntities == null) managerEntities = new Vector();
                 this.managerEntities.add(Integer.parseInt(o.toString()));
                 break;
             case 13:
@@ -340,7 +340,7 @@ public class Event implements KvmSerializable, Serializable{
                 propertyInfo.name = "maxPrice";
                 break;
             case 12:
-                propertyInfo.type = List.class;
+                propertyInfo.type = ArrayList.class;
                 propertyInfo.name = "managerEntities";
                 break;
             case 13:
@@ -387,7 +387,7 @@ public class Event implements KvmSerializable, Serializable{
     }
 
     public void addManagerEntity(int id){
-        if (managerEntities == null) managerEntities = new SerializerIntArray();
+        if (managerEntities == null) managerEntities = new Vector();
         managerEntities.add(id);
     }
 }

@@ -12,6 +12,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.ListPreference;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.AsyncTask;
@@ -114,9 +115,10 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
 
         checkPlayServices();
 
-        int userId = myPreference.getInt(Globals.PROPERTY_USER_ID,-1);
+        int userId = myPreference.getInt(Globals.PROPERTY_USER_ID, -1);
         if(userId > 0){
             Intent intent = new Intent(getContext(), MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
             getActivity().finish();
         }
@@ -265,7 +267,7 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
         }
 
         String registeredUser =
-                prefs.getString(Globals.PROPERTY_USER, "user");
+                prefs.getString(Globals.PROPERTY_USER, "user@email.com");
 
         int registeredVersion =
                 prefs.getInt(Globals.PROPERTY_APP_VERSION, Integer.MIN_VALUE);
@@ -316,19 +318,14 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
         }
     }
 
-    private void setRegistrationId(Context context, String user, String userName, String regId, int userId)
+    private void setRegistrationId(Context context, String regId)
     {
-        SharedPreferences prefs = getSharedPreferences(
-                MainActivity.class.getSimpleName(),
-                Context.MODE_PRIVATE);
 
         int appVersion = getAppVersion(context);
 
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(Globals.PROPERTY_USER, user);
-        editor.putString(Globals.PROPERTY_USER_NAME, userName);
+        SharedPreferences.Editor editor = myPreference.edit();
+
         editor.putString(Globals.PROPERTY_REG_ID, regId);
-        editor.putInt(Globals.PROPERTY_USER_ID, userId);
         editor.putInt(Globals.PROPERTY_APP_VERSION, appVersion);
         editor.putLong(Globals.PROPERTY_EXPIRATION_TIME,
                 System.currentTimeMillis() + Globals.EXPIRATION_TIME_MS);
@@ -336,13 +333,33 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
         editor.commit();
     }
 
+    private void setConfigurationPreferences(Context context, User user)
+    {
+
+        SharedPreferences.Editor editor = myPreference.edit();
+        editor.putString(Globals.PROPERTY_USER, user.getEmail());
+        editor.putInt(Globals.PROPERTY_USER_ID, user.getId());
+        editor.putString(Globals.PROPERTY_USER_NAME, user.getUsername());
+
+        editor.putString("mapType", user.getMapType());
+        editor.putBoolean("buildings_map_checkbox", user.isEdificios3D());
+
+        if(user.isNotifNewEventManaged() || user.isNotifNewEventUnmanaged()){
+            editor.putBoolean("notifications_new_event", true);
+        }else{
+            editor.putBoolean("notifications_new_event", false);
+        }
+
+        editor.putBoolean("notifications_new_event_managed", user.isNotifNewEventManaged());
+        editor.putBoolean("notifications_new_event_unmanaged", user.isNotifNewEventUnmanaged());
+        editor.putBoolean("notifications_new_message", user.isNotifNewMemberEvent());
+
+        editor.commit();
+    }
+
     private void registerUserInServer(final String email, final String regid, final boolean comeFromGCMTask){
 
         final String userName = myPreference.getString("userName", email.split("@")[0]);
-
-        final SharedPreferences prefs = getSharedPreferences(
-                MainActivity.class.getSimpleName(),
-                Context.MODE_PRIVATE);
 
         User me = new User();
         me.setEmail(email);
@@ -360,10 +377,9 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
 
                 if (u.getId() > 0) {
                     if (comeFromGCMTask)
-                        setRegistrationId(getApplicationContext(), email, userName, regid,u.getId());
-                    SharedPreferences.Editor editor = myPreference.edit();
-                    editor.putInt(Globals.PROPERTY_USER_ID, u.getId());
-                    editor.commit();
+                        setRegistrationId(getApplicationContext(), regid);
+
+                    setConfigurationPreferences(getApplicationContext(), u);
 
                     Intent intent = new Intent(getContext(), MainActivity.class);
                     startActivity(intent);

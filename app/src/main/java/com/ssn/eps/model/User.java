@@ -19,7 +19,7 @@ public class User implements KvmSerializable{
 	private String gcmId;
 
 	//Configuració
-	private int mapType;
+	private String mapType;
 	private boolean edificios3D;
 	private boolean notifNewEventManaged;
 	private boolean notifNewEventUnmanaged;
@@ -37,7 +37,7 @@ public class User implements KvmSerializable{
 		this.telephone = 0;
 		this.type = 0;
 		this.gcmId = "";
-		this.mapType = 1;
+		this.mapType = "1";
 		this.notifNewEventManaged = false;
 		this.notifNewEventUnmanaged = false;
 		this.notifNewMemberEvent = true;
@@ -112,11 +112,11 @@ public class User implements KvmSerializable{
 		this.edificios3D = edificios3D;
 	}
 
-	public int getMapType() {
+	public String getMapType() {
 		return mapType;
 	}
 
-	public void setMapType(int mapType) {
+	public void setMapType(String mapType) {
 		this.mapType = mapType;
 	}
 
@@ -219,7 +219,7 @@ public class User implements KvmSerializable{
                 break;
 			case 10:
 				String settings = o.toString();
-				this.mapType = Integer.parseInt(String.valueOf(settings.charAt(0)));
+				this.mapType = String.valueOf(settings.charAt(0));
 				this.edificios3D = settings.charAt(1) == '1';
 				this.notifNewEventManaged = settings.charAt(2) == '1';
 				this.notifNewEventUnmanaged = settings.charAt(3) == '1';

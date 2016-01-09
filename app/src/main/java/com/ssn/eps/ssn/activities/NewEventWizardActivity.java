@@ -102,6 +102,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
     private EditText maxPricePlayerEditText;
     private EditText dateHourEditText;
     private EditText durationEditText;
+    private EditText cancelationEditText;
 
     private RadioGroup radioGroup;
     private RadioButton zoneRadioButton;
@@ -122,6 +123,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
     private TextView TVMaxPlayers;
     private TextView TVMaxPricePlayer;
     private TextView TVDuration;
+    private TextView TVCancelation;
     private TextView TVDateHour;
     private TextView TVField;
     private TextView TVFieldTitle;
@@ -280,6 +282,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         });
 
         durationEditText = (EditText) findViewById(R.id.duration);
+        cancelationEditText = (EditText) findViewById(R.id.cancelation);
 
         zoneRadioButton = (RadioButton) findViewById(R.id.radio_button_zone);
         fieldRadioButton = (RadioButton) findViewById(R.id.radio_button_field);
@@ -449,6 +452,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         TVMaxPricePlayer = (TextView) findViewById(R.id.TV_max_price_player);
         TVDateHour = (TextView) findViewById(R.id.TV_date_hour);
         TVDuration = (TextView) findViewById(R.id.TV_duration);
+        TVCancelation = (TextView) findViewById(R.id.TV_cancelation);
         TVField = (TextView) findViewById(R.id.TV_field);
         TVFieldTitle = (TextView) findViewById(R.id.TV_field_title);
     }
@@ -636,6 +640,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         TVMaxPricePlayer.setText(maxPricePlayerEditText.getText());
         TVDateHour.setText(dateHourEditText.getText());
         TVDuration.setText(durationEditText.getText());
+        TVCancelation.setText(cancelationEditText.getText());
 
         if(zoneRadioButton.isChecked()){
             TVFieldTitle.setText(getString(R.string.radio_button_zone)+":");
@@ -675,6 +680,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
 
         Calendar startDate = null;
         Calendar endDate = null;
+        Calendar cancelationDate = null;
         try {
             startDate = Calendar.getInstance();
             startDate.setTime(Globals.sdf.parse(dateHourEditText.getText().toString()));
@@ -688,6 +694,9 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         endDate = startDate;
         endDate.add(Calendar.MINUTE, Integer.parseInt(durationEditText.getText().toString()));
         event.setEndDate(endDate);
+        cancelationDate = endDate;
+        cancelationDate.add(Calendar.MINUTE,(-1)*Integer.parseInt(cancelationEditText.getText().toString()));
+        event.setLimitDate(cancelationDate);
 
         if(zoneRadioButton.isChecked()){
             event.setCity(zoneEditText.getText().toString());
@@ -739,6 +748,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         if(maxPricePlayerEditText.getText() == null || maxPricePlayerEditText.getText().toString().isEmpty() || !isNumeric(maxPricePlayerEditText.getText().toString())) return false;
         if(dateHourEditText.getText() == null || dateHourEditText.getText().toString().isEmpty()) return false;
         if(durationEditText.getText() == null || durationEditText.getText().toString().isEmpty() || Integer.parseInt(durationEditText.getText().toString()) < 0) return false;
+        if(cancelationEditText.getText() == null || cancelationEditText.getText().toString().isEmpty() || Integer.parseInt(cancelationEditText.getText().toString()) < 0) return false;
         if(zoneRadioButton.isChecked() && zoneEditText.getText().equals("")) return false;
         if(fieldRadioButton.isChecked() && !checkSelectedFields()) return false;
         if(mapRadioButton.isChecked() && (marker == null || circle == null)) return false;
