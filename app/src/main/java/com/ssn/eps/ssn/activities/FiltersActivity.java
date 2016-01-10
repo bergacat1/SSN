@@ -159,6 +159,5 @@ public class FiltersActivity extends AppCompatActivity {
         Intent intent = this.getIntent();
         this.setResult(RESULT_CANCELED, intent);
         finish();
-        finish();
     }
 }

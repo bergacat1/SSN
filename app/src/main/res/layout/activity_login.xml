@@ -44,6 +44,12 @@
                 android:textStyle="bold" android:background="@drawable/common_plus_signin_btn_text_dark_normal"
                 android:layout_gravity="center" android:textSize="20dp"
                 android:textColor="@color/common_google_signin_btn_text_dark_pressed" android:layout_marginBottom="20dp"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/powered_by_google_light"
+                android:layout_gravity="center_horizontal"
+                android:contentDescription="powered by Google"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
