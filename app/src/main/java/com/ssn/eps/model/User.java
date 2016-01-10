@@ -38,8 +38,9 @@ public class User implements KvmSerializable{
 		this.type = 0;
 		this.gcmId = "";
 		this.mapType = "1";
-		this.notifNewEventManaged = false;
-		this.notifNewEventUnmanaged = false;
+		this.edificios3D = true;
+		this.notifNewEventManaged = true;
+		this.notifNewEventUnmanaged = true;
 		this.notifNewMemberEvent = true;
 	}
 
@@ -174,7 +175,7 @@ public class User implements KvmSerializable{
 				sb.append(notifNewEventManaged ? "1" : "0");
 				sb.append(notifNewEventUnmanaged ? "1" : "0");
 				sb.append(notifNewMemberEvent ? "1" : "0");
-				break;
+				return sb.toString();
 		}
         return null;
 	}

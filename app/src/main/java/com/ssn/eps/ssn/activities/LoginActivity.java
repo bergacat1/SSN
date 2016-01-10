@@ -359,7 +359,7 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
 
     private void registerUserInServer(final String email, final String regid, final boolean comeFromGCMTask){
 
-        final String userName = myPreference.getString("userName", email.split("@")[0]);
+        final String userName = myPreference.getString(Globals.PROPERTY_USER_NAME, email.split("@")[0]);
 
         User me = new User();
         me.setEmail(email);

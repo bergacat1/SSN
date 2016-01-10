@@ -21,6 +21,7 @@ import General.Globals;
 public class GCMIntentService extends IntentService
 {
     private static final int NOTIF_ALERTA_ID = 1;
+    public static final int COME_FROM_NOTIF = 9002;
 
     public GCMIntentService() {
         super("GCMIntentService");
@@ -56,6 +57,8 @@ public class GCMIntentService extends IntentService
         switch (extras.getInt("type")){
             case 0:
             case 1:
+            case 2:
+            case 3:
                 if(extras.containsKey("eventId") && extras.getInt("eventId") > 0) return true;
                 break;
             default:
@@ -83,6 +86,12 @@ public class GCMIntentService extends IntentService
                 break;
             case 1: // USER JOINED IN EVENT
                 mBuilder.setContentText(getString(R.string.notif_type_1));
+                break;
+            case 2: // Event canceled
+                mBuilder.setContentText(getString(R.string.notif_type_2));
+                break;
+            case 3: // Event reserved
+                mBuilder.setContentText(getString(R.string.notif_type_3));
                 break;
             default:
                 return;

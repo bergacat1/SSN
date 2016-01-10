@@ -100,9 +100,13 @@
     <!-- Notificaciones -->
     <string name="notif_type_0">Nuevo evento</string>
     <string name="notif_type_1">El evento crece</string>
+    <string name="notif_type_2">Evento cancelado</string>
+    <string name="notif_type_3">Evento reservado</string>
 
     <string name="notif_type_0_text">Se ha creado un nuevo evento</string>
     <string name="notif_type_1_text">Un usuario se ha unido a un evento al que perteneces.</string>
+    <string name="notif_type_2_text">El evento ha sido cancelado.</string>
+    <string name="notif_type_3_text">El evento ha sido reservado.</string>
 
     <string-array name="mapTypes">
         <item>De carreteras</item>

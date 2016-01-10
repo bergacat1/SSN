@@ -27,6 +27,7 @@ import com.ssn.eps.model.User;
 import com.ssn.eps.model.Event;
 import com.ssn.eps.ssn.R;
 import com.ssn.eps.ssn.activities.NewEventWizardActivity;
+import com.ssn.eps.ssn.activities.SettingsActivity;
 
 /**
  * Created by lluis on 24/12/15.
@@ -70,8 +71,14 @@ public class SoapWSCaller {
         makeCall(act, "registerUser", piList, maList, callback);
     }
 
-    public void unRegisterUserCall(Activity act, String email, WSCallbackInterface callback){
-        //todo
+    public void unRegisterUserCall(Activity act, int userId, WSCallbackInterface callback){
+        List<PropertyInfo> piList = new ArrayList<PropertyInfo>();
+        PropertyInfo pi = new PropertyInfo();
+        pi.setName("userid");
+        pi.setValue(userId);
+        piList.add(pi);
+
+        makeCall(act, "logoutUser", piList, null, callback);
     }
 
     public void getSportsCall(Activity act, WSCallbackInterface callback){
@@ -211,6 +218,16 @@ public class SoapWSCaller {
         makeCall(act, "createEvent", piList, null, callback);
     }
 
+    public void setUserSettingsCall(Activity activity, User user, WSCallbackInterface callback) {
+        List<PropertyInfo> piList = new ArrayList<PropertyInfo>();
+        PropertyInfo pi = new PropertyInfo();
+        pi.setName("user");
+        pi.setValue(user);
+        piList.add(pi);
+
+        makeCall(activity, "setUserSettings", piList, null, callback);
+    }
+
     private boolean checkNetwork(Activity act){
         ConnectivityManager connectivityManager = (ConnectivityManager) act.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -220,9 +237,6 @@ public class SoapWSCaller {
     public static SoapWSCaller getInstance(){
         return instance;
     }
-
-
-
 
     private class AsyncCallWS extends AsyncTask <String, Void, Result> {
 

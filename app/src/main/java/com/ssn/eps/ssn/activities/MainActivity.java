@@ -26,6 +26,7 @@ import com.ssn.eps.model.Result;
 import com.ssn.eps.model.Event;
 import com.ssn.eps.ssn.R;
 import com.ssn.eps.ssn.fragments.MessageDialogFragment;
+import com.ssn.eps.ssn.gcmservices.GCMIntentService;
 import com.ssn.eps.ssn.wscaller.SoapWSCaller;
 import com.ssn.eps.ssn.wscaller.WSCallbackInterface;
 
@@ -115,6 +116,20 @@ public class MainActivity extends AppCompatActivity{
                     bundle.putSerializable("cancellButton",true);
                     bundle.putSerializable("eventId",extras.getInt("eventId"));
                     break;
+                case 2: // Event canceled
+                    bundle.putSerializable("title",getString(R.string.notif_type_2));
+                    bundle.putSerializable("message", getString(R.string.notif_type_2_text));
+                    bundle.putSerializable("positiveButtonTextId",R.string.event_detail);
+                    bundle.putSerializable("cancellButton",true);
+                    bundle.putSerializable("eventId",extras.getInt("eventId"));
+                    break;
+                case 3: // Event reserved
+                    bundle.putSerializable("title",getString(R.string.notif_type_3));
+                    bundle.putSerializable("message", getString(R.string.notif_type_3_text));
+                    bundle.putSerializable("positiveButtonTextId",R.string.event_detail);
+                    bundle.putSerializable("cancellButton",true);
+                    bundle.putSerializable("eventId",extras.getInt("eventId"));
+                    break;
                 default:
                     return;
             }
@@ -122,7 +137,6 @@ public class MainActivity extends AppCompatActivity{
             dialog.setArguments(bundle);
             dialog.show(getSupportFragmentManager(), "notification_dialog");
         }
-
     }
 
 
@@ -168,16 +182,27 @@ public class MainActivity extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        /*switch (requestCode){
+            case GCMIntentService.COME_FROM_NOTIF:
+
+                break;
+        }*/
+    }
+
     private void logout(){
 
-        String email = myPreference.getString(Globals.PROPERTY_USER,"");
+        int userId = myPreference.getInt(Globals.PROPERTY_USER_ID, -1);
 
-        if(email.equals("")){
+        if(userId < 0){
             showToast(getString(R.string.internal_error));
             return;
         }
 
-        SoapWSCaller.getInstance().unRegisterUserCall(this, email, new WSCallbackInterface() {
+        SoapWSCaller.getInstance().unRegisterUserCall(this, userId, new WSCallbackInterface() {
             @Override
             public void onProcesFinished(Result res) {
                 if (!res.isValid()) {

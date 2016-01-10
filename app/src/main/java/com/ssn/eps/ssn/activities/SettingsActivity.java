@@ -4,6 +4,7 @@ package com.ssn.eps.ssn.activities;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -19,10 +20,17 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.ssn.eps.model.Result;
+import com.ssn.eps.model.User;
 import com.ssn.eps.ssn.R;
+import com.ssn.eps.ssn.wscaller.SoapWSCaller;
+import com.ssn.eps.ssn.wscaller.WSCallbackInterface;
 
 import java.util.List;
+
+import General.Globals;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -36,10 +44,14 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
+
+    private SharedPreferences myPreference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActionBar();
+        myPreference = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     /**
@@ -51,6 +63,46 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        int userId = myPreference.getInt(Globals.PROPERTY_USER_ID,-1);
+
+        if (userId < 0) {
+            showToast(getString(R.string.internal_error));
+            return;
+        }
+
+        User user = new User();
+        user.setId(userId);
+        user.setUsername(myPreference.getString(Globals.PROPERTY_USER_NAME, ""));
+        user.setMapType(myPreference.getString("mapType", "1"));
+        user.setEdificios3D(myPreference.getBoolean("buildings_map_checkbox",true));
+        user.setNotifNewEventManaged(myPreference.getBoolean("notifications_new_event_managed",true));
+        user.setNotifNewEventUnmanaged(myPreference.getBoolean("notifications_new_event_unmanaged",true));
+        user.setNotifNewMemberEvent(myPreference.getBoolean("notifications_new_message",true));
+
+        SoapWSCaller.getInstance().setUserSettingsCall(this,user, new WSCallbackInterface() {
+            @Override
+            public void onProcesFinished(Result res) {
+                if (!res.isValid()) {
+                    showToast(getString(R.string.server_error) +": " + res.getError());
+                    return;
+                }
+            }
+
+            @Override
+            public void onProcessError() {
+                showToast(getString(R.string.server_error));
+            }
+        });
+    }
+
+    private void showToast(CharSequence text){
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
     }
 
     @Override
