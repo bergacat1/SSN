@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,9 +47,7 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
         this.tab = tab;
         this.fragment = fragment;
 
-        prefs = context.getSharedPreferences(
-                MainActivity.class.getSimpleName(),
-                Context.MODE_PRIVATE);
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     @Override
@@ -243,10 +242,13 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
         switch(this.tab)
         {
             case EventsFragment.TABEVENTS:
-                if(e.isJoined())
+                if(e.isJoined()) {
                     butJoin.setVisibility(View.GONE);
-                else
+                    butLeave.setVisibility(View.VISIBLE);
+                }else {
                     butLeave.setVisibility(View.GONE);
+                    butJoin.setVisibility(View.VISIBLE);
+                }
                 break;
             case EventsFragment.TABMYEVENTS:
                 butJoin.setVisibility(View.GONE);
