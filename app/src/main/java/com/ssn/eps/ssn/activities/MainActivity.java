@@ -42,7 +42,7 @@ import General.Globals;
 import model.Event_OLD;
 import model.Sport_OLD;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements FragmentsCommunicationInterface{
 
     private SharedPreferences myPreference;
 
@@ -100,35 +100,34 @@ public class MainActivity extends AppCompatActivity{
             MessageDialogFragment dialog = new MessageDialogFragment();
             Bundle bundle = new Bundle();
 
-            switch (extras.getInt("type")){
-                case 0: // New event
-                    // todo s'ha d'actualitzar la llista d'events, ja que s'acaba de crear-ne un.
+            switch (extras.getString("type")){
+                case "0": // New event
                     bundle.putSerializable("title",getString(R.string.notif_type_0));
                     bundle.putSerializable("message", getString(R.string.notif_type_0_text));
                     bundle.putSerializable("positiveButtonTextId",R.string.event_detail);
                     bundle.putSerializable("cancellButton",true);
-                    bundle.putSerializable("eventId",extras.getInt("eventId"));
+                    bundle.putSerializable("eventId",Integer.parseInt(extras.getString("idEvent")));
                     break;
-                case 1: // Join event
+                case "1": // Join event
                     bundle.putSerializable("title",getString(R.string.notif_type_1));
                     bundle.putSerializable("message", getString(R.string.notif_type_1_text));
                     bundle.putSerializable("positiveButtonTextId",R.string.event_detail);
                     bundle.putSerializable("cancellButton",true);
-                    bundle.putSerializable("eventId",extras.getInt("eventId"));
+                    bundle.putSerializable("eventId",Integer.parseInt(extras.getString("idEvent")));
                     break;
-                case 2: // Event canceled
+                case "2": // Event canceled
                     bundle.putSerializable("title",getString(R.string.notif_type_2));
                     bundle.putSerializable("message", getString(R.string.notif_type_2_text));
                     bundle.putSerializable("positiveButtonTextId",R.string.event_detail);
                     bundle.putSerializable("cancellButton",true);
-                    bundle.putSerializable("eventId",extras.getInt("eventId"));
+                    bundle.putSerializable("eventId",Integer.parseInt(extras.getString("idEvent")));
                     break;
-                case 3: // Event reserved
+                case "3": // Event reserved
                     bundle.putSerializable("title",getString(R.string.notif_type_3));
                     bundle.putSerializable("message", getString(R.string.notif_type_3_text));
                     bundle.putSerializable("positiveButtonTextId",R.string.event_detail);
                     bundle.putSerializable("cancellButton",true);
-                    bundle.putSerializable("eventId",extras.getInt("eventId"));
+                    bundle.putSerializable("eventId",Integer.parseInt(extras.getString("idEvent")));
                     break;
                 default:
                     return;
@@ -248,6 +247,11 @@ public class MainActivity extends AppCompatActivity{
 
     private Context getContext(){
         return this;
+    }
+
+    @Override
+    public void refreshTab(int tab) {
+
     }
 
     public void goToEventById(int id){

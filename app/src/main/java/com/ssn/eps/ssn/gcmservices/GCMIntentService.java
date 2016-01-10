@@ -54,12 +54,12 @@ public class GCMIntentService extends IntentService
             return false;
         }
 
-        switch (extras.getInt("type")){
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-                if(extras.containsKey("eventId") && extras.getInt("eventId") > 0) return true;
+        switch (extras.getString("type")){
+            case "0":
+            case "1":
+            case "2":
+            case "3":
+                if(extras.containsKey("idEvent") && Integer.parseInt(extras.getString("idEvent")) >= 0) return true;
                 break;
             default:
                 Log.e(Globals.TAG, "Invalid push notification");
@@ -80,17 +80,17 @@ public class GCMIntentService extends IntentService
                         .setContentTitle(getString(R.string.app_name))
                         .setAutoCancel(true);
 
-        switch (extras.getInt("type")){ // todo: mirar si els usuaris volen rebre les notificacions
-            case 0: // NEW EVENT
+        switch (extras.getString("type")){ // todo: mirar si els usuaris volen rebre les notificacions
+            case "0": // NEW EVENT
                 mBuilder.setContentText(getString(R.string.notif_type_0));
                 break;
-            case 1: // USER JOINED IN EVENT
+            case "1": // USER JOINED IN EVENT
                 mBuilder.setContentText(getString(R.string.notif_type_1));
                 break;
-            case 2: // Event canceled
+            case "2": // Event canceled
                 mBuilder.setContentText(getString(R.string.notif_type_2));
                 break;
-            case 3: // Event reserved
+            case "3": // Event reserved
                 mBuilder.setContentText(getString(R.string.notif_type_3));
                 break;
             default:
