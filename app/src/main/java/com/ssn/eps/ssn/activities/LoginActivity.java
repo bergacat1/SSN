@@ -414,7 +414,6 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
                 //Nos registramos en los servidores de GCM
                 regid = gcm.register(Globals.SENDER_ID);
 
-
                 Log.d(Globals.TAG, "Registrado en GCM: registration_id=" + regid);
 
                 //Nos registramos en nuestro servidor

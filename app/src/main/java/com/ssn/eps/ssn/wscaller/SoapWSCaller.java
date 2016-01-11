@@ -37,7 +37,7 @@ public class SoapWSCaller {
     private static SoapWSCaller instance = new SoapWSCaller();
 
     private final static String NAMESPACE = "http://ws.ssn/";
-    private final String URL = "http://192.168.1.105:8080/SSN_WS/SSNWS";
+    private final String URL = "http://192.168.1.41:8080/SSN_WS/SSNWS";
 
     // Callbacks http://stackoverflow.com/questions/16800711/passing-function-as-a-parameter-in-java
 
@@ -71,7 +71,7 @@ public class SoapWSCaller {
         makeCall(act, "registerUser", piList, maList, callback);
     }
 
-    public void unRegisterUserCall(Activity act, int userId, WSCallbackInterface callback){
+    public void unRegisterUserCall(Activity act, int userId, WSCallbackInterface callback) {
         List<PropertyInfo> piList = new ArrayList<PropertyInfo>();
         PropertyInfo pi = new PropertyInfo();
         pi.setName("userid");
@@ -79,6 +79,42 @@ public class SoapWSCaller {
         piList.add(pi);
 
         makeCall(act, "logoutUser", piList, null, callback);
+    }
+
+    public void getEventByIDCall(Activity act, int eventid, int userid, WSCallbackInterface callback){
+        List<PropertyInfo> piList = new ArrayList<PropertyInfo>();
+        PropertyInfo pi = new PropertyInfo();
+        pi.setName("idevent");
+        pi.setValue(eventid);
+        piList.add(pi);
+        pi = new PropertyInfo();
+        pi.setName("iduser");
+        pi.setValue(userid);
+        piList.add(pi);
+
+        List<Mapping> maList = new ArrayList<Mapping>();
+        Mapping m = new Mapping("event", new Event().getClass());
+        maList.add(m);
+
+        makeCall(act, "getEventById", piList, maList, callback);
+    }
+
+    public void getUsersByEvent(Activity act, int eventid, WSCallbackInterface callback){
+        List<PropertyInfo> piList = new ArrayList<PropertyInfo>();
+        PropertyInfo pi = new PropertyInfo();
+        pi.setName("idevent");
+        pi.setValue(eventid);
+        piList.add(pi);
+
+        List<Mapping> maList = new ArrayList<Mapping>();
+        Mapping m = new Mapping("user", new User().getClass());
+        maList.add(m);
+
+        makeCall(act, "getUsersByEvent", piList, maList, callback);
+    }
+
+    public void unRegisterUserCall(Activity act, String email, WSCallbackInterface callback){
+        //todo
     }
 
     public void getSportsCall(Activity act, WSCallbackInterface callback){
@@ -174,6 +210,20 @@ public class SoapWSCaller {
         maList.add(m);
 
         makeCall(act, "getManagerEntitiesBySport", piList, maList, callback);
+    }
+
+    public void getManagerEntitiesByEventCall(Activity act, Integer eventid, WSCallbackInterface callback){
+        List<PropertyInfo> piList = new ArrayList<PropertyInfo>();
+        PropertyInfo pi = new PropertyInfo();
+        pi.setName("idevent");
+        pi.setValue(eventid);
+        piList.add(pi);
+
+        List<Mapping> maList = new ArrayList<Mapping>();
+        Mapping m = new Mapping("managerEntity", new ManagerEntity().getClass());
+        maList.add(m);
+
+        makeCall(act, "getManagerEntitiesByEvent", piList, maList, callback);
     }
 
     public void joinEventCall(Activity act, int idUser, int idEvent, WSCallbackInterface callback){

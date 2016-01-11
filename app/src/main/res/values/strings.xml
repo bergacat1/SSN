@@ -27,6 +27,7 @@
     <string name="pref_header_notifications">Notificacions</string>
 
     <string name="join">Unirse</string>
+    <string name="unjoin">Desunirse</string>
     <string name="join_confirmation">Estás seguro que quieres unirte al evento?</string>
     <string name="view_details">Ver</string>
     <string name="filters">Filtros</string>
@@ -85,6 +86,7 @@
     <string name="report">Reportar usuario</string>
     <string name="user_info">Información del usuario</string>
 
+    <string name="poblacion">Población</string>
     <string name="confirmar_reporte">Reportar Usuario</string>
     <string name="confirmar_reporte_text">Está seguro que quiere reportar el usuario?</string>
     <string name="close">Cerrar</string>
