@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -67,6 +69,7 @@ import com.ssn.eps.ssn.fragments.MessageDialogFragment;
 import com.ssn.eps.ssn.wscaller.SoapWSCaller;
 import com.ssn.eps.ssn.wscaller.WSCallbackInterface;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -75,6 +78,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import General.Globals;
@@ -710,6 +714,15 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             event.setLatitude(marker.getPosition().latitude);
             event.setLongitude(marker.getPosition().longitude);
             event.setRange(circle.getRadius());
+
+            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+            try {
+                Address a = geocoder.getFromLocation(event.getLatitude(), event.getLongitude(), 1).get(0);
+                event.setCity(a.getLocality());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         event.setIdCreator(myPreference.getInt(Globals.PROPERTY_USER_ID, -1));

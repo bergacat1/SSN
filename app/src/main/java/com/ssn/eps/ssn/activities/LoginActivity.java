@@ -32,6 +32,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.ssn.eps.model.Sport;
 import com.ssn.eps.model.User;
@@ -60,7 +62,7 @@ import model.User_OLD;
 public class LoginActivity extends AppCompatActivity  implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final int RC_SIGN_IN = 9001;
-    private GoogleApiClient mGoogleApiClient;
+    public static GoogleApiClient mGoogleApiClient;
     private GoogleCloudMessaging gcm;
 
     private String regid;
@@ -106,6 +108,10 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+    }
+
+    public static PendingResult<Status> logout(){
+        return Auth.GoogleSignInApi.signOut(mGoogleApiClient);
     }
 
     @Override
@@ -211,6 +217,7 @@ public class LoginActivity extends AppCompatActivity  implements GoogleApiClient
     }
 
     private void signIn() {
+        if(mGoogleApiClient.isConnected()) Auth.GoogleSignInApi.signOut(mGoogleApiClient);
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
