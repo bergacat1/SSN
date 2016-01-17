@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -122,6 +123,11 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
             rowView = convertView;
 
         final Event e = this.events.get(groupPosition);
+
+        LinearLayout layout = (LinearLayout)rowView.findViewById(R.id.list_item_details);
+        int backgroundId = getDrawableBySport(e.getIdSport());
+        if(backgroundId != -1)
+            layout.setBackground(rowView.getResources().getDrawable(backgroundId));
 
         // Set data into the view.
         TextView tvState = (TextView) rowView.findViewById(R.id.event_state);
@@ -260,6 +266,25 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
         }
 
         return rowView;
+    }
+
+    private int getDrawableBySport(int idSport) {
+        switch(idSport)
+        {
+            case 1:
+                return R.drawable.football;
+            case 2:
+                return R.drawable.basket;
+            case 3:
+                return R.drawable.padel;
+            case 4:
+                return R.drawable.tennis;
+            case 5:
+                return R.drawable.volley;
+            case 7:
+                return R.drawable.futsal;
+        }
+        return -1;
     }
 
     private int getLightColorByState(Event.States state){
