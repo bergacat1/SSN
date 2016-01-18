@@ -717,10 +717,10 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         }
 
         event.setStartDate(startDate);
-        endDate = startDate;
+        endDate = (Calendar)startDate.clone();
         endDate.add(Calendar.MINUTE, Integer.parseInt(durationEditText.getText().toString()));
         event.setEndDate(endDate);
-        cancelationDate = endDate;
+        cancelationDate = (Calendar)startDate.clone();
         cancelationDate.add(Calendar.MINUTE,(-1)*Integer.parseInt(cancelationEditText.getText().toString()));
         event.setLimitDate(cancelationDate);
 
