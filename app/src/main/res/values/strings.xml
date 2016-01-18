@@ -62,7 +62,7 @@
 
     <string name="radio_button_zone">Población</string>
     <string name="radio_button_field">Pista</string>
-    <string name="radio_button_map">Mapa</string>
+    <string name="radio_button_map">Zona</string>
     <string name="marker_title">Àrea de busqueda</string>
 
     <string name="crear">Crear</string>
@@ -83,7 +83,7 @@
     <string name="userAge">Edad</string>
     <string name="favSportUser">Deporte favorito</string>
     <string name="emailUser">Email</string>
-    <string name="report">Reportar usuario</string>
+    <string name="report">Reportar</string>
     <string name="user_info">Información del usuario</string>
 
     <string name="poblacion">Población</string>
@@ -131,4 +131,7 @@
 
 
     <string name="cancelation">Tiempo límite para cancelación (min):</string>
+    <string name="cancelation1">Tiempo cancelación (min):</string>
+
+    <string name="zone">Zona:</string>
 </resources>

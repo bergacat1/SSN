@@ -15,6 +15,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +24,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -132,8 +134,6 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
     private TextView TVField;
     private TextView TVFieldTitle;
 
-    private boolean mapModeField;
-
     private Event event;
 
     private SharedPreferences myPreference;
@@ -147,6 +147,11 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         setContentView(R.layout.activity_new_event_wizard);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            // Show the Up button in the action bar.
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         context = this;
 
@@ -172,6 +177,16 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
         //showInitialMessage();
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            this.finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -340,7 +355,7 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
 
                         for (Iterator it = likelyPlaces.iterator(); it.hasNext(); ) {
                             AutocompletePrediction placeLikelihood = (AutocompletePrediction) it.next();
-                            zonesList.add(placeLikelihood.getDescription());
+                            if(placeLikelihood.getPlaceTypes().contains(Place.TYPE_LOCALITY))zonesList.add(placeLikelihood.getDescription());
                         }
                         zonesAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, zonesList);
                         zoneEditText.setAdapter(zonesAdapter);
@@ -355,7 +370,9 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
 
             }
         });
+
         zoneEditText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 fullZoneText = zonesAdapter.getItem(position);
@@ -658,12 +675,17 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             TVField.setText(text);
         }else{
             TVFieldTitle.setText(getString(R.string.radio_button_map)+":");
-            if(marker != null && circle != null)
-                TVField.setText("  lat: " + new DecimalFormat("#0.00").format(marker.getPosition().latitude)
-                    + "º long: " + new DecimalFormat("#0.00").format(marker.getPosition().longitude)
-                    + "º R: " + circle.getRadius()/1000 + "Km");
-        }
+            if(marker != null && circle != null){
+                Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+                try {
+                    Address a = geocoder.getFromLocation(event.getLatitude(), event.getLongitude(), 1).get(0);
+                    TVField.setText(a.getLocality());
 
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public void createEvent(View v){
@@ -960,6 +982,18 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
 
         public void setSecond(B second) {
             this.second = second;
+        }
+    }
+
+    private class MyString{
+        String s;
+        public MyString(String s){
+            this.s = s;
+        }
+
+        @Override
+        public String toString() {
+            return s;
         }
     }
 }

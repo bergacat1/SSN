@@ -146,6 +146,11 @@ public class User implements KvmSerializable{
 	}
 
 	@Override
+	public String toString() {
+		return username;
+	}
+
+	@Override
 	public Object getProperty(int i) {
 		switch(i){
 			case 0:

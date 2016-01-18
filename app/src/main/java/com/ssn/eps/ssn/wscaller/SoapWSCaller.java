@@ -37,7 +37,7 @@ public class SoapWSCaller {
     private static SoapWSCaller instance = new SoapWSCaller();
 
     private final static String NAMESPACE = "http://ws.ssn/";
-    private final String URL = "http://192.168.1.124:8080/SSN_WS/SSNWS";
+    private final String URL = "http://192.168.1.105:8080/SSN_WS/SSNWS";
 
     // Callbacks http://stackoverflow.com/questions/16800711/passing-function-as-a-parameter-in-java
 
@@ -111,10 +111,6 @@ public class SoapWSCaller {
         maList.add(m);
 
         makeCall(act, "getUsersByEvent", piList, maList, callback);
-    }
-
-    public void unRegisterUserCall(Activity act, String email, WSCallbackInterface callback){
-        //todo
     }
 
     public void getSportsCall(Activity act, WSCallbackInterface callback){

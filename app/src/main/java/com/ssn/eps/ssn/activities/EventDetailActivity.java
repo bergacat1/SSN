@@ -2,6 +2,7 @@ package com.ssn.eps.ssn.activities;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,11 +10,13 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,6 +33,7 @@ import java.util.Calendar;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -59,30 +63,34 @@ public class EventDetailActivity extends AppCompatActivity {
     private List<User> listPlayers = new ArrayList<>();
     private List<ManagerEntity> listManagerEntities = new ArrayList<>();
     private ListView listView;
-    private List<String> values = new ArrayList<>();
 
-    private ArrayAdapter <String> adapter;
-    //private Event_OLD event;
-    private ManagerEntity_OLD manager_entity;
+    private ArrayAdapter <User> userAdapter;
 
+    private LinearLayout zoneL;
+
+    private TextView tvState;
     private TextView tv_sport;
     private TextView tv_datetime;
+    private TextView tv_datetimeDuration;
     private TextView tv_numplayers;
     private TextView tv_maxprice;
+    private TextView tv_zone;
     private ListView listView_players;
     private Button report_button;
     private Button close_button;
-    private Button button;
-    private Button butJoin;
+    private Button actionButton;
 
     private GoogleMap mMap;
     private MapView mapView;
-    private Circle circle;
-    private Marker marker;
-    private LinearLayout zona_layout;
 
     private SharedPreferences prefs;
-    int idEvent;
+    private ProgressDialog progress;
+
+    private Event event;
+    private int userid;
+
+    private int ch = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,75 +99,173 @@ public class EventDetailActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            // Show the Up button in the action bar.
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
-        initializeViews(savedInstanceState);
-
-        Calendar c = Calendar.getInstance();
-
-        c.set(Calendar.YEAR, 2015);
-        c.set(Calendar.MONTH, 11);
-        c.set(Calendar.DAY_OF_MONTH,2);
-        c.set(Calendar.HOUR, 12);
-        c.set(Calendar.MINUTE, 30);
-
-        tv_sport = (TextView) findViewById(R.id.tvSport_value);
-        tv_datetime = (TextView) findViewById(R.id.tvDateTime_value);
-        tv_numplayers = (TextView) findViewById(R.id.tvNumPlayers_value);
-        tv_maxprice = (TextView) findViewById(R.id.tvMaxprice_value);
-
-        listView = (ListView) findViewById(R.id.list_players);
-
-        adapter = new ArrayAdapter<String>(this, R.layout.event_list_item, R.id.event_compressed_description, values);
-
-        idEvent = cridaWS();
+        progress = new ProgressDialog(getActivity());
+        progress.setMessage(getString(R.string.loading));
+        progress.show();
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-        butJoin = (Button) findViewById(R.id.button_id);
-        butJoin.setOnClickListener(new View.OnClickListener() {
+        initializeViews(savedInstanceState);
+
+        userAdapter = new ArrayAdapter<User>(this, R.layout.event_list_item, R.id.event_compressed_description, listPlayers);
+
+        userid = prefs.getInt(Globals.PROPERTY_USER_ID, -1);
+        final int eventid = getIntent().getIntExtra("idevent", -1);
+
+        if(userid < 0 || eventid < 0){
+            showToast(getString(R.string.internal_error));
+            return ;
+        }
+
+        getEventCall(eventid);
+        getUsersCall(eventid);
+
+        actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new android.app.AlertDialog.Builder(EventDetailActivity.this)
-                        .setTitle(getResources().getText(R.string.join))
-                        .setMessage(getResources().getText(R.string.join_confirmation))
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                int userId = prefs.getInt(Globals.PROPERTY_USER_ID, 0);
+                if(event.isJoined()){
+                    new android.app.AlertDialog.Builder(getActivity())
+                            .setTitle(getResources().getText(R.string.leave))
+                            .setMessage(getResources().getText(R.string.leave_confirmation))
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    int userId = prefs.getInt(Globals.PROPERTY_USER_ID, 0);
+                                    if (userId > 0)
+                                        SoapWSCaller.getInstance().leaveEventCall((Activity) getActivity(), userId, event.getIdEvent(), new WSCallbackInterface() {
+                                            @Override
+                                            public void onProcesFinished(Result res) {
+                                                if (res.isValid()) {
+                                                    Toast.makeText(getActivity(), getText(R.string.leaveOk).toString(), Toast.LENGTH_LONG).show();
+                                                } else {
+                                                    new android.app.AlertDialog.Builder(getActivity())
+                                                            .setTitle(R.string.atencion)
+                                                            .setMessage(getText(R.string.serverError).toString() + res.getError())
+                                                            .setPositiveButton(getText(R.string.ok).toString(), new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                    getActivity().finish();
+                                                                }
+                                                            })
+                                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                                            .show();
+                                                }
 
-                                if (userId > 0) {
-                                    SoapWSCaller.getInstance().joinEventCall((Activity) EventDetailActivity.this, userId, idEvent, new WSCallbackInterface() {
-                                        @Override
-                                        public void onProcesFinished(Result res) {
-                                            if (res.isValid()) {
-                                                //fragment.refreshTab(EventsFragment.TABMYEVENTS);
-                                                Toast.makeText(getApplicationContext(), EventDetailActivity.this.getText(R.string.joinOk).toString(), Toast.LENGTH_LONG).show();
-                                            } else {
-                                                new android.app.AlertDialog.Builder(EventDetailActivity.this)
-                                                        .setTitle(R.string.atencion)
-                                                        .setMessage(EventDetailActivity.this.getText(R.string.serverError).toString() + res.getError())
-                                                        .setPositiveButton(EventDetailActivity.this.getText(R.string.ok).toString(), null)
-                                                        .setIcon(android.R.drawable.ic_dialog_alert)
-                                                        .show();
                                             }
-
-                                        }
-
-                                        @Override
-                                        public void onProcessError() {
-                                            showToast(getApplicationContext().getText(R.string.server_error));
-                                        }
-                                    });
+                                            @Override
+                                            public void onProcessError() {
+                                                showToast(getText(R.string.server_error));
+                                            }
+                                        });
                                 }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                }
+                            })
+                            .show();
+                }else{
+                    new android.app.AlertDialog.Builder(getActivity())
+                            .setTitle(getResources().getText(R.string.join))
+                            .setMessage(getResources().getText(R.string.join_confirmation))
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    int userId = prefs.getInt(Globals.PROPERTY_USER_ID, 0);
+                                    if (userId > 0)
+                                        SoapWSCaller.getInstance().joinEventCall(getActivity(), userId, event.getIdEvent(), new WSCallbackInterface() {
+                                            @Override
+                                            public void onProcesFinished(Result res) {
+                                                if (res.isValid()){
+                                                    Toast.makeText(getActivity(), getActivity().getText(R.string.joinOk).toString(), Toast.LENGTH_LONG).show();
+                                                }else{
+                                                    new android.app.AlertDialog.Builder(getActivity())
+                                                            .setTitle(R.string.atencion)
+                                                            .setMessage(getActivity().getText(R.string.serverError).toString() + res.getError())
+                                                            .setPositiveButton(getActivity().getText(R.string.ok).toString(), new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                    getActivity().finish();
+                                                                }
+                                                            })
+                                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                                            .show();
+                                                }
+
+                                            }
+                                            @Override
+                                            public void onProcessError() {
+                                                showToast(getActivity().getText(R.string.server_error));
+                                            }
+                                        });
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                }
+                            })
+                            .show();
+                }
+
+
+                /*new android.app.AlertDialog.Builder(EventDetailActivity.this)
+                    .setTitle(getResources().getText(R.string.join))
+                    .setMessage(getResources().getText(R.string.join_confirmation))
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            if(event.isJoined()){
+                                // todo sortir
+                            }else{
+                                SoapWSCaller.getInstance().joinEventCall(getActivity(), userid, eventid, new WSCallbackInterface() {
+                                    @Override
+                                    public void onProcesFinished(Result res) {
+                                        if (res.isValid()) {
+                                            //fragment.refreshTab(EventsFragment.TABMYEVENTS);
+                                            Toast.makeText(getApplicationContext(), EventDetailActivity.this.getText(R.string.joinOk).toString(), Toast.LENGTH_LONG).show();
+                                        } else {
+                                            new android.app.AlertDialog.Builder(EventDetailActivity.this)
+                                                    .setTitle(R.string.atencion)
+                                                    .setMessage(EventDetailActivity.this.getText(R.string.serverError).toString() + res.getError())
+                                                    .setPositiveButton(EventDetailActivity.this.getText(R.string.ok).toString(), null)
+                                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                                    .show();
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onProcessError() {
+                                        showToast(getApplicationContext().getText(R.string.server_error));
+                                    }
+                                });
                             }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
-                            }
-                        })
-                        .show();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                .show();*/
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            this.finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -177,9 +283,21 @@ public class EventDetailActivity extends AppCompatActivity {
 
     private void initializeViews(Bundle savedInstanceState){
 
+        zoneL = (LinearLayout)findViewById(R.id.zoneL);
+
+        tvState = (TextView) findViewById(R.id.event_state);
+
+        tv_sport = (TextView) findViewById(R.id.tvSport_value);
+        tv_datetime = (TextView) findViewById(R.id.tvDateTime_value);
+        tv_datetimeDuration = (TextView) findViewById(R.id.tvDateTimeDuration_value);
+        tv_numplayers = (TextView) findViewById(R.id.tvNumPlayers_value);
+        tv_maxprice = (TextView) findViewById(R.id.tvMaxprice_value);
+        tv_zone = (TextView) findViewById(R.id.tvZone_value);
+
+        listView = (ListView) findViewById(R.id.list_players);
+
         mapView = (MapView) findViewById(R.id.mapview_eventdetail);
-        zona_layout = (LinearLayout) findViewById(R.id.pistaLayout);
-        button = (Button) findViewById(R.id.button_id);
+        actionButton = (Button) findViewById(R.id.action_button);
 
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
@@ -190,17 +308,7 @@ public class EventDetailActivity extends AppCompatActivity {
         MapsInitializer.initialize(this);
     }
 
-    public int cridaWS(){
-
-        getIntent().getExtras();
-        int id = 0;
-        int eventid = getIntent().getIntExtra("idevent",id);
-
-        SharedPreferences prefs = this.getSharedPreferences(
-                MainActivity.class.getSimpleName(),
-                Context.MODE_PRIVATE);
-
-        int userid = prefs.getInt(Globals.PROPERTY_USER_ID, -1);
+    public void getEventCall(int eventid){
 
         SoapWSCaller.getInstance().getEventByIDCall(this, eventid, userid, new WSCallbackInterface() {
             @Override
@@ -210,22 +318,55 @@ public class EventDetailActivity extends AppCompatActivity {
                     return;
                 }
 
-                Event event = (Event) res.getData().get(0);
-                showToast(event.getSportName());
+                event = (Event) res.getData().get(0);
 
-                cridaWSManagerEntities(event);
+                if (event.getIdReservation() > 0) {
+                    managerEntitiesCall(event);
+                } else {
+                    if (event.getLatitude() != 0 && event.getLongitude() != 0 && event.getRange() != 0) {
+                        // NO RESERVAT: punt i radi al mapa
+                        mMap.addMarker(new MarkerOptions()
+                                        .position(new LatLng(event.getLatitude(), event.getLongitude()))
+                                        .title(getString(R.string.marker_title))
+                        );
+                        mMap.addCircle(new CircleOptions()
+                                        .center(new LatLng(event.getLatitude(), event.getLongitude()))
+                                        .radius(event.getRange())
+                                        .strokeWidth(2)
+                                        .strokeColor(Color.BLUE)
+                                        .fillColor(Color.argb(140, 36, 4, 218))
+                        );
+                        mapView.setVisibility(View.VISIBLE);
+                    } else if (!event.getCity().equals("")) {
+                        // NO RESERVAT: ciutat/zona
+                        tv_zone.setText(event.getCity());
+                        zoneL.setVisibility(View.VISIBLE);
+                    } else {
+                        managerEntitiesCall(event);
+                    }
+                }
+
+
+                tvState.setText(event.getState().toString());
+                tvState.setTextColor(getHeavyColorByState(event.getState()));
 
                 tv_sport.setText(event.getSportName());
                 tv_datetime.setText(Globals.sdf.format(event.getStartDate().getTime()));
+                tv_datetimeDuration.setText(Double.toString((event.getEndDate().getTimeInMillis() - event.getStartDate().getTimeInMillis()) / (1000 * 60)));
                 tv_numplayers.setText(event.getMinPlayers() + " / " + event.getMaxPlayers());
                 tv_maxprice.setText(event.getMaxPrice() + " €");
 
                 //Tractar si l'usuari esta ja unit a l'event
-                if (event.isJoined()) {
-                    button.setText(R.string.unjoin);
-                } else {
-                    button.setText(R.string.join);
+                if (event.getState() == Event.States.OPEN || event.getState() == Event.States.RESERVED) {
+                    actionButton.setText(R.string.join);
+                    if (event.isJoined()) {
+                        actionButton.setText(R.string.unjoin);
+                    }
+                    actionButton.setVisibility(View.VISIBLE);
                 }
+
+
+                check();
             }
 
             @Override
@@ -233,7 +374,9 @@ public class EventDetailActivity extends AppCompatActivity {
                 showToast(getString(R.string.server_error));
             }
         });
+    }
 
+    private void getUsersCall(int eventid){
         SoapWSCaller.getInstance().getUsersByEvent(this, eventid, new WSCallbackInterface() {
             @Override
             public void onProcesFinished(Result res) {
@@ -246,11 +389,8 @@ public class EventDetailActivity extends AppCompatActivity {
                     User user = (User) it.next();
                     listPlayers.add(user);
                 }
-                for (int i = 0; i < listPlayers.size(); i++) {
-                    values.add(listPlayers.get(i).getUsername());
-                }
 
-                listView.setAdapter(adapter);
+                listView.setAdapter(userAdapter);
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -260,13 +400,8 @@ public class EventDetailActivity extends AppCompatActivity {
                         dialog.setTitle(getString(R.string.user_info));
                         dialog.setContentView(R.layout.content_window_user_detail);
 
-                        close_button = (Button) dialog.findViewById(R.id.button_close);
-                        close_button.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.dismiss();
-                            }
-                        });
+                        TextView userName = (TextView) dialog.findViewById(R.id.tv_userName_value);
+                        userName.setText(String.valueOf(user.getName()));
 
                         report_button = (Button) dialog.findViewById(R.id.button_report);
                         report_button.setOnClickListener(new View.OnClickListener() {
@@ -277,6 +412,7 @@ public class EventDetailActivity extends AppCompatActivity {
                                         .setMessage(getString(R.string.confirmar_reporte_text))
                                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
+                                                //todo reportar
                                             }
                                         })
                                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -289,15 +425,10 @@ public class EventDetailActivity extends AppCompatActivity {
 
                         dialog.setCancelable(true);
 
-                        TextView userName = (TextView) dialog.findViewById(R.id.tv_userName_value);
-                        userName.setText(String.valueOf(user.getName()));
-
-                        TextView emailUser = (TextView) dialog.findViewById(R.id.tv_emailUser_value);
-                        emailUser.setText(String.valueOf(user.getEmail()));
-
                         dialog.show();
                     }
                 });
+                check();
             }
 
             @Override
@@ -305,10 +436,9 @@ public class EventDetailActivity extends AppCompatActivity {
                 showToast(getString(R.string.server_error));
             }
         });
-        return eventid;
     }
 
-    public void cridaWSManagerEntities(final Event event){
+    public void managerEntitiesCall(final Event event){
         SoapWSCaller.getInstance().getManagerEntitiesByEventCall(this, event.getIdEvent(), new WSCallbackInterface() {
             @Override
             public void onProcesFinished(Result res) {
@@ -317,63 +447,22 @@ public class EventDetailActivity extends AppCompatActivity {
                     return;
                 }
                 for (Iterator it = res.getData().iterator(); it.hasNext(); ) {
-                    ManagerEntity managerEntity = (ManagerEntity) it.next();
-                    listManagerEntities.add(managerEntity);
-                }
-                //Event ja reservat
-                if(event.getIdReservation()<0){
-                    mapView.setVisibility(View.VISIBLE);
+                    ManagerEntity me = (ManagerEntity) it.next();
 
-                    if(listManagerEntities.size()==1){
-                        showToast("Event Reservat!!");
-                        LatLng pos = new LatLng(listManagerEntities.get(0).getLatitude(),
-                                listManagerEntities.get(0).getLongitude());
-                        marker = mMap.addMarker(new MarkerOptions()
-                                .position(pos)
-                                .title(listManagerEntities.get(0).getName())
-                                .draggable(true));
+                    if (!me.isValidForPrint()) continue;
+
+                    Marker m = mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(me.getLatitude(), me.getLongitude()))
+                            .title(me.getName())
+                            .visible(false));
+
+                    if (me.getType() == 0) {
+                        m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_managed_selected));
+                    } else if (me.getType() == 1) {
+                        m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_no_managed_selected));
                     }
                 }
-                //Event sense reservar encara
-                else{
-                    //Mapa amb punt i zona pel voltant
-                    if(event.getRange()!=0){
-                        LatLng pos = new LatLng(event.getLatitude(), event.getLongitude());
-                        mapView.setVisibility(View.VISIBLE);
-
-                        marker = mMap.addMarker(new MarkerOptions()
-                                .position(pos)
-                                .draggable(true));
-
-                        circle = mMap.addCircle(new CircleOptions()
-                                        .center(pos)
-                                        .radius(250)
-                                        .strokeWidth(2)
-                                        .strokeColor(Color.BLUE)
-                                        .fillColor(Color.argb(140, 36, 4, 218))
-                        );
-                    }
-                    //Mapa amb la o les ManagerEntities la icona i el nom
-                    else if(listManagerEntities.size()>0) {
-                        mapView.setVisibility(View.VISIBLE);
-
-                        for (int i=0; i<listManagerEntities.size(); i++){
-                            LatLng pos = new LatLng(listManagerEntities.get(i).getLatitude(),
-                                                    listManagerEntities.get(i).getLongitude());
-                            marker = mMap.addMarker(new MarkerOptions()
-                                    .position(pos)
-                                    .title(listManagerEntities.get(i).getName())
-                                    .draggable(true));
-                        }
-                    }
-
-                    else{
-                        zona_layout.setVisibility(View.VISIBLE);
-                        TextView value_poblacio = (TextView) findViewById(R.id.tv_poblvalue);
-                        value_poblacio.setText(event.getCity());
-                    }
-
-                }
+                mapView.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -381,6 +470,32 @@ public class EventDetailActivity extends AppCompatActivity {
                 showToast(getString(R.string.server_error));
             }
         });
+    }
+
+    private void check(){
+        ch ++;
+        if(ch >= 2){
+            progress.dismiss();
+        }
+    }
+
+    private Activity getActivity(){
+        return this;
+    }
+
+    private int getHeavyColorByState(Event.States state){
+
+        switch(state){
+            case OPEN:
+                return getResources().getColor(R.color.heavy_green);
+            case RESERVED:
+                return getResources().getColor(R.color.heavy_orange);
+            case FINISHED:
+                return getResources().getColor(R.color.heavy_blue);
+            case CANCELED:
+                return getResources().getColor(R.color.heavy_red);
+        }
+        return 0;
     }
 
     private void showToast(CharSequence text){

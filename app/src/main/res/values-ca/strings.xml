@@ -54,7 +54,7 @@
 
     <string name="radio_button_zone">Població</string>
     <string name="radio_button_field">Pista</string>
-    <string name="radio_button_map">Mapa</string>
+    <string name="radio_button_map">Zona</string>
     <string name="marker_title">Àrea de busqueda</string>
 
     <string name="crear">Crear</string>
@@ -74,7 +74,7 @@
     <string name="userAge">Edat</string>
     <string name="favSportUser">Esport favorit</string>
     <string name="emailUser">Correu</string>
-    <string name="report">Reportar usuari</string>
+    <string name="report">Reportar</string>
     <string name="user_info">Informació de l\'usuari</string>
 
     <string name="confirmar_reporte_text">Està segur que vol reportar l\'usuari?</string>

@@ -55,7 +55,7 @@
 
     <string name="radio_button_zone">City</string>
     <string name="radio_button_field">Field</string>
-    <string name="radio_button_map">Map</string>
+    <string name="radio_button_map">Zone</string>
     <string name="marker_title">Search area</string>
 
     <string name="crear">Create</string>
@@ -73,7 +73,7 @@
     <string name="userAge">Age</string>
     <string name="favSportUser">Favorite sport</string>
     <string name="emailUser">Email</string>
-    <string name="report">User report</string>
+    <string name="report">Report</string>
     <string name="user_info">User\'s information</string>
 
     <string name="confirmar_reporte_text">Are you sure to report user?</string>

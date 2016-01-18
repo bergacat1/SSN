@@ -105,44 +105,47 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
         Bundle extras = getIntent().getExtras();
         if(extras != null && extras.containsKey("type")){ // SHOW NOTIFICATION DIALOG
 
-            MessageDialogFragment dialog = new MessageDialogFragment();
-            Bundle bundle = new Bundle();
+            //MessageDialogFragment dialog = new MessageDialogFragment();
+            //Bundle bundle = new Bundle();
 
             switch (extras.getString("type")){
                 case "0": // New event
-                    bundle.putSerializable("title",getString(R.string.notif_type_0));
+                    /*bundle.putSerializable("title",getString(R.string.notif_type_0));
                     bundle.putSerializable("message", getString(R.string.notif_type_0_text));
                     bundle.putSerializable("positiveButtonTextId",R.string.event_detail);
                     bundle.putSerializable("cancellButton",true);
                     bundle.putSerializable("eventId",Integer.parseInt(extras.getString("idEvent")));
-                    break;
+                    break;*/
                 case "1": // Join event
-                    bundle.putSerializable("title",getString(R.string.notif_type_1));
+                    /*bundle.putSerializable("title",getString(R.string.notif_type_1));
                     bundle.putSerializable("message", getString(R.string.notif_type_1_text));
                     bundle.putSerializable("positiveButtonTextId",R.string.event_detail);
                     bundle.putSerializable("cancellButton",true);
                     bundle.putSerializable("eventId",Integer.parseInt(extras.getString("idEvent")));
-                    break;
+                    break;*/
                 case "2": // Event canceled
-                    bundle.putSerializable("title",getString(R.string.notif_type_2));
+                    /*bundle.putSerializable("title",getString(R.string.notif_type_2));
                     bundle.putSerializable("message", getString(R.string.notif_type_2_text));
                     bundle.putSerializable("positiveButtonTextId",R.string.event_detail);
                     bundle.putSerializable("cancellButton",true);
                     bundle.putSerializable("eventId",Integer.parseInt(extras.getString("idEvent")));
-                    break;
+                    break;*/
                 case "3": // Event reserved
-                    bundle.putSerializable("title",getString(R.string.notif_type_3));
+                    /*bundle.putSerializable("title",getString(R.string.notif_type_3));
                     bundle.putSerializable("message", getString(R.string.notif_type_3_text));
                     bundle.putSerializable("positiveButtonTextId",R.string.event_detail);
                     bundle.putSerializable("cancellButton",true);
-                    bundle.putSerializable("eventId",Integer.parseInt(extras.getString("idEvent")));
+                    bundle.putSerializable("eventId",Integer.parseInt(extras.getString("idEvent")));*/
+                    Intent i = new Intent(this,EventDetailActivity.class);
+                    i.putExtra("idevent", Integer.parseInt(extras.getString("idEvent")));
+                    startActivity(i);
                     break;
                 default:
                     return;
             }
 
-            dialog.setArguments(bundle);
-            dialog.show(getSupportFragmentManager(), "notification_dialog");
+            //dialog.setArguments(bundle);
+            //dialog.show(getSupportFragmentManager(), "notification_dialog");
         }
     }
 
