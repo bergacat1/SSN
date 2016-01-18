@@ -347,7 +347,7 @@ public class EventDetailActivity extends AppCompatActivity {
                 }
 
 
-                tvState.setText(event.getState().toString());
+                tvState.setText(getString(getResources().getIdentifier(event.getState().toString(), "string", getPackageName())));
                 tvState.setTextColor(getHeavyColorByState(event.getState()));
 
                 tv_sport.setText(event.getSportName());

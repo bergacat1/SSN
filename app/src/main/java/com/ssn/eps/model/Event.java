@@ -1,5 +1,8 @@
 package com.ssn.eps.model;
 
+import android.content.Context;
+
+import com.ssn.eps.ssn.R;
 import com.ssn.eps.ssn.wscaller.SerializerIntArray;
 
 import org.ksoap2.serialization.KvmSerializable;
@@ -369,6 +372,14 @@ public class Event implements KvmSerializable, Serializable{
                 break;
         }
 	}
+
+    /*@Override
+    public String getStateString(Context c) {
+        switch (getState()){
+            case OPEN:
+                return c.getString();
+        }
+    }*/
 
     public String getSportName() {
         return sportName;

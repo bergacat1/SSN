@@ -134,4 +134,8 @@
     <string name="cancelation1">Tiempo cancelación (min):</string>
 
     <string name="zone">Zona:</string>
+    <string name="OPEN">ABIERTO</string>
+    <string name="RESERVED">RESERVADO</string>
+    <string name="FINISHED">FINALIZADO</string>
+    <string name="CANCELED">CANCELADO</string>
 </resources>

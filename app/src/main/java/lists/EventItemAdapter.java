@@ -131,7 +131,7 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
 
         // Set data into the view.
         TextView tvState = (TextView) rowView.findViewById(R.id.event_state);
-        tvState.setText(e.getState().toString());
+        tvState.setText(context.getString(context.getResources().getIdentifier(e.getState().toString(), "string", context.getPackageName())));
         tvState.setTextColor(getHeavyColorByState(e.getState()));
         TextView tvSport = (TextView) rowView.findViewById(R.id.event_expanded_sport);
         tvSport.setText(rowView.getResources().getText(R.string.sport) + " " + e.getSportName());
