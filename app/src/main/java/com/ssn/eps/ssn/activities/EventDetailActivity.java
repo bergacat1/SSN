@@ -30,6 +30,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
@@ -37,6 +38,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.ssn.eps.model.Event;
@@ -325,18 +327,26 @@ public class EventDetailActivity extends AppCompatActivity {
                 } else {
                     if (event.getLatitude() != 0 && event.getLongitude() != 0 && event.getRange() != 0) {
                         // NO RESERVAT: punt i radi al mapa
+
+                        LatLng latlon = new LatLng(event.getLatitude(), event.getLongitude());
                         mMap.addMarker(new MarkerOptions()
-                                        .position(new LatLng(event.getLatitude(), event.getLongitude()))
+                                        .position(latlon)
                                         .title(getString(R.string.marker_title))
                         );
                         mMap.addCircle(new CircleOptions()
-                                        .center(new LatLng(event.getLatitude(), event.getLongitude()))
+                                        .center(latlon)
                                         .radius(event.getRange())
                                         .strokeWidth(2)
                                         .strokeColor(Color.BLUE)
                                         .fillColor(Color.argb(140, 36, 4, 218))
                         );
                         mapView.setVisibility(View.VISIBLE);
+
+                        // Zoom in the Google Map
+                        mMap.moveCamera(CameraUpdateFactory.zoomTo(8));
+                        // Show the location in Google Map
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(latlon));
+
                     } else if (!event.getCity().equals("")) {
                         // NO RESERVAT: ciutat/zona
                         tv_zone.setText(event.getCity());
@@ -360,7 +370,7 @@ public class EventDetailActivity extends AppCompatActivity {
                 if (event.getState() == Event.States.OPEN || event.getState() == Event.States.RESERVED) {
                     actionButton.setText(R.string.join);
                     if (event.isJoined()) {
-                        actionButton.setText(R.string.unjoin);
+                        actionButton.setText(R.string.leave);
                     }
                     actionButton.setVisibility(View.VISIBLE);
                 }
@@ -401,7 +411,7 @@ public class EventDetailActivity extends AppCompatActivity {
                         dialog.setContentView(R.layout.content_window_user_detail);
 
                         TextView userName = (TextView) dialog.findViewById(R.id.tv_userName_value);
-                        userName.setText(String.valueOf(user.getName()));
+                        userName.setText(String.valueOf(user.getUsername()));
 
                         report_button = (Button) dialog.findViewById(R.id.button_report);
                         report_button.setOnClickListener(new View.OnClickListener() {
@@ -420,7 +430,9 @@ public class EventDetailActivity extends AppCompatActivity {
                                             }
                                         })
                                         .show();
+                                dialog.dismiss();
                             }
+
                         });
 
                         dialog.setCancelable(true);
@@ -446,6 +458,9 @@ public class EventDetailActivity extends AppCompatActivity {
                     showToast(getString(R.string.server_error) + ": " + res.getError());
                     return;
                 }
+
+                LatLngBounds.Builder bld = new LatLngBounds.Builder();
+
                 for (Iterator it = res.getData().iterator(); it.hasNext(); ) {
                     ManagerEntity me = (ManagerEntity) it.next();
 
@@ -454,7 +469,9 @@ public class EventDetailActivity extends AppCompatActivity {
                     Marker m = mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(me.getLatitude(), me.getLongitude()))
                             .title(me.getName())
-                            .visible(false));
+                            .visible(true));
+
+                    bld.include(new LatLng(me.getLatitude(), me.getLongitude()));
 
                     if (me.getType() == 0) {
                         m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_managed_selected));
@@ -462,7 +479,11 @@ public class EventDetailActivity extends AppCompatActivity {
                         m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.field_icon_no_managed_selected));
                     }
                 }
+
+                LatLngBounds bounds = bld.build();
+
                 mapView.setVisibility(View.VISIBLE);
+                //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 70));
             }
 
             @Override

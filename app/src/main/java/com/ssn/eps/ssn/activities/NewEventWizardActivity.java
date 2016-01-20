@@ -678,9 +678,8 @@ public class NewEventWizardActivity extends AppCompatActivity implements OnMarke
             if(marker != null && circle != null){
                 Geocoder geocoder = new Geocoder(context, Locale.getDefault());
                 try {
-                    Address a = geocoder.getFromLocation(event.getLatitude(), event.getLongitude(), 1).get(0);
+                    Address a = geocoder.getFromLocation(marker.getPosition().latitude, marker.getPosition().longitude, 1).get(0);
                     TVField.setText(a.getLocality());
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

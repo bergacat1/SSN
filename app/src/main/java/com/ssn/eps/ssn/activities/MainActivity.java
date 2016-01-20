@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
                     bundle.putSerializable("positiveButtonTextId",R.string.event_detail);
                     bundle.putSerializable("cancellButton",true);
                     bundle.putSerializable("eventId",Integer.parseInt(extras.getString("idEvent")));*/
-                    Intent i = new Intent(this,EventDetailActivity.class);
+                    Intent i = new Intent(this,EventDetailTabedActivity.class);
                     i.putExtra("idevent", Integer.parseInt(extras.getString("idEvent")));
                     startActivity(i);
                     break;
@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements FragmentsCommunic
 
         mSectionsPagerAdapter.refreshTab(EventsFragment.TABEVENTS);
 
-        Intent intent = new Intent(getContext(),EventDetailActivity.class);
+        Intent intent = new Intent(getContext(),EventDetailTabedActivity.class);
         intent.putExtra("idevent",id);
 
         startActivity(intent);

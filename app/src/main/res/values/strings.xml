@@ -7,7 +7,7 @@
     <string name="continue_">Continuar</string>
 
     <string name="leave_app_text">Está seguro que desea salir de la aplicación? De este modo dejará de recibir notificaciones.</string>
-    
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Contraseña (opcional)</string>
@@ -33,11 +33,11 @@
     <string name="filters">Filtros</string>
     <string name="pref_alias">Alias</string>
     <string name="pref_new_event">Al crearse nuevo evento</string>
-    <string name="pref_new_event_managed_field" >En pista gestionada</string>
-    <string name="pref_new_event_unmanaged_field" >En pista no gestionada</string>
-    <string name="pref_new_event_member" >Al unirse un miembro a uno de mis eventos</string>
+    <string name="pref_new_event_managed_field">En pista gestionada</string>
+    <string name="pref_new_event_unmanaged_field">En pista no gestionada</string>
+    <string name="pref_new_event_member">Al unirse un miembro a uno de mis eventos</string>
     <string name="new_event">Nuevo evento</string>
-    <string name="event_detail" >Ver</string>
+    <string name="event_detail">Ver</string>
     <string name="leave">Salir</string>
     <string name="leave_confirmation">Estás seguro que quieres salir del evento?</string>
 
@@ -47,7 +47,7 @@
     <string name="features_button">Caract.</string>
     <string name="zone_button">Pista</string>
     <string name="comfirmation_button">Resumen</string>
-    
+
     <string name="sport">Deporte:</string>
     <string name="num_min_players">Min. jugadores:</string>
     <string name="num_max_players">Max. jugadores:</string>
@@ -138,4 +138,8 @@
     <string name="RESERVED">RESERVADO</string>
     <string name="FINISHED">FINALIZADO</string>
     <string name="CANCELED">CANCELADO</string>
+    <string name="title_activity_event_detail_tabed">EventDetailTabedActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="information">Información</string>
+    <string name="localization">Mapa</string>
 </resources>

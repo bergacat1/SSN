@@ -20,6 +20,7 @@ import com.ssn.eps.model.Result;
 import com.ssn.eps.ssn.R;
 import com.ssn.eps.ssn.activities.EventDetailActivity;
 import com.ssn.eps.model.Event;
+import com.ssn.eps.ssn.activities.EventDetailTabedActivity;
 import com.ssn.eps.ssn.activities.EventsFragment;
 import com.ssn.eps.ssn.activities.MainActivity;
 import com.ssn.eps.ssn.wscaller.SoapWSCaller;
@@ -150,7 +151,7 @@ public class EventItemAdapter extends BaseExpandableListAdapter {
         butView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(context,EventDetailActivity.class);
+                Intent i = new Intent(context, EventDetailTabedActivity.class);
                 i.putExtra("idevent", e.getIdEvent());
                 context.startActivity(i);
             }
