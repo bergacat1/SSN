@@ -97,7 +97,7 @@
     <string name="loading">Loading..</string>
     <string name="localization">Map</string>
     <string name="mapType">Map type</string>
-    <string name="noEvents">There aren'\t events</string>
+    <string name="noEvents">There aren\'t events</string>
     <string name="no_managed_entity_selected">Unmanaged entity selected</string>
     <string name="no_managed_entity_selected_text">You can not ensure the availability of the track because there is no registered entity that manages.</string>
     <string name="notif_type_0">New event</string>
